@@ -24,7 +24,7 @@ public class TitleScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        // First clear screen to black
+        // First clear screen to Red
         ScreenUtils.clear(Color.RED);
 
         // Transition to GameScreen when SPACE is pressed
