@@ -30,7 +30,6 @@ public class TitleScreen implements Screen {
         // Transition to GameScreen when SPACE is pressed
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             game.setScreen(new GameScreen(game));
-
         }
     }
 
