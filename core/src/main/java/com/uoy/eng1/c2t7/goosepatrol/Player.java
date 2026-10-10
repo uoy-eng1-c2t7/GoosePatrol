@@ -24,13 +24,13 @@ public class Player {
         // -- Update player position --
 
         // Movement up (positive y)
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) y += speed * delta;
+        if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) y += speed * delta;
         // Movement down (negative y)
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) y -= speed * delta;
+        if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) y -= speed * delta;
         // Movement left (negative x)
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) x -= speed * delta;
+        if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) x -= speed * delta;
         // Movement right (positive x)
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) x += speed * delta;
+        if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) x += speed * delta;
 
         // -- Update collision position --
         bounds.setPosition(x, y);
