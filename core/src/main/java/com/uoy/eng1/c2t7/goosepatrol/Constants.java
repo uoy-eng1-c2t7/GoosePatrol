@@ -23,6 +23,7 @@ public class Constants {
     public static final float PLAYER_START_Y = 3f;
     public static final float PLAYER_RADIUS = 0.4f;
     public static final float PLAYER_SPEED = 6f;
+    public static final float PLAYER_TURN_SPEED = 15f;
  
     // Assets
     public static final String PLAYER_TEXTURE = "student.png";

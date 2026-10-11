@@ -42,6 +42,8 @@ public class GameScreen implements Screen {
     private final Player player;
     private State state = State.RUNNING;
 
+    private final Vector2 mouseWorld = new Vector2();
+
     public GameScreen(Main game) {
         this.game = game;
 
@@ -50,13 +52,11 @@ public class GameScreen implements Screen {
         // Map drawn at 1/PPM so one 32x32 tile is 1m
         map = new TmxMapLoader().load(Constants.MAP_FILE);
         mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / Constants.PPM, game.batch);
-        // Calculate map width in meters
-        mapWidth = map.getProperties().get("width", Integer.class)
-                * map.getProperties().get("tilewidth", Integer.class) / Constants.PPM;
-        // Calculate map height in meters
-        mapHeight = map.getProperties().get("height", Integer.class)
-                * map.getProperties().get("tileheight", Integer.class) / Constants.PPM;
+        
+        mapWidth = MapCollisionLoader.getMapWidth(map);
+        mapHeight = MapCollisionLoader.getMapHeight(map);
 
+        // Load in all the collisions
         MapCollisionLoader.createBodies(map, world);
 
         playerTexture = new Texture(Constants.PLAYER_TEXTURE);
@@ -82,6 +82,9 @@ public class GameScreen implements Screen {
         if (state == State.RUNNING) {
             player.setDirection(readDirectionX(), readDirectionY());
             player.update();
+            mouseWorld.set(Gdx.input.getX(), Gdx.input.getY());
+            viewport.unproject(mouseWorld);
+            player.faceToward(mouseWorld, delta);
             stepPhysics(delta);
         }
         updateCamera();
