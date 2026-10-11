@@ -1,5 +1,6 @@
 package com.uoy.eng1.c2t7.goosepatrol;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -39,10 +41,17 @@ public class GameScreen implements Screen {
     private final World world = new World(new Vector2(0, 0), true);
     private float accumulator = 0f;
 
-    private final Player player;
-    private State state = State.RUNNING;
+    // Debug
+    private final Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
+    private boolean debugMode = false;
+    private static final String TAG = "GameScreen";
 
+    // Player.
+    private final Player player;
     private final Vector2 mouseWorld = new Vector2();
+
+    // Game state.
+    private State state = State.RUNNING;
 
     public GameScreen(Main game) {
         this.game = game;
@@ -52,12 +61,14 @@ public class GameScreen implements Screen {
         // Map drawn at 1/PPM so one 32x32 tile is 1m
         map = new TmxMapLoader().load(Constants.MAP_FILE);
         mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / Constants.PPM, game.batch);
-        
+
         mapWidth = MapCollisionLoader.getMapWidth(map);
         mapHeight = MapCollisionLoader.getMapHeight(map);
 
         // Load in all the collisions
         MapCollisionLoader.createBodies(map, world);
+        Gdx.app.log(TAG, "Loaded " + Constants.MAP_FILE + " (" + mapWidth + " x " + mapHeight + " m)");
+        Gdx.app.debug(TAG, "Physics bodies: " + world.getBodyCount());
 
         playerTexture = new Texture(Constants.PLAYER_TEXTURE);
         player = new Player(world, Constants.PLAYER_START_X, Constants.PLAYER_START_Y);
@@ -101,6 +112,11 @@ public class GameScreen implements Screen {
         player.render(game.batch, playerTexture);
         game.batch.end();
 
+        if (debugMode) {
+            debugRenderer.render(world, camera.combined);
+            renderDebugOverlay();
+        }
+
         if (state == State.PAUSED) {
             renderPauseOverlay();
         }
@@ -110,22 +126,32 @@ public class GameScreen implements Screen {
      * Returns true if the screen was changed.
      */
     private boolean handleInput() {
+        // Pause with ESCAPE.
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             if (state == State.RUNNING) {
                 pauseGame();
             } else {
                 state = State.RUNNING;
+                Gdx.app.log(TAG, "Resumed");
             }
         }
+        // If paused, quit with Q.
         if (state == State.PAUSED && Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
             game.setScreen(new TitleScreen(game));
             return true;
+        }
+        // Enable debug mode with F3.
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+            debugMode = !debugMode;
+            Gdx.app.setLogLevel(debugMode ? Application.LOG_DEBUG : Application.LOG_INFO);
+            Gdx.app.log(TAG, "Debug mode " + (debugMode ? "on" : "off"));
         }
         return false;
     }
 
     private void pauseGame() {
         state = State.PAUSED;
+        Gdx.app.log(TAG, "Paused");
     }
 
     private float readDirectionX() {
@@ -185,6 +211,20 @@ public class GameScreen implements Screen {
         float midY = hudViewport.getWorldHeight() / 2f;
         game.font.draw(game.batch, "PAUSED", midX - 25, midY + 20);
         game.font.draw(game.batch, "ESC to resume, Q to return to title", midX - 100, midY - 10);
+        game.batch.end();
+    }
+
+    private void renderDebugOverlay() {
+        hudViewport.apply();
+        game.batch.setProjectionMatrix(hudViewport.getCamera().combined);
+        game.batch.begin();
+        float top = hudViewport.getWorldHeight() - 10;
+        Vector2 p = player.getPosition();
+        game.font.draw(game.batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, top);
+        game.font.draw(game.batch, String.format("Player: %.2f, %.2f m", p.x, p.y), 10, top - 20);
+        game.font.draw(game.batch, String.format("Mouse: %.2f, %.2f m", mouseWorld.x, mouseWorld.y), 10, top - 40);
+        game.font.draw(game.batch, "State: " + state, 10, top - 60);
+        game.font.draw(game.batch, "Physics bodies: " + world.getBodyCount(), 10, top - 80);
         game.batch.end();
     }
 

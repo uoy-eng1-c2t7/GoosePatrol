@@ -1,6 +1,8 @@
 package com.uoy.eng1.c2t7.goosepatrol;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -15,6 +17,9 @@ public class Main extends Game {
 
     @Override 
     public void create() {
+        Gdx.app.setLogLevel(Application.LOG_INFO);
+        Gdx.app.log("Main", "Game started");
+        
         batch = new SpriteBatch();
         font = new BitmapFont();
         setScreen(new TitleScreen(this));

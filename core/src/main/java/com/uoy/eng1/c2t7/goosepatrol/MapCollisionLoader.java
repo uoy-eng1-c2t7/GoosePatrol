@@ -54,13 +54,17 @@ public class MapCollisionLoader {
             return;
         }
 
+        int count = 0;
         for (MapObject object : layer.getObjects()) {
             if (object instanceof RectangleMapObject) {
                 createRectangle(world, ((RectangleMapObject) object).getRectangle());
+                count++;
             } else if (object instanceof PolygonMapObject) {
                 createPolygon(world, (PolygonMapObject) object);
+                count++;
             }
         }
+        Gdx.app.log("MapCollisionLoader", "Created " + count + " collision shapes");
     }
 
     /**
@@ -104,17 +108,17 @@ public class MapCollisionLoader {
         shape.dispose();
     }
 
-        private static void createPolygon(World world, PolygonMapObject object) {
+    private static void createPolygon(World world, PolygonMapObject object) {
         // Vertices with the polygon position already applied, in pixels
         float[] vertices = object.getPolygon().getTransformedVertices().clone();
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] /= Constants.PPM;
         }
- 
+
         BodyDef bd = new BodyDef();
         bd.type = BodyDef.BodyType.StaticBody;
         Body body = world.createBody(bd);
- 
+
         // A loop handles concave shapes
         ChainShape shape = new ChainShape();
         shape.createLoop(vertices);
