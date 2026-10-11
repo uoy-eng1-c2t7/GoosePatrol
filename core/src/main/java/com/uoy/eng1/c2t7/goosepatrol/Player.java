@@ -1,7 +1,5 @@
 package com.uoy.eng1.c2t7.goosepatrol;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -11,57 +9,57 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
+/**
+ * The player, a dynamic Box2D body.
+ */
 public class Player {
-    private Body body;
-    private float speed = 2f; 
-    private final Texture texture;
+    private final Body body;
+    private final Vector2 direction = new Vector2();
+    private final Vector2 velocity = new Vector2();
 
     public Player(World world, float startX, float startY) {
-        texture = new Texture("student.png");
-
-        // Define physics body
         BodyDef bd = new BodyDef();
         bd.type = BodyDef.BodyType.DynamicBody;
-        bd.position.set(startX / GameScreen.PPM, startY / GameScreen.PPM);
+        bd.position.set(startX, startY);
+        bd.fixedRotation = true;
         body = world.createBody(bd);
 
-        // Define circle hitbox
         CircleShape circle = new CircleShape();
-        circle.setRadius(GameScreen.pixelToMeters(texture.getWidth() / 2f));
+        circle.setRadius(Constants.PLAYER_RADIUS);
         FixtureDef fd = new FixtureDef();
         fd.shape = circle;
+        fd.friction = 0f;
         body.createFixture(fd);
         circle.dispose();
+    }
+
+    /**
+     * Set the movement direction.
+     */
+    public void setDirection(float x, float y) {
+        direction.set(x, y);
     }
 
     public Vector2 getPosition() {
         return body.getPosition();
     }
 
-    public void update(float delta) {
-        float velX = 0;
-        float velY = 0;
-
-        // Movement up (positive y)
-        if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) velY += speed;
-        // Movement down (negative y)
-        if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) velY -= speed;
-        // Movement left (negative x)
-        if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) velX -= speed;
-        // Movement right (positive x)
-        if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) velX += speed;
-
-        body.setLinearVelocity(velX, velY);
+    /**
+     * Applies direction as velocity, normalised so diaganols aren't faster.
+     */
+    public void update() {
+        velocity.set(direction).nor().scl(Constants.PLAYER_SPEED);
+        body.setLinearVelocity(velocity);
     }
 
-    public void render(SpriteBatch batch) {
-        float pixelX = GameScreen.metersToPixels(body.getPosition().x) - (texture.getWidth() / 2f);
-        float pixelY = GameScreen.metersToPixels(body.getPosition().y) - (texture.getHeight() / 2f);
-
-        batch.draw(texture, pixelX, pixelY);
+    /**
+     * Draw the sprite centered on the body
+     */
+    public void render(SpriteBatch batch, Texture texture) {
+        float width = texture.getWidth() / Constants.PPM;
+        float height = texture.getHeight() / Constants.PPM;
+        batch.draw(texture, body.getPosition().x - width / 2f,
+                body.getPosition().y - height / 2f, width, height);
     }
 
-    public void dispose() {
-        texture.dispose();
-    }
 }

@@ -1,6 +1,7 @@
 package com.uoy.eng1.c2t7.goosepatrol;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
@@ -8,23 +9,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * platforms.
  */
 public class Main extends Game {
-    // Shared SpriteBatch
+    // Shared resources.
     public SpriteBatch batch;
-
-    @Override
-    public void create() {
-        batch = new SpriteBatch();
-
-        setScreen(new TitleScreen(this));
-    }
+    public BitmapFont font;
 
     @Override 
-    public void render() {
-        super.render();
+    public void create() {
+        batch = new SpriteBatch();
+        font = new BitmapFont();
+        setScreen(new TitleScreen(this));
     }
 
     @Override
     public void dispose() {
+        super.dispose();
         batch.dispose();
+        font.dispose();
     }
 }
