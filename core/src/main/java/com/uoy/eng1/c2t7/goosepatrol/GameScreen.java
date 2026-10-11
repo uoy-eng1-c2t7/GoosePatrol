@@ -11,9 +11,6 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -60,8 +57,8 @@ public class GameScreen implements Screen {
         mapHeight = map.getProperties().get("height", Integer.class)
                 * map.getProperties().get("tileheight", Integer.class) / Constants.PPM;
 
-        createMapBounds();
-        
+        MapCollisionLoader.createBodies(map, world);
+
         playerTexture = new Texture(Constants.PLAYER_TEXTURE);
         player = new Player(world, Constants.PLAYER_START_X, Constants.PLAYER_START_Y);
 
@@ -186,30 +183,6 @@ public class GameScreen implements Screen {
         game.font.draw(game.batch, "PAUSED", midX - 25, midY + 20);
         game.font.draw(game.batch, "ESC to resume, Q to return to title", midX - 100, midY - 10);
         game.batch.end();
-    }
-
-    /**
-     * Invisible walls around the edge of the map so the player can't leave.
-     */
-    private void createMapBounds() {
-        BodyDef bd = new BodyDef();
-        bd.type = BodyDef.BodyType.StaticBody;
-        Body body = world.createBody(bd);
-
-        EdgeShape edge = new EdgeShape();
-        // Bottom.
-        edge.set(0, 0, mapWidth, 0); 
-        body.createFixture(edge, 0f);
-        // Right.
-        edge.set(mapWidth, 0, mapWidth, mapHeight); 
-        body.createFixture(edge, 0f);
-        // Top.
-        edge.set(mapWidth, mapHeight, 0, mapHeight); 
-        body.createFixture(edge, 0f);
-        // Left.
-        edge.set(0, mapHeight, 0, 0); 
-        body.createFixture(edge, 0f);
-        edge.dispose();
     }
 
     @Override
