@@ -1,8 +1,11 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.screens;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -49,6 +52,10 @@ public class GameScreen implements Screen {
     private boolean followPlayer = true;
     private float panTimer;
 
+    // Debug
+    private final ShapeRenderer debugShapes = new ShapeRenderer();
+    private boolean debug = false;
+
     public GameScreen(GoosePatrol game) {
         // initialise everything
         this.game = game;
@@ -93,6 +100,11 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        // debug mode, press F3
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+            debug = !debug;
+        }
+
         // INTENT - where do entities want to go
         for (Entity entity : entities) {
             entity.updateIntent(delta);
@@ -119,6 +131,10 @@ public class GameScreen implements Screen {
             entity.draw(game.batch);
         }
         game.batch.end();
+
+        if (debug) {
+            drawDebug();
+        }
     }
 
     private void updatePhysics() {
@@ -207,6 +223,25 @@ public class GameScreen implements Screen {
         return MathUtils.clamp(target, half, mapSize - half);
     }
 
+    private void drawDebug() {
+        debugShapes.setProjectionMatrix(camera.combined);
+        debugShapes.begin(ShapeRenderer.ShapeType.Line);
+
+        // Walls
+        debugShapes.setColor(Color.RED);
+        for (Rectangle wall : walls) {
+            debugShapes.rect(wall.x, wall.y, wall.width, wall.height);
+        }
+
+        // Entity hitboxes
+        debugShapes.setColor(Color.GREEN);
+        for (Entity entity : entities) {
+            debugShapes.circle(entity.hitbox.x, entity.hitbox.y, entity.hitbox.radius);
+        }
+
+        debugShapes.end();
+    }
+
     @Override
     public void resize(int width, int height) {
         if (width <= 0 || height <= 0)
@@ -229,9 +264,13 @@ public class GameScreen implements Screen {
 
     @Override
     public void hide() {
+        dispose();
     }
 
     @Override
     public void dispose() {
+        debugShapes.dispose();
+        map.dispose();
+        mapRenderer.dispose();
     }
 }
