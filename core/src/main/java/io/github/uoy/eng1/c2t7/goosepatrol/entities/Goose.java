@@ -27,14 +27,14 @@ public class Goose extends Entity {
 
         dir.set(target.position).sub(position);
 
-        if (isTouching()) {
+        if (!isTouching()) {
             velocity.set(dir).nor().scl(speed * delta);
             targetRotation = velocity.angleDeg();
         }
     }
 
     public boolean isTouching() {
-        return dir.len() > hitbox.radius + target.hitbox.radius;
+        return dir.len() <= hitbox.radius + target.hitbox.radius;
     }
 
 }
