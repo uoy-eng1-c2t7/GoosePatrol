@@ -73,7 +73,7 @@ public class GameScreen implements Screen {
         entities = new Array<Entity>();
 
         // load map walls for collision
-        for (MapObject object : map.getLayers().get("collision").getObjects()) {
+        for (MapObject object : map.getLayers().get("waterCollisions").getObjects()) {
             if (object instanceof RectangleMapObject) {
                 Rectangle rect = ((RectangleMapObject) object).getRectangle();
                 
@@ -166,7 +166,7 @@ public class GameScreen implements Screen {
     }
 
     private boolean isColliding(Entity movingEntity) {
-        // Check against walls
+        // Check against walls (water)
         for (Rectangle wall : walls) {
             if (Intersector.overlaps(movingEntity.hitbox, wall)) {
                 return true;
