@@ -8,11 +8,12 @@ public class Constants {
     // Private constructor as class doesn't need to be instantiated
     private Constants() {}
 
-    public final static float VIRTUAL_WIDTH = 480;
-    public final static  float VIRTUAL_HEIGHT = 270; 
+    public final static float VIRTUAL_WIDTH = 960;
+    public final static  float VIRTUAL_HEIGHT = 540; 
     
     public final static String MAP_FILE = "test.tmx";
     public final static String PLAYER_TEXTURE = "player.png";
-
-    public final static float PLAYER_SPEED = 100f;
+    public final static String GOOSE_TEXTURE = "goose.png";
+    public final static float PLAYER_SPEED = 200f;
+    public final static float GOOSE_SPEED = 185f;
 }

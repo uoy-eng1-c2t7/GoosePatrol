@@ -1,8 +1,11 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.screens;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -19,6 +22,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 import io.github.uoy.eng1.c2t7.goosepatrol.entities.Entity;
+import io.github.uoy.eng1.c2t7.goosepatrol.entities.Goose;
 import io.github.uoy.eng1.c2t7.goosepatrol.entities.Player;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.Constants;
 
@@ -28,24 +32,29 @@ public class GameScreen implements Screen {
         RUNNING, PAUSED
     }
 
+    // Game
+    private Array<Entity> entities;
+    private Array<Rectangle> walls;
+    private Player player;
+    private State state = State.RUNNING;
+
+    // Setup
     private final GoosePatrol game;
     private final OrthographicCamera camera;
     private final Viewport viewport;
     private final TiledMap map;
     private final OrthogonalTiledMapRenderer mapRenderer;
-    private Array<Entity> entities;
-    private Array<Rectangle> walls;
-    private Player player;
+    private final float mapWidth;
+    private final float mapHeight;
 
     // Camera
     private final Vector2 focus = new Vector2();
     private boolean followPlayer = true;
     private float panTimer;
 
-    private final float mapWidth;
-    private final float mapHeight;
-
-    private State state = State.RUNNING;
+    // Debug
+    private final ShapeRenderer debugShapes = new ShapeRenderer();
+    private boolean debug = false;
 
     public GameScreen(GoosePatrol game) {
         // initialise everything
@@ -72,14 +81,30 @@ public class GameScreen implements Screen {
             }
         }
 
+        // Create boundary around map
+        float t = 64; 
+        walls.add(new Rectangle(-t, -t, mapWidth + 2 * t, t)); // bottom
+        walls.add(new Rectangle(-t, mapHeight, mapWidth + 2 * t, t)); // top
+        walls.add(new Rectangle(-t, 0, t, mapHeight)); // left
+        walls.add(new Rectangle(mapWidth, 0, t, mapHeight)); // right
+
         // test player
         player = new Player(new Vector2(100, 100));
         entities.add(player);
         camera.position.set(player.hitbox.x, player.hitbox.y, 0);
+
+        // test goose
+        Goose goose = new Goose(new Vector2(150, 150), player);
+        entities.add(goose);
     }
 
     @Override
     public void render(float delta) {
+        // debug mode, press F3
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+            debug = !debug;
+        }
+
         // INTENT - where do entities want to go
         for (Entity entity : entities) {
             entity.updateIntent(delta);
@@ -87,6 +112,11 @@ public class GameScreen implements Screen {
 
         // PHYSICS - can they go there? resolve any collisionjs
         updatePhysics();
+
+        // Update - rotation, animations etc
+        for (Entity entity : entities) {
+            entity.update(delta);
+        }
 
         updateCamera(delta);
 
@@ -101,6 +131,10 @@ public class GameScreen implements Screen {
             entity.draw(game.batch);
         }
         game.batch.end();
+
+        if (debug) {
+            drawDebug();
+        }
     }
 
     private void updatePhysics() {
@@ -157,13 +191,14 @@ public class GameScreen implements Screen {
         // Camera can either follow player or focus on something depending on bool
         // I imagine using this for showing where the exit is at the start of the 
         // game
+
         if (!followPlayer) {
             panTimer -= delta;
             if (panTimer <= 0) followPlayer = true;
         }
 
-        float targetX = followPlayer ? player.hitbox.x : focus.x;
-        float targetY = followPlayer ? player.hitbox.y : focus.y;
+        float targetX = followPlayer ? player.position.x : focus.x;
+        float targetY = followPlayer ? player.position.y : focus.y;
 
         float halfw = camera.viewportWidth * camera.zoom / 2f;
         float halfh = camera.viewportHeight * camera.zoom / 2f;
@@ -188,6 +223,25 @@ public class GameScreen implements Screen {
         return MathUtils.clamp(target, half, mapSize - half);
     }
 
+    private void drawDebug() {
+        debugShapes.setProjectionMatrix(camera.combined);
+        debugShapes.begin(ShapeRenderer.ShapeType.Line);
+
+        // Walls
+        debugShapes.setColor(Color.RED);
+        for (Rectangle wall : walls) {
+            debugShapes.rect(wall.x, wall.y, wall.width, wall.height);
+        }
+
+        // Entity hitboxes
+        debugShapes.setColor(Color.GREEN);
+        for (Entity entity : entities) {
+            debugShapes.circle(entity.hitbox.x, entity.hitbox.y, entity.hitbox.radius);
+        }
+
+        debugShapes.end();
+    }
+
     @Override
     public void resize(int width, int height) {
         if (width <= 0 || height <= 0)
@@ -210,9 +264,13 @@ public class GameScreen implements Screen {
 
     @Override
     public void hide() {
+        dispose();
     }
 
     @Override
     public void dispose() {
+        debugShapes.dispose();
+        map.dispose();
+        mapRenderer.dispose();
     }
 }

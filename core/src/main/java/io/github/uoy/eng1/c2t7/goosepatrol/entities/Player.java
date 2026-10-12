@@ -17,11 +17,16 @@ public class Player extends Entity {
     public void updateIntent(float delta) {
         velocity.set(0, 0); 
 
-        float moveDistance = speed * delta;
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) velocity.y += 1;
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) velocity.y -= 1;
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) velocity.x -= 1;
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) velocity.x += 1;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) velocity.y += moveDistance;
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) velocity.y -= moveDistance;
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) velocity.x -= moveDistance;
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) velocity.x += moveDistance;
+        if (!velocity.isZero()) {
+            // Normalise velocity and scale it by speed * delta (for framereate independence)
+            velocity.nor().scl(speed * delta);
+            // Face movement direction
+            targetRotation = velocity.angleDeg();
+        }
     }
 }
