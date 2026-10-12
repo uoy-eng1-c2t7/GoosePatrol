@@ -13,9 +13,9 @@ public class Player extends Entity {
         super(startPosition, new Texture(Constants.PLAYER_TEXTURE), Constants.PLAYER_SPEED);
     }
 
-    @Override 
+    @Override
     public void updateIntent(float delta) {
-        velocity.set(0, 0); 
+        velocity.set(0, 0);
 
         if (Gdx.input.isKeyPressed(Input.Keys.W)) velocity.y += 1;
         if (Gdx.input.isKeyPressed(Input.Keys.S)) velocity.y -= 1;
@@ -23,7 +23,7 @@ public class Player extends Entity {
         if (Gdx.input.isKeyPressed(Input.Keys.D)) velocity.x += 1;
 
         if (!velocity.isZero()) {
-            // Normalise velocity and scale it by speed * delta (for framereate independence)
+            // Normalise velocity and scale it by speed * delta (for framerate independence)
             velocity.nor().scl(speed * delta);
             // Face movement direction
             targetRotation = velocity.angleDeg();
