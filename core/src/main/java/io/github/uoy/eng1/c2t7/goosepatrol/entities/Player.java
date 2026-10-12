@@ -23,7 +23,7 @@ public class Player extends Entity {
         if (Gdx.input.isKeyPressed(Input.Keys.D)) velocity.x += 1;
 
         if (!velocity.isZero()) {
-            // Normalise velocity and scale it by speed * delta (for framerate independence)
+            // Normalise velocity and scale it by speed * delta (for framereate independence)
             velocity.nor().scl(speed * delta);
             // Face movement direction
             targetRotation = velocity.angleDeg();
