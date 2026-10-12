@@ -63,7 +63,7 @@ public class WorldRenderer {
             // Draw entities
             debugShapes.setColor(Color.GREEN);
             for (Entity entity : entities) {
-                debugShapes.circle(entity.hitbox.x, entity.hitbox.y, entity.hitbox.radius);
+                entity.drawDebug(debugShapes);
             }
 
             debugShapes.end();
