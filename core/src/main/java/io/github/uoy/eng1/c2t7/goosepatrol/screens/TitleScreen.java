@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 
-/** Game title screen, first screen to be displayed */
+/** Title screen, first screen to be displayed */
 public class TitleScreen implements Screen {
     private final GoosePatrol game;
     private final OrthographicCamera camera;

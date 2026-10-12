@@ -14,8 +14,6 @@ import io.github.uoy.eng1.c2t7.goosepatrol.utils.Constants;
 
 /** The main gameplay screen */
 public class GameScreen implements Screen {
-    
-    // Reference to main game
     private GoosePatrol game;
 
     private OrthographicCamera camera;
