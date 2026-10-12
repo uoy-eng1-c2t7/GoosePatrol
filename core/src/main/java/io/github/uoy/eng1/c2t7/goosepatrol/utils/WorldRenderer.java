@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
+import io.github.uoy.eng1.c2t7.goosepatrol.ai.NavGrid;
 import io.github.uoy.eng1.c2t7.goosepatrol.entities.Entity;
 
 public class WorldRenderer {
@@ -16,16 +17,18 @@ public class WorldRenderer {
     private final OrthogonalTiledMapRenderer mapRenderer;
     private final Array<Entity> entities;
     private final MapCollision collision;
+    private final NavGrid navGrid;
 
     private final ShapeRenderer debugShapes = new ShapeRenderer();
     private boolean debug = false;
 
-    public WorldRenderer(GoosePatrol game, GameCamera camera, MapLoader mapLoader, Array<Entity> entities) {
+    public WorldRenderer(GoosePatrol game, GameCamera camera, MapLoader mapLoader, Array<Entity> entities, NavGrid navGrid) {
         this.game = game;
         this.gameCamera = camera;
         this.mapRenderer = new OrthogonalTiledMapRenderer(mapLoader.getMap(), game.batch);
         this.entities = entities;
         this.collision = mapLoader.getCollision();
+        this.navGrid = navGrid;
     }
 
     public void render() {
@@ -45,11 +48,19 @@ public class WorldRenderer {
             debugShapes.setProjectionMatrix(gameCamera.getCamera().combined);
             debugShapes.begin(ShapeRenderer.ShapeType.Line);
 
+            // Draw navgrid map overlay
+            if (navGrid != null) {
+                navGrid.drawDebug(debugShapes);
+            }
+
+            // Draw walls
             debugShapes.setColor(Color.RED);
             for (Polygon wall : collision.getWalls()) {
                 debugShapes.polygon(wall.getTransformedVertices());
             }
 
+
+            // Draw entities
             debugShapes.setColor(Color.GREEN);
             for (Entity entity : entities) {
                 debugShapes.circle(entity.hitbox.x, entity.hitbox.y, entity.hitbox.radius);

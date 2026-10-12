@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
+import io.github.uoy.eng1.c2t7.goosepatrol.ai.NavGrid;
 import io.github.uoy.eng1.c2t7.goosepatrol.entities.Entity;
 import io.github.uoy.eng1.c2t7.goosepatrol.entities.Goose;
 import io.github.uoy.eng1.c2t7.goosepatrol.entities.Player;
@@ -32,6 +33,7 @@ public class GameScreen implements Screen {
     private State state = State.RUNNING;
     private final PhysicsEngine physicsEngine;
     private final WorldRenderer worldRenderer;
+    private final NavGrid navGrid;
 
     public GameScreen(GoosePatrol game) {
         this.game = game;
@@ -41,8 +43,10 @@ public class GameScreen implements Screen {
 
         spawnEntities();
 
+        navGrid = new NavGrid(mapLoader);
+
         physicsEngine = new PhysicsEngine(mapLoader.getCollision(), entities);
-        worldRenderer = new WorldRenderer(game, gameCamera, mapLoader, entities);
+        worldRenderer = new WorldRenderer(game, gameCamera, mapLoader, entities, navGrid);
     }
 
     private void spawnEntities() {
