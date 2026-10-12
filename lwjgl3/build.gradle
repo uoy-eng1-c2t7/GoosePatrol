@@ -19,7 +19,7 @@ apply plugin: 'io.github.fourlastor.construo'
 import io.github.fourlastor.construo.Target
 
 sourceSets.main.resources.srcDirs += [ rootProject.file('assets').path ]
-application.mainClass = 'com.uoy.eng1.c2t7.goosepatrol.lwjgl3.Lwjgl3Launcher'
+application.mainClass = 'io.github.uoy.eng1.c2t7.goosepatrol.lwjgl3.Lwjgl3Launcher'
 application.applicationName = appName
 eclipse.project.name = appName + '-lwjgl3'
 java.sourceCompatibility = 17
@@ -33,8 +33,6 @@ dependencies {
   implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
   implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
   implementation project(':core')
-
-  implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-backend-lwjgl3:$graalHelperVersion"
@@ -153,7 +151,7 @@ construo {
       architecture.set(Target.Architecture.AARCH64)
       jdkUrl.set("https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.10%2B7/OpenJDK21U-jdk_aarch64_mac_hotspot_21.0.10_7.tar.gz")
       // macOS needs an identifier
-      identifier.set("com.uoy.eng1.c2t7.goosepatrol." + appName)
+      identifier.set("io.github.uoy.eng1.c2t7.goosepatrol." + appName)
       // Optional: icon for macOS, as an ICNS file
       macIcon.set(project.file("icons/logo.icns"))
     }
@@ -161,7 +159,7 @@ construo {
       architecture.set(Target.Architecture.X86_64)
       jdkUrl.set("https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.10%2B7/OpenJDK21U-jdk_x64_mac_hotspot_21.0.10_7.tar.gz")
       // macOS needs an identifier
-      identifier.set("com.uoy.eng1.c2t7.goosepatrol." + appName)
+      identifier.set("io.github.uoy.eng1.c2t7.goosepatrol." + appName)
       // Optional: icon for macOS, as an ICNS file
       macIcon.set(project.file("icons/logo.icns"))
     }
