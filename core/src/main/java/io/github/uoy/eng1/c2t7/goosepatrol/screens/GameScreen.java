@@ -162,13 +162,14 @@ public class GameScreen implements Screen {
         // Camera can either follow player or focus on something depending on bool
         // I imagine using this for showing where the exit is at the start of the 
         // game
+
         if (!followPlayer) {
             panTimer -= delta;
             if (panTimer <= 0) followPlayer = true;
         }
 
-        float targetX = followPlayer ? player.hitbox.x : focus.x;
-        float targetY = followPlayer ? player.hitbox.y : focus.y;
+        float targetX = followPlayer ? player.position.x : focus.x;
+        float targetY = followPlayer ? player.position.y : focus.y;
 
         float halfw = camera.viewportWidth * camera.zoom / 2f;
         float halfh = camera.viewportHeight * camera.zoom / 2f;

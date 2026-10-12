@@ -21,8 +21,7 @@ public abstract class Entity {
         this.texture = texture;
         this.speed = speed;
         float radius = texture.getWidth() / 2f;
-        // Draw a circle to act as a hitbox in the middle of the texture
-        this.hitbox = new Circle(position.x + radius, position.y + radius, radius);
+        this.hitbox = new Circle(position.x, position.y, radius);
     }
 
     // Entities updates where it wants to go
@@ -31,12 +30,13 @@ public abstract class Entity {
     // Visuals
     public void draw(SpriteBatch batch) {
         float w = texture.getWidth(), h = texture.getHeight();
-        batch.draw(texture, position.x, position.y, w / 2f, h / 2f, w, h,  1f, 1f, rotation, 0, 0, (int) w, (int) h, false, false);
+        // draw needs the bottom left corner, so offset position - long call :(
+        batch.draw(texture, position.x - w / 2f, position.y - h / 2f, w / 2f, h / 2f, w, h, 1f, 1f, rotation, 0, 0, (int) w, (int) h, false, false);
     }
 
-    // Reallign hitbox to center of the texture
+    // Keep hitbox on the entities position
     public void syncHithox() {
-        hitbox.setPosition(position.x + hitbox.radius, position.y + hitbox.radius);
+        hitbox.setPosition(position.x, position.y);
     }
 
     public void update(float delta) {
