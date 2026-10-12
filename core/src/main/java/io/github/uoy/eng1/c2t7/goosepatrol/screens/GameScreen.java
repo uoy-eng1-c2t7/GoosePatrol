@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 import io.github.uoy.eng1.c2t7.goosepatrol.ai.NavGrid;
+import io.github.uoy.eng1.c2t7.goosepatrol.ai.Pathfinder;
 import io.github.uoy.eng1.c2t7.goosepatrol.entities.Entity;
 import io.github.uoy.eng1.c2t7.goosepatrol.entities.Goose;
 import io.github.uoy.eng1.c2t7.goosepatrol.entities.Player;
@@ -34,6 +35,7 @@ public class GameScreen implements Screen {
     private final PhysicsEngine physicsEngine;
     private final WorldRenderer worldRenderer;
     private final NavGrid navGrid;
+    private final Pathfinder pathfinder;
 
     public GameScreen(GoosePatrol game) {
         this.game = game;
@@ -41,12 +43,13 @@ public class GameScreen implements Screen {
         mapLoader = new MapLoader(Constants.MAP_FILE);
         gameCamera = new GameCamera(mapLoader.getWidth(), mapLoader.getHeight());
 
-        spawnEntities();
-
         navGrid = new NavGrid(mapLoader);
+        pathfinder = new Pathfinder(navGrid);
 
         physicsEngine = new PhysicsEngine(mapLoader.getCollision(), entities);
         worldRenderer = new WorldRenderer(game, gameCamera, mapLoader, entities, navGrid);
+
+        spawnEntities();
     }
 
     private void spawnEntities() {
@@ -55,7 +58,7 @@ public class GameScreen implements Screen {
         gameCamera.snapTo(player.position);
 
         for (Vector2 spawn : mapLoader.getGooseSpawns()) {
-            entities.add(new Goose(spawn, player));
+            entities.add(new Goose(spawn, player, pathfinder));
         }
 
         // Show exit at start of the game

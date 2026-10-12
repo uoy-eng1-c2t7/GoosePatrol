@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.utils.Array;
 
+import io.github.uoy.eng1.c2t7.goosepatrol.ai.Pathfinder;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.Constants;
 
 public class Goose extends Entity {
@@ -16,13 +17,18 @@ public class Goose extends Entity {
 
     public Array<Vector2> currentPath;
 
+    private final Pathfinder pathFinder;
+    private float pathTimer = 0; 
+
     private final Entity target;
     private State state = State.ANGRY;
     private final Vector2 dir = new Vector2();
 
-    public Goose(Vector2 startPosition, Entity target) {
+    public Goose(Vector2 startPosition, Entity target, Pathfinder pathfinder) {
         super(startPosition, new Texture(Constants.GOOSE_TEXTURE), Constants.GOOSE_SPEED);
         this.target = target;
+        this.pathFinder = pathfinder;
+        this.currentPath = new Array<>();
     }
 
     @Override
@@ -31,11 +37,25 @@ public class Goose extends Entity {
 
         if (state != State.ANGRY) return;
         
-        dir.set(target.position).sub(position);
+        // Recalculate path every 0.25 seconds otherwise lag
+        pathTimer -= delta;
+        if (pathTimer <= 0) {
+            currentPath = pathFinder.findPath(position, target.position);
+            pathTimer = 0.25f;
+        }
 
-        if (dir.len() > hitbox.radius + target.hitbox.radius) { // stop if touching
-            velocity.set(dir).nor().scl(speed * delta);
-            targetRotation = velocity.angleDeg();
+        // Follow the path
+        if (currentPath.size > 0) {
+            Vector2 nextWaypoint = currentPath.first();
+            dir.set(nextWaypoint).sub(position);
+
+            // If reached waypoint, remove it 
+            if (dir.len() < speed * delta) {
+                currentPath.removeIndex(0);
+            } else {
+                velocity.set(dir).nor().scl(speed * delta);
+                targetRotation = velocity.angleDeg();
+            }
         }
     }
 
