@@ -10,4 +10,9 @@ public class Constants {
 
     public final static float VIRTUAL_WIDTH = 16f;
     public final static  float VIRTUAL_HEIGHT = 9f; 
+    
+    public final static String MAP_FILE = "test.tmx";
+    public final static String PLAYER_TEXTURE = "player.png";
+
+    public final static float PLAYER_SPEED = 10f;
 }
