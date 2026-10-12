@@ -1,4 +1,4 @@
-package io.github.uoy.entities;
+package io.github.uoy.eng1.c2t7.goosepatrol.entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,9 +13,10 @@ public abstract class Entity {
     protected float speed;
 
     public Entity(Vector2 startPosition, Texture texture, float speed) {
-        this.position = new Vector2(startPosition.x, startPosition.y);
+        position = new Vector2(startPosition.x, startPosition.y);
         this.texture = texture;
         this.speed = speed;
+        velocity = new Vector2(0, 0);
         float radius = texture.getWidth() / 2f;
         // Draw a circle to act as a hitbox in the middle of the texture
         this.hitbox = new Circle(position.x + radius, position.y + radius, radius);

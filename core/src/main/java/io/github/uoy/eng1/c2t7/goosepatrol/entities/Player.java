@@ -1,4 +1,4 @@
-package io.github.uoy.entities;
+package io.github.uoy.eng1.c2t7.goosepatrol.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -9,8 +9,8 @@ import io.github.uoy.eng1.c2t7.goosepatrol.utils.Constants;
 
 public class Player extends Entity {
 
-    public Player(Vector2 startPosition, Texture texture) {
-        super(startPosition, texture, Constants.PLAYER_SPEED);
+    public Player(Vector2 startPosition) {
+        super(startPosition, new Texture(Constants.PLAYER_TEXTURE), Constants.PLAYER_SPEED);
     }
 
     @Override 
