@@ -166,9 +166,9 @@ public class GameScreen implements Screen {
     }
 
     private boolean isColliding(Entity movingEntity) {
-        // Check against walls (water)
+        // Check against water
         for (Rectangle wall : walls) {
-            if (Intersector.overlaps(movingEntity.hitbox, wall)) {
+            if (Intersector.overlaps(movingEntity.hitbox, wall) && (movingEntity instanceof Player)) {
                 return true;
             }
         }
