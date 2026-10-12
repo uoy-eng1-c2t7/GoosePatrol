@@ -29,24 +29,25 @@ public class GameScreen implements Screen {
         RUNNING, PAUSED
     }
 
+    // Game
+    private Array<Entity> entities;
+    private Array<Rectangle> walls;
+    private Player player;
+    private State state = State.RUNNING;
+
+    // Setup
     private final GoosePatrol game;
     private final OrthographicCamera camera;
     private final Viewport viewport;
     private final TiledMap map;
     private final OrthogonalTiledMapRenderer mapRenderer;
-    private Array<Entity> entities;
-    private Array<Rectangle> walls;
-    private Player player;
+    private final float mapWidth;
+    private final float mapHeight;
 
     // Camera
     private final Vector2 focus = new Vector2();
     private boolean followPlayer = true;
     private float panTimer;
-
-    private final float mapWidth;
-    private final float mapHeight;
-
-    private State state = State.RUNNING;
 
     public GameScreen(GoosePatrol game) {
         // initialise everything
