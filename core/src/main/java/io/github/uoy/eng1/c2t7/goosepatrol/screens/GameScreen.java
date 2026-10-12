@@ -75,7 +75,7 @@ public class GameScreen implements Screen {
         }
 
         // Create boundary around map
-        float t = 64;
+        float t = 64; 
         walls.add(new Rectangle(-t, -t, mapWidth + 2 * t, t)); // bottom
         walls.add(new Rectangle(-t, mapHeight, mapWidth + 2 * t, t)); // top
         walls.add(new Rectangle(-t, 0, t, mapHeight)); // left
