@@ -15,5 +15,5 @@ public class Constants {
     public final static String PLAYER_TEXTURE = "player.png";
     public final static String GOOSE_TEXTURE = "goose.png";
     public final static float PLAYER_SPEED = 200f;
-    public final static float GOOSE_SPEED = 185f;
+    public final static float GOOSE_SPEED = 150f;
 }

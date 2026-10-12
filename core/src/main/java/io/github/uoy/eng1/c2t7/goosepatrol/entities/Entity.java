@@ -20,7 +20,8 @@ public abstract class Entity {
         position = new Vector2(startPosition.x, startPosition.y);
         this.texture = texture;
         this.speed = speed;
-        float radius = texture.getWidth() / 2f;
+        // Scale down radius to 80% of texture size - stops texture getting stuck on walls
+        float radius = (texture.getWidth() / 2f) * 0.8f;
         this.hitbox = new Circle(position.x, position.y, radius);
     }
 
