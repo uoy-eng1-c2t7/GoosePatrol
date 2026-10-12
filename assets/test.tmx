@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="5">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="10">
  <tileset firstgid="1" name="test" tilewidth="32" tileheight="32" tilecount="2" columns="0">
   <grid orientation="orthogonal" width="1" height="1"/>
   <tile id="0">
@@ -75,6 +75,30 @@
   <object id="2" name="Player" x="800" y="960">
    <properties>
     <property name="kind" value="player"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="5" name="Goose" x="256" y="256">
+   <properties>
+    <property name="kind" value="goose"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="7" name="Goose" x="992" y="256">
+   <properties>
+    <property name="kind" value="goose"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="8" name="Goose" x="1440" y="864">
+   <properties>
+    <property name="kind" value="goose"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="9" name="Goose" x="256" y="928">
+   <properties>
+    <property name="kind" value="goose"/>
    </properties>
    <point/>
   </object>
