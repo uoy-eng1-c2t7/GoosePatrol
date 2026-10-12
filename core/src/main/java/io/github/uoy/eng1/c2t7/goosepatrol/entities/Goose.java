@@ -73,7 +73,7 @@ public class Goose extends Entity {
 
         // Draw A* path
         if (currentPath != null && !currentPath.isEmpty()) {
-            shapeRenderer.setColor(Color.YELLOW);
+            shapeRenderer.setColor(Color.BLUE);
             Vector2 prevPoint = position;
 
             for (Vector2 waypoint : currentPath) {
