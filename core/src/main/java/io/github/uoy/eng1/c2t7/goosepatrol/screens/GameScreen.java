@@ -83,6 +83,9 @@ public class GameScreen implements Screen {
                 entity.update(delta);
             }
         }
+
+        gameCamera.update(delta, player.position);
+        worldRenderer.render();
     }
 
     @Override
