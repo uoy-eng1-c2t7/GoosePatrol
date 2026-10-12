@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 import io.github.uoy.eng1.c2t7.goosepatrol.entities.Entity;
+import io.github.uoy.eng1.c2t7.goosepatrol.entities.Goose;
 import io.github.uoy.eng1.c2t7.goosepatrol.entities.Player;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.Constants;
 
@@ -72,10 +73,21 @@ public class GameScreen implements Screen {
             }
         }
 
+        // Create boundary around map
+        float t = 64;
+        walls.add(new Rectangle(-t, -t, mapWidth + 2 * t, t)); // bottom
+        walls.add(new Rectangle(-t, mapHeight, mapWidth + 2 * t, t)); // top
+        walls.add(new Rectangle(-t, 0, t, mapHeight)); // left
+        walls.add(new Rectangle(mapWidth, 0, t, mapHeight)); // right
+
         // test player
         player = new Player(new Vector2(100, 100));
         entities.add(player);
         camera.position.set(player.hitbox.x, player.hitbox.y, 0);
+
+        // test goose
+        Goose goose = new Goose(new Vector2(150, 150), player);
+        entities.add(goose);
     }
 
     @Override
