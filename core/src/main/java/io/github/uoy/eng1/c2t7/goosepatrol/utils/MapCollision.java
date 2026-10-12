@@ -27,7 +27,7 @@ public class MapCollision {
         
         // Check each edge of the wall , 
         for (Polygon polygon : polygons) {
-            float[] vertices = polygon.getTransformedVertices(); // x0, y0, x1, y1 ..
+            float[] vertices = polygon.getTransformedVertices(); // x0, y0, x1, y1
 
             // check each edge of the wall, edge i fruns from vertex i to the next vertex
             for (int i = 0; i < vertices.length; i += 2) {
