@@ -1,7 +1,9 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.entities;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -43,5 +45,10 @@ public abstract class Entity {
     public void update(float delta) {
         // Smoothly update rotation to targetRotation
         rotation = MathUtils.lerpAngleDeg(rotation, targetRotation, 1f - (float) Math.exp(-turnSpeed * delta));
+    }
+
+    public void drawDebug(ShapeRenderer shapeRenderer) {
+        shapeRenderer.setColor(Color.GREEN);
+        shapeRenderer.circle(hitbox.x, hitbox.y, hitbox.radius);
     }
 }
