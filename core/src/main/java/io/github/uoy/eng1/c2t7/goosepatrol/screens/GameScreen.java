@@ -88,6 +88,11 @@ public class GameScreen implements Screen {
         // PHYSICS - can they go there? resolve any collisionjs
         updatePhysics();
 
+        // Update - rotation, animations etc
+        for (Entity entity : entities) {
+            entity.update(delta);
+        }
+
         updateCamera(delta);
 
         // RENDER - map first then entities ontop
