@@ -10,7 +10,7 @@ import io.github.uoy.eng1.c2t7.goosepatrol.utils.Constants;
 public class Player extends Entity {
 
     public Player(Vector2 startPosition) {
-        super(startPosition, new Texture(Constants.PLAYER_TEXTURE), Constants.PLAYER_SPEED);
+        super(startPosition, new Texture(Constants.PLAYER_TEXTURE), Constants.PLAYER_SPEED, Constants.PLAYER_HITBOX_RADIUS);
     }
 
     @Override

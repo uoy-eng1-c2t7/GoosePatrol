@@ -1,8 +1,8 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.utils;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -57,6 +57,16 @@ public class GameCamera {
     private float clampAxis(float target, float half, float mapSize) {
         if (mapSize <= half * 2f) return mapSize / 2f; // view bigger than map so center it 
         return MathUtils.clamp(target, half, mapSize - half);
+    }
+
+
+    /**
+     * Fills {@code out} with the world space rectangle the camera can see.
+     */
+    public Rectangle getViewBounds(Rectangle out) {
+        float width = camera.viewportWidth * camera.zoom;
+        float height = camera.viewportHeight * camera.zoom;
+        return out.set(camera.position.x - width / 2f, camera.position.y - height / 2f, width, height);
     }
 
     public void apply() {
