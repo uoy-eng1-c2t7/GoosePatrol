@@ -16,7 +16,8 @@ import io.github.uoy.eng1.c2t7.goosepatrol.utils.Constants;
 
 /**
  * A hungry goose, it's behaviour is a small state machine.
- * <p> Movement: if the goose can see where it wants to go, it walks straight there.
+ * <p>
+ * Movement: if the goose can see where it wants to go, it walks straight there.
  * If a wall is in the way it will ask the {@link Pathfinder} for a route.
  * 
  */
@@ -29,18 +30,22 @@ public class Goose extends Entity {
     private final Pathfinder pathfinder;
     private final Vector2 home;
 
-    private State state = State.IDLE;   
+    private State state = State.IDLE;
 
     // Array of points for the current path
     private Array<Vector2> currentPath = new Array<>();
-    // Random repathing time so geese dont all repath at the same time (would be laggy :( )
+    // Random repathing time so geese dont all repath at the same time (would be
+    // laggy :( )
     private float repathTimer = MathUtils.random(0f, Constants.REPATH_TIME);
 
     // CHASE
     private float chaseTimer; // How long the goose has been chasing
+    private float timeSinceSeen; // How long since the goose last saw the player
+    private final Vector2 lastSeen = new Vector2(); // where the goose last saw the player
+    private float reaggroCooldown; // Ignore the player briefly before giving up
 
     // DISTRACTED
-    private final Vector2 distractPoint = new Vector2(); // 
+    private final Vector2 distractPoint = new Vector2(); //
     private float distractTimer;
 
     // IDLE wandering
@@ -73,7 +78,7 @@ public class Goose extends Entity {
         return state;
     }
 
-    @Override 
+    @Override
     public void updateIntent(float delta) {
         velocity.set(0, 0);
 
@@ -86,25 +91,49 @@ public class Goose extends Entity {
     }
 
     private void updateIdle(float delta) {
-        // Check if target is within aggro range
-        if (position.dst2(target.position) < Constants.AGGRO_RADIUS * Constants.AGGRO_RADIUS) {
-            // target within range, update state
-            state = State.CHASE;
-            chaseTimer = Constants.MAX_CHASE_SECONDS;
-            currentPath.clear();
+        if (canNoticePlayer()) {
+            startChase();
             return;
         }
         wander(delta);
     }
 
+    /**
+     * True if the player is inside the wake-up radius and in clear view
+     */
+    private boolean canNoticePlayer() {
+        return position.dst2(target.position) < Constants.AGGRO_RADIUS * Constants.AGGRO_RADIUS
+                && pathfinder.canSee(position, target.position);
+    }
+
+    private void startChase() {
+        state = State.CHASE;
+        chaseTimer = Constants.MAX_CHASE_SECONDS;
+        timeSinceSeen = 0f;
+        lastSeen.set(target.position);
+        currentPath.clear();
+    }
+
     private void updateChase(float delta) {
         chaseTimer -= delta;
+
+        if (pathfinder.canSee(position, target.position)) {
+            timeSinceSeen = 0f;
+            lastSeen.set(target.position);
+        } else {
+            timeSinceSeen += delta;
+        }
+
         boolean tooFar = position.dst2(target.position) > Constants.LEASH_RADIUS * Constants.LEASH_RADIUS;
-        if (chaseTimer <= 0 || tooFar) {
+        if (chaseTimer <= 0 || tooFar || timeSinceSeen > Constants.LOSE_SIGHT_SECONDS) {
             startReturnHome();
             return;
         }
-        moveToward(target.position, speed, delta);
+
+        // Just lost sight: keep following the real position for a moment, then fall
+        // back to last seen spot
+        Vector2 goal = timeSinceSeen < Constants.TRACK_SECONDS ? target.position : lastSeen;
+        moveToward(goal, speed, delta);
     }
 
     private void updateDistracted(float delta) {
@@ -113,7 +142,7 @@ public class Goose extends Entity {
             startReturnHome();
             return;
         }
-        
+
         // Walk to lure, then wait there until timer runs out
         if (position.dst2(distractPoint) > Constants.ARRIVE_DISTANCE * Constants.ARRIVE_DISTANCE) {
             moveToward(distractPoint, speed, delta);
@@ -121,7 +150,14 @@ public class Goose extends Entity {
     }
 
     private void updateReturnHome(float delta) {
-        // Ignores player so goose leaves
+        // Notice the player again, but only after a short cooldown so a goose that just
+        // gave up doesnt flip back immediately
+        reaggroCooldown -= delta;
+        if (reaggroCooldown <= 0 && canNoticePlayer()) {
+            startChase();
+            return;
+        }
+
         if (position.dst2(home) <= Constants.HOME_ARRIVE_DISTANCE * Constants.HOME_ARRIVE_DISTANCE) {
             state = State.IDLE;
             hasWanderPoint = false;
@@ -135,6 +171,7 @@ public class Goose extends Entity {
         state = State.RETURN_HOME;
         currentPath.clear();
         repathTimer = 0f;
+        reaggroCooldown = Constants.REAGGRO_COOLDOWN;
     }
 
     private void moveToward(Vector2 goal, float moveSpeed, float delta) {
@@ -155,7 +192,8 @@ public class Goose extends Entity {
 
     private void followPath(float moveSpeed, float delta) {
         // Drop every waypoint goose has already reached
-        while (currentPath.size > 0 && position.dst2(currentPath.first()) <= Constants.ARRIVE_DISTANCE * Constants.ARRIVE_DISTANCE) {
+        while (currentPath.size > 0
+                && position.dst2(currentPath.first()) <= Constants.ARRIVE_DISTANCE * Constants.ARRIVE_DISTANCE) {
             currentPath.removeIndex(0);
         }
         if (currentPath.size > 0) {
@@ -171,10 +209,10 @@ public class Goose extends Entity {
         float step = moveSpeed * delta;
 
         if (dir.len2() <= step * step) {
-            velocity.set(dir);   // close enough to land on it
+            velocity.set(dir); // close enough to land on it
         } else {
             velocity.set(dir).nor().scl(step);
-        } 
+        }
         if (!velocity.isZero()) {
             targetRotation = velocity.angleDeg();
         }
@@ -201,9 +239,9 @@ public class Goose extends Entity {
             return;
         }
         steerStraight(wanderPoint, speed * Constants.WANDER_SPEED_FACTOR, delta);
-     }
+    }
 
-     private void pickWanderPoint() {
+    private void pickWanderPoint() {
         for (int attempts = 0; attempts < 5; attempts++) {
             float angle = MathUtils.random(360f);
             float distance = MathUtils.random(Constants.WANDER_RADIUS);
@@ -216,10 +254,10 @@ public class Goose extends Entity {
             }
         }
         wanderPause = MathUtils.random(Constants.WANDER_PAUSE_MIN, Constants.WANDER_PAUSE_MAX);
-     }
+    }
 
-     @Override  
-     public void drawDebug(ShapeRenderer shapeRenderer) {
+    @Override
+    public void drawDebug(ShapeRenderer shapeRenderer) {
         super.drawDebug(shapeRenderer);
 
         // Home marker
@@ -233,7 +271,7 @@ public class Goose extends Entity {
                 shapeRenderer.circle(position.x, position.y, Constants.AGGRO_RADIUS);
             }
             case CHASE -> {
-                shapeRenderer.setColor(Color.RED);
+                shapeRenderer.setColor(pathfinder.canSee(position, target.position) ? Color.RED : Color.MAROON);
                 shapeRenderer.line(position, target.position);
             }
             case DISTRACTED -> {
@@ -245,7 +283,6 @@ public class Goose extends Entity {
                 shapeRenderer.line(position, home);
             }
         }
-            
 
         // Pathfinding
         if (!currentPath.isEmpty()) {

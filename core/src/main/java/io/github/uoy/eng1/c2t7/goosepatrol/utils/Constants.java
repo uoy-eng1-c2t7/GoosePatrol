@@ -36,5 +36,7 @@ public final class Constants {
     public static final float WANDER_PAUSE_MIN = 1f;
     public static final float WANDER_PAUSE_MAX = 3f;
     public static final float WANDER_TIMEOUT = 4f;          // give up if cant reach wander spot
-
-}
+    public static final float LOSE_SIGHT_SECONDS = 2f;      // time until geese give up and go home after losing sight
+    public static final float TRACK_SECONDS = 1.5f;         // after losing sight follows real player position (cheats) for this long
+    public static final float REAGGRO_COOLDOWN = 1.5f;      // after giving up, ignores player this long
+}   
