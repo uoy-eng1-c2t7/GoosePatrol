@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -21,6 +22,7 @@ public class WorldRenderer {
 
     private final ShapeRenderer debugShapes = new ShapeRenderer();
     private boolean debug = false;
+    private final Rectangle viewBounds = new Rectangle();
 
     public WorldRenderer(GoosePatrol game, GameCamera camera, MapLoader mapLoader, Array<Entity> entities, NavGrid navGrid) {
         this.game = game;
@@ -50,7 +52,7 @@ public class WorldRenderer {
 
             // Draw navgrid map overlay
             if (navGrid != null) {
-                navGrid.drawDebug(debugShapes);
+                navGrid.drawDebug(debugShapes, gameCamera.getViewBounds(viewBounds));
             }
 
             // Draw walls

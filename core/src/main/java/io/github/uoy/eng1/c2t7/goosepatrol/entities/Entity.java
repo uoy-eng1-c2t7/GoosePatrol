@@ -18,13 +18,11 @@ public abstract class Entity {
     protected float rotation = 0;
     protected float targetRotation = 0;
 
-    public Entity(Vector2 startPosition, Texture texture, float speed) {
+    public Entity(Vector2 startPosition, Texture texture, float speed, float hitBoxRadius) {
         position = new Vector2(startPosition.x, startPosition.y);
         this.texture = texture;
         this.speed = speed;
-        // Scale down radius to 80% of texture size - stops texture getting stuck on walls
-        float radius = (texture.getWidth() / 2f) * 0.8f;
-        this.hitbox = new Circle(position.x, position.y, radius);
+        this.hitbox = new Circle(position.x, position.y, hitBoxRadius);
     }
 
     // Entities updates where it wants to go

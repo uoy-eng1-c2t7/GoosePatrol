@@ -3,6 +3,7 @@ package io.github.uoy.eng1.c2t7.goosepatrol.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -31,6 +32,8 @@ public class GameScreen implements Screen {
     private final MapLoader mapLoader;
     private final GameCamera gameCamera;
     private Player player;
+    private Texture playerTexture;
+    private Texture gooseTexture;
     private State state = State.RUNNING;
     private final PhysicsEngine physicsEngine;
     private final WorldRenderer worldRenderer;
@@ -43,11 +46,14 @@ public class GameScreen implements Screen {
         mapLoader = new MapLoader(Constants.MAP_FILE);
         gameCamera = new GameCamera(mapLoader.getWidth(), mapLoader.getHeight());
 
-        navGrid = new NavGrid(mapLoader);
+        navGrid = new NavGrid(mapLoader, Constants.GOOSE_HITBOX_RADIUS);
         pathfinder = new Pathfinder(navGrid);
 
         physicsEngine = new PhysicsEngine(mapLoader.getCollision(), entities);
         worldRenderer = new WorldRenderer(game, gameCamera, mapLoader, entities, navGrid);
+
+        playerTexture = new Texture(Constants.PLAYER_TEXTURE);
+        gooseTexture = new Texture(Constants.GOOSE_TEXTURE);
 
         spawnEntities();
     }
@@ -58,7 +64,7 @@ public class GameScreen implements Screen {
         gameCamera.snapTo(player.position);
 
         for (Vector2 spawn : mapLoader.getGooseSpawns()) {
-            entities.add(new Goose(spawn, player, pathfinder));
+            entities.add(new Goose(spawn, gooseTexture, player, pathfinder));
         }
 
         // Show exit at start of the game
