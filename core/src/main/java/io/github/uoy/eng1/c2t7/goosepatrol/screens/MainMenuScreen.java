@@ -94,7 +94,7 @@ public class MainMenuScreen implements Screen {
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                game.setScreen(new GameScreen(game));
             }
         });
 
@@ -115,16 +115,17 @@ public class MainMenuScreen implements Screen {
      */
     private void addHoverEffect(final TextButton button) {
         button.setTransform(true); // To scale a button it needs a transform
-        button.setOrigin(Align.center);      // Ensure button scales from middle
 
         button.addListener(new ClickListener() {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                button.setOrigin(Align.center);     
                 button.addAction(Actions.scaleTo(1.1f, 1.1f, 0.1f));
             }
 
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                button.setOrigin(Align.center);     
                 button.addAction(Actions.scaleTo(1.0f, 1, 0.1f));
             }
         });
@@ -132,7 +133,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(new Color());
+        ScreenUtils.clear(Color.WHITE);
         stage.act(delta);
         stage.draw();
     }
