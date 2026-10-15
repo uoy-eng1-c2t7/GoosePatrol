@@ -33,7 +33,7 @@ public class PauseMenu extends UiLayer {
      * @param onRestart  run when Restart is clicked
      * @param onMainMenu run when Main Menu is clicked
      */
-    public PauseMenu(SpriteBatch batch, Skin skin, Runnable onResume, Runnable onRestart, Runnable onMainMenu) {
+    public PauseMenu(SpriteBatch batch, Skin skin, Runnable onResume, Runnable onRestart, Runnable onMainMenu, String initialTitle) {
         super(batch);
 
         // Full window dark layer to dim the game, uses white pixel drawable from uiskin
@@ -47,7 +47,7 @@ public class PauseMenu extends UiLayer {
         table.setFillParent(true);
         stage.addActor(table);
 
-        title = new Label("PAUSED", skin);
+        title = new Label(initialTitle, skin);
         table.add(title).padBottom(40).row();
 
         resumeButton = addButton(table, skin, "Resume", onResume);
