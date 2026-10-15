@@ -4,12 +4,15 @@
     ],
     "fileStates": {
         "campus.tmx": {
-            "scale": 0.32923437499999997,
+            "scale": 0.125,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1599.1647287741448,
-                "y": 800.3417018651228
+                "x": -852,
+                "y": -612
             }
+        },
+        "campus.tmx#campus_tiles": {
+            "scaleInDock": 1
         }
     },
     "last.imagePath": "C:/Users/lsjsa/Documents/GameDev/GoosePatrol/assets/tiled",
