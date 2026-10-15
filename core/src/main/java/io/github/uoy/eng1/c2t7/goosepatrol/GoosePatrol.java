@@ -3,8 +3,8 @@ package io.github.uoy.eng1.c2t7.goosepatrol;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -20,11 +20,13 @@ import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
  */
 public class GoosePatrol extends Game {
     private final AssetManager assetManger = new AssetManager();
+    private SpriteBatch batch;
     private GameConfig config;
 
     @Override
     public void create() {
-        loadAssets();
+        batch = new SpriteBatch();
+        loadGlobalAssets();
         loadConfig();
         setScreen(new MainMenuScreen(this));
     }
@@ -37,13 +39,16 @@ public class GoosePatrol extends Game {
         return config;
     }
 
-    private void loadAssets() {
-        // Tell the AssetManager that we are using a non-default loader
-        InternalFileHandleResolver resolver = new InternalFileHandleResolver();
-        assetManger.setLoader(TiledMap.class, new TmxMapLoader(resolver)); // For loading Tiled maps
+    public SpriteBatch getBatch() {
+        return batch;
+    }
 
-        // Load all of our assets
-        // assetManger.load("campus.tmx", TiledMap.class);
+    /** Loads the small set of assets that every screen needs, very fast so no need to  */
+    private void loadGlobalAssets() {
+        // Tell AssetManager how to load our map - Tmx isn't a default
+        assetManger.setLoader(TiledMap.class, new TmxMapLoader());
+
+        // Load all global assets - these use default loaders
         assetManger.load(AssetPaths.UI_LOGO, Texture.class);
         assetManger.load(AssetPaths.UI_SKIN, Skin.class);
 

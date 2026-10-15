@@ -38,14 +38,12 @@ public class MainMenuScreen implements Screen {
         this.game = game;
 
         // Setup a Stage with a FitViewport so the UI scales on any monitor size
-        stage = new Stage(new FitViewport(1280, 720)); // This is a virtual size
-
-        // Tell libGDX to route all mouse clicks to this stage
-        Gdx.input.setInputProcessor(stage);
+        stage = new Stage(new FitViewport(1280, 720), game.getBatch()); // This is a virtual size
 
         // Get loaded UI assets from AssetManager
         Skin skin = game.getAssetManager().get(AssetPaths.UI_SKIN, Skin.class);
         Texture logoTex = game.getAssetManager().get(AssetPaths.UI_LOGO, Texture.class);
+        logoTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear); // smooth out the logo
 
         // Table to allign UI
         Table table = new Table();
@@ -94,7 +92,7 @@ public class MainMenuScreen implements Screen {
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new LoadingScreen(game));
             }
         });
 
@@ -147,15 +145,17 @@ public class MainMenuScreen implements Screen {
     }
 
     @Override
+    public void show() {
+        // Tell libGDX to route all mouse clicks to this stage when screen is shown
+        Gdx.input.setInputProcessor(stage); 
+    }
+
+    @Override
     public void pause() {
     }
 
     @Override
     public void resume() {
-    }
-
-    @Override
-    public void show() {
     }
 
     @Override

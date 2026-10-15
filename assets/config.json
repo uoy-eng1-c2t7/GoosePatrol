@@ -1,4 +1,5 @@
 {
     "playerSpeed" : 200.0,
-    "gameDurationSeconds" : 300
+    "gameDurationSeconds" : 300,
+    "minLoadTimeSeconds" : 0.6
 }
