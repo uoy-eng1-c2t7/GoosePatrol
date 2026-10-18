@@ -1,6 +1,5 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.world.Physics;
 
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -31,7 +30,7 @@ public class MapCollision {
         pos.x = MathUtils.clamp(pos.x, radius, mapWidth - radius);
         pos.y = MathUtils.clamp(pos.y, radius, mapHeight - radius);
 
-        // Wall collision – 3 passes so corner cases (literally) settle correctly.
+        // Wall collision – 3 passes so corner cases settle correctly.
         // A single pass can push into a second wall; iterating converges quickly.
         for (int pass = 0; pass < 3; pass++) {
             for (Rectangle r : walls) {
