@@ -98,6 +98,10 @@ public class NavGraph implements IndexedGraph<NavNode> {
         return n != null && n.isWalkable();
     }
 
+    public Array<NavNode> getNodes() {
+        return nodes;   
+    }
+
     @Override
     public int getIndex(NavNode node) {
         return node.getIndex();

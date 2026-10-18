@@ -34,7 +34,12 @@ public class PathFinder {
 
     /** True if there is a clear straight line between the two points */
     public boolean canSee(Vector2 from, Vector2 to) {
-        return !collision.segmentBlocked(from, to, clearance);
+        return !collision.segmentBlocked(from, to, 0f);
+    }
+
+    /** Can a body walk this line without clipping a wall?  */
+    public boolean canWalk(Vector2 from, Vector2 to) {
+        return !collision.segmentBlocked(from, to, clearance - 1f); // slightly under clearance so geese dont get stuck on walls
     }
 
     /**
@@ -71,7 +76,7 @@ public class PathFinder {
         while (i < raw.size) {
             int farthest = i;
             for (int j = raw.size - 1; j > i; j--) {
-                if (canSee(anchor, raw.get(j))) {
+                if (canWalk(anchor, raw.get(j))) {
                     farthest = j;
                     break;
                 }

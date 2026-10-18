@@ -3,6 +3,7 @@ package io.github.uoy.eng1.c2t7.goosepatrol.screens;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -57,6 +58,10 @@ public class LoadingScreen implements Screen {
     /** Queues everything needed for a run. */
     private void queueGameplayAssets() {
         assets.load(AssetPaths.CAMPUS_MAP, TiledMap.class);
+        assets.load(AssetPaths.GOOSE, Texture.class);
+        assets.load(AssetPaths.PLAYER, Texture.class);
+        assets.load(AssetPaths.ITEM, Texture.class);
+        assets.load(AssetPaths.LURE, Texture.class);
     }
 
     @Override  

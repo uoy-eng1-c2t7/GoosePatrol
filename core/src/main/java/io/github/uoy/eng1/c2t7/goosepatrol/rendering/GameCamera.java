@@ -3,7 +3,7 @@ package io.github.uoy.eng1.c2t7.goosepatrol.rendering;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
@@ -19,7 +19,7 @@ public class GameCamera {
     private final float followSpeed;
 
     public GameCamera(GameConfig.CameraConfig config, float mapWidth, float mapHeight) {
-        this.viewport = new FitViewport(config.viewWidth, config.viewHeight, camera);
+        this.viewport = new ExtendViewport(config.viewWidth, config.viewHeight, camera);
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
         this.followSpeed = config.followSpeed;

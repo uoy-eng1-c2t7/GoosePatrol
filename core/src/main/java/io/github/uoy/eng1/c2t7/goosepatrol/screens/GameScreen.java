@@ -3,7 +3,6 @@ package io.github.uoy.eng1.c2t7.goosepatrol.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
@@ -25,7 +24,8 @@ import io.github.uoy.eng1.c2t7.goosepatrol.world.WorldListener;
  * reads input and connects the world, renderer and UI together.
  * Also listens to the world so it can show pop up messages.
  * 
- * <p> WASD to move, 1-9 for inventory, ESC to pause, F3 for debug. </p>
+ * <p> WASD to move, 1-9 for inventory, ESC to pause, 
+ * F3 for world debug, F4 for nav debug, F5 for AI debug. </p>
  */
 public class GameScreen implements Screen, WorldListener {
     private enum GameState {
@@ -50,7 +50,7 @@ public class GameScreen implements Screen, WorldListener {
         world = new GameWorld(game.getConfig(), map, this);
         camera = new GameCamera(game.getConfig().camera, world.getWidth(), world.getHeight());
         camera.snapTo(world.getPlayer().getPosition());
-        worldRenderer = new WorldRenderer(world, map, camera, game.getBatch());
+        worldRenderer = new WorldRenderer(world, map, camera, game.getBatch(), game.getAssetManager());
         hud = new Hud(game.getBatch(), skin);
 
         pauseMenu = new PauseMenu(
@@ -130,7 +130,13 @@ public class GameScreen implements Screen, WorldListener {
     /** ESC toggles between running and paused, Ignored on the ready and finished screens state. F3 toggles debug. */
     private void handleHotKeys() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
-            worldRenderer.toggleDebug();
+            worldRenderer.toggleWorldDebug();
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F4)) {
+            worldRenderer.toggleNavDebug();
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
+            worldRenderer.toggleAiDebug();
         }
         if (!Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             return;

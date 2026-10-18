@@ -79,6 +79,8 @@ public class GameWorld {
     private final Inventory inventory = new Inventory();
     private final ItemContext itemContext = new WorldItemContext();
 
+    private final NavGraph navGraph;
+
     private Status status = Status.RUNNING;
     private float timeLeft;
     private float elapsed;
@@ -101,8 +103,8 @@ public class GameWorld {
         physics = new PhysicsEngine(collision);
 
         float clearance = Math.max(config.player.radius, config.goose.radius);
-        NavGraph graph = new NavGraph(collision, map.getWidth(), map.getHeight(), map.getTileSize(), clearance);
-        PathFinder pathFinder = new PathFinder(graph, collision, clearance);
+        navGraph = new NavGraph(collision, map.getWidth(), map.getHeight(), map.getTileSize() / 2f, clearance);
+        PathFinder pathFinder = new PathFinder(navGraph, collision, clearance);
 
         player = new Player(map.getPlayerSpawn(), config.player);
         movers.add(player);
@@ -244,6 +246,11 @@ public class GameWorld {
         return true;
     }
 
+
+    public NavGraph getNavGraph() {
+        return navGraph;
+    }
+    
     /** The only door through which item effects can touch the world. */
     private final class WorldItemContext implements ItemContext {
         @Override

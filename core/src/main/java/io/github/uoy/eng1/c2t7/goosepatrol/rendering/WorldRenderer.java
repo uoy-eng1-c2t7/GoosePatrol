@@ -1,9 +1,9 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.rendering;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 
+import io.github.uoy.eng1.c2t7.goosepatrol.utils.AssetPaths;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.GameWorld;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.HiddenEvent;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Goose;
@@ -21,36 +22,44 @@ import io.github.uoy.eng1.c2t7.goosepatrol.world.items.GroundItem;
 
 /**
  * Draws the world: the Tiled map, then simple coloured shapes for entities.
- * Shapes are placeholders; to use sprites later, replace the {@code draw*} methods
+ * Shapes are placeholders; to use sprites later, replace the {@code draw*}
+ * methods
  * and keep {@link #render()} the same. Reads the world, never changes it.
  *
- * <p>Press F3 in game to toggle debug view (walls, hidden events, exit).</p>
+ * <p>
+ * Press F3 in game to toggle debug view (walls, hidden events, exit).
+ * </p>
  */
 public class WorldRenderer implements Disposable {
-    private static final Color EXIT_COLOR = new Color(0.2f, 0.9f, 0.3f, 0.35f);
-    private static final Color ITEM_COLOR = new Color(1f, 0.85f, 0.1f, 1f);
-    private static final Color LURE_COLOR = new Color(1f, 0.55f, 0.1f, 0.5f);
-    private static final Color GOOSE_IDLE = Color.WHITE;
-    private static final Color GOOSE_CHASING = new Color(1f, 0.45f, 0.45f, 1f);
-    private static final Color GOOSE_DISTRACTED = new Color(1f, 0.9f, 0.4f, 1f);
-    private static final Color PLAYER_COLOR = new Color(0.2f, 0.5f, 1f, 1f);
-    private static final Color PLAYER_BUFFED = new Color(0.2f, 0.9f, 0.9f, 1f);
+    private static final float ITEM_SIZE = 16f;
+    private static final float LURE_SIZE = 16f;
 
     private final GameWorld world;
     private final GameCamera gameCamera;
+    private final SpriteBatch batch;
     private final OrthogonalTiledMapRenderer mapRenderer;
-    private final ShapeRenderer shapes = new ShapeRenderer();
-    private boolean debug;
+    private final ShapeRenderer debugShapes = new ShapeRenderer();
 
-    public WorldRenderer(GameWorld world, TiledMap map, GameCamera gameCamera, SpriteBatch batch) {
+    private final Texture playerTexture;
+    private final Texture gooseTexture;
+    private final Texture itemTexture;
+    private final Texture lureTexture;
+
+    private final DebugRenderer debug;
+
+    public WorldRenderer(GameWorld world, TiledMap map, GameCamera gameCamera, SpriteBatch batch, AssetManager assets) {
         this.world = world;
         this.gameCamera = gameCamera;
+        this.batch = batch;
         this.mapRenderer = new OrthogonalTiledMapRenderer(map, 1f, batch);
+        this.debug = new DebugRenderer(world);
+
+        playerTexture = assets.get(AssetPaths.PLAYER, Texture.class);
+        gooseTexture = assets.get(AssetPaths.GOOSE, Texture.class);
+        itemTexture = assets.get(AssetPaths.ITEM, Texture.class);
+        lureTexture = assets.get(AssetPaths.LURE, Texture.class);
     }
 
-    public void toggleDebug() {
-        debug = !debug;
-    }
 
     /** Draws one frame of the world. */
     public void render() {
@@ -60,86 +69,86 @@ public class WorldRenderer implements Disposable {
         mapRenderer.setView(cam);
         mapRenderer.render();
 
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        shapes.setProjectionMatrix(cam.combined);
-
-        shapes.begin(ShapeType.Filled);
-        drawExit();
+        debugShapes.setProjectionMatrix(cam.combined);
+        batch.begin();
         drawGroundItems();
         drawLures();
         drawGeese();
         drawPlayer();
-        shapes.end();
+        batch.end();
 
-        if (debug) {
-            drawDebug();
-        }
+        debug.render(cam, batch);
     }
 
-    private void drawExit() {
-        Rectangle r = world.getMap().getExitArea();
-        shapes.setColor(EXIT_COLOR);
-        shapes.rect(r.x, r.y, r.width, r.height);
+    public void toggleWorldDebug() {
+        debug.toggleWorld();
+    }
+
+    public void toggleNavDebug() {
+        debug.toggleNavGrid();
+    }
+
+    public void toggleAiDebug() {
+        debug.toggleAi();
     }
 
     private void drawGroundItems() {
-        shapes.setColor(ITEM_COLOR);
         for (GroundItem item : world.getGroundItems()) {
             if (!item.isCollected()) {
-                Vector2 p = item.getPosition();
-                shapes.circle(p.x, p.y, 5f);
+                drawCentred(itemTexture, item.getPosition(), ITEM_SIZE, ITEM_SIZE, false);
             }
         }
     }
 
     private void drawLures() {
-        shapes.setColor(LURE_COLOR);
         for (GameWorld.Lure lure : world.getLures()) {
-            shapes.circle(lure.getPosition().x, lure.getPosition().y, 6f);
+            drawCentred(lureTexture, lure.getPosition(), LURE_SIZE, LURE_SIZE, false);
         }
     }
 
     private void drawGeese() {
         for (Goose g : world.getGeese()) {
-            Vector2 p = g.getPosition();
-            shapes.setColor(g.isChasing() ? GOOSE_CHASING : g.isDistracted() ? GOOSE_DISTRACTED : GOOSE_IDLE);
-            shapes.circle(p.x, p.y, g.getRadius());
-            drawBeak(p, g.getRotation(), g.getRadius());
+            float size = g.getRadius() * 2f;
+            drawRotated(gooseTexture, g.getPosition(), size, size, g.getRotation());
         }
     }
 
     private void drawPlayer() {
-        Vector2 p = world.getPlayer().getPosition();
-        shapes.setColor(world.getPlayer().hasSpeedModifier() ? PLAYER_BUFFED : PLAYER_COLOR);
-        shapes.circle(p.x, p.y, world.getPlayer().getRadius());
-        drawBeak(p, world.getPlayer().getRotation(), world.getPlayer().getRadius());
+        float size = world.getPlayer().getRadius() * 2f;
+        drawRotated(playerTexture, world.getPlayer().getPosition(), size, size,
+                world.getPlayer().getRotation());
     }
 
-    /** Small orange dot on the edge of a circle so you can see which way it faces. */
-    private void drawBeak(Vector2 centre, float rotationDeg, float radius) {
-        shapes.setColor(Color.ORANGE);
-        shapes.circle(centre.x + MathUtils.cosDeg(rotationDeg) * radius,
-                centre.y + MathUtils.sinDeg(rotationDeg) * radius, 2.5f);
+    /**
+     * Draws {@code texture} centred on {@code centre}, turned to
+     * {@code rotationDeg}.
+     */
+    private void drawRotated(Texture texture, Vector2 centre, float width, float height, float rotationDeg) {
+        batch.draw(texture,
+                centre.x - width / 2f, centre.y - height / 2f,
+                width / 2f, height / 2f, // rotate around the sprite's centre
+                width, height,
+                1f, 1f,
+                rotationDeg,
+                0, 0, texture.getWidth(), texture.getHeight(),
+                false, false);
     }
 
-    private void drawDebug() {
-        shapes.begin(ShapeType.Line);
-        shapes.setColor(Color.RED);
-        for (Rectangle wall : world.getMap().getWalls()) {
-            shapes.rect(wall.x, wall.y, wall.width, wall.height);
-        }
-        shapes.setColor(Color.MAGENTA);
-        for (HiddenEvent e : world.getEvents()) {
-            Rectangle a = e.getArea();
-            shapes.rect(a.x, a.y, a.width, a.height);
-        }
-        shapes.end();
+    /**
+     * Draws {@code texture} centred on {@code centre}, optionally mirrored
+     * left-right.
+     */
+    private void drawCentred(Texture texture, Vector2 centre, float width, float height, boolean flipX) {
+        batch.draw(texture,
+                centre.x - width / 2f, centre.y - height / 2f, width, height,
+                0, 0, texture.getWidth(), texture.getHeight(),
+                flipX, false);
     }
 
     @Override
     public void dispose() {
-        mapRenderer.dispose(); 
-        shapes.dispose();
+        mapRenderer.dispose();
+        debugShapes.dispose();
+        debug.dispose();
     }
 }

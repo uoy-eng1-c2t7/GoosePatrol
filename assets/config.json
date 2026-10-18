@@ -17,7 +17,7 @@
         "wanderPauseMin": 1,
         "wanderPauseMax": 3,
         "wanderSpeedFactor": 0.4,
-        "repathSeconds": 0.4
+        "repathSeconds": 0.8
     },
     "camera": {
         "viewWidth": 640,

@@ -78,12 +78,53 @@ public class MapCollision {
 
     /** True if the straight line a-b crosses any wall grown by {@code margin}. */
     public boolean segmentBlocked(Vector2 a, Vector2 b, float margin) {
-        Rectangle grown = new Rectangle();
         for (Rectangle r : walls) {
-            grown.set(r.x - margin, r.y - margin, r.width + 2 * margin, r.height + 2 * margin);
-            if (Intersector.intersectSegmentRectangle(a, b, grown))
+            if (segmentHitsBox(a.x, a.y, b.x, b.y,
+                    r.x - margin, r.y - margin, r.x + r.width + margin, r.y + r.height + margin)) {
                 return true;
+            }
         }
         return false;
+    }
+
+    /**
+     * Segment vs axis-aligned box (slab method). Counts a start point inside the
+     * box as a hit.
+     */
+    private static boolean segmentHitsBox(float ax, float ay, float bx, float by,
+            float minX, float minY, float maxX, float maxY) {
+        float t0 = 0f, t1 = 1f;
+        float dx = bx - ax, dy = by - ay;
+        if (Math.abs(dx) < 1e-6f) {
+            if (ax < minX || ax > maxX)
+                return false;
+        } else {
+            float ta = (minX - ax) / dx, tb = (maxX - ax) / dx;
+            if (ta > tb) {
+                float t = ta;
+                ta = tb;
+                tb = t;
+            }
+            t0 = Math.max(t0, ta);
+            t1 = Math.min(t1, tb);
+            if (t0 > t1)
+                return false;
+        }
+        if (Math.abs(dy) < 1e-6f) {
+            if (ay < minY || ay > maxY)
+                return false;
+        } else {
+            float ta = (minY - ay) / dy, tb = (maxY - ay) / dy;
+            if (ta > tb) {
+                float t = ta;
+                ta = tb;
+                tb = t;
+            }
+            t0 = Math.max(t0, ta);
+            t1 = Math.min(t1, tb);
+            if (t0 > t1)
+                return false;
+        }
+        return true;
     }
 }
