@@ -45,6 +45,10 @@ public class GameCamera {
         // If map smaller than view, center it
         camera.position.x = mapWidth <= halfW * 2 ? mapWidth / 2f : MathUtils.clamp(camera.position.x, halfW, mapWidth - halfW);
         camera.position.y = mapHeight <= halfH * 2 ? mapHeight / 2f : MathUtils.clamp(camera.position.y, halfH, mapHeight - halfH);
+        // Round to the nearest whole pixel so tile edges always land on exact
+        // pixel boundaries — prevents sub-pixel blending seams between tiles.
+        camera.position.x = Math.round(camera.position.x);
+        camera.position.y = Math.round(camera.position.y);
         camera.update();
     }
 
