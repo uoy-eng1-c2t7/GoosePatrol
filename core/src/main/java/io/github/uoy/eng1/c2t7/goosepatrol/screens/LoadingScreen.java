@@ -4,7 +4,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -57,7 +59,10 @@ public class LoadingScreen implements Screen {
 
     /** Queues everything needed for a run. */
     private void queueGameplayAssets() {
-        assets.load(AssetPaths.CAMPUS_MAP, TiledMap.class);
+        TmxMapLoader.Parameters mapParams = new TmxMapLoader.Parameters();
+        mapParams.textureMinFilter = TextureFilter.Nearest;
+        mapParams.textureMagFilter = TextureFilter.Nearest;
+        assets.load(AssetPaths.CAMPUS_MAP, TiledMap.class, mapParams);
         assets.load(AssetPaths.GOOSE, Texture.class);
         assets.load(AssetPaths.PLAYER, Texture.class);
         assets.load(AssetPaths.ITEM, Texture.class);
