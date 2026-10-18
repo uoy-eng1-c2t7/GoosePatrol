@@ -1,5 +1,27 @@
 {
-    "playerSpeed" : 200.0,
-    "gameDurationSeconds" : 300,
-    "minLoadTimeSeconds" : 0.6
+    "gameDurationSeconds": 300,
+    "minLoadTimeSeconds": 1.0,
+    "player": {
+        "speed": 120,
+        "radius": 8
+    },
+    "goose": {
+        "speed": 90,
+        "radius": 8,
+        "aggroRadius": 150,
+        "leashRadius": 400,
+        "maxChaseSeconds": 12,
+        "loseSightSeconds": 2,
+        "reaggroCooldown": 2,
+        "wanderRadius": 60,
+        "wanderPauseMin": 1,
+        "wanderPauseMax": 3,
+        "wanderSpeedFactor": 0.4,
+        "repathSeconds": 0.4
+    },
+    "camera": {
+        "viewWidth": 640,
+        "viewHeight": 360,
+        "followSpeed": 4
+    }
 }

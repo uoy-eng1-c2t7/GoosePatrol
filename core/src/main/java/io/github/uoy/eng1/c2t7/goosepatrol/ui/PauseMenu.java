@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 
 /**
  * Overlay shown while the game is paused, dims the frozen game and offers
@@ -48,6 +49,7 @@ public class PauseMenu extends UiLayer {
         stage.addActor(table);
 
         title = new Label(initialTitle, skin);
+        title.setAlignment(Align.center);
         table.add(title).padBottom(40).row();
 
         resumeButton = addButton(table, skin, "Resume", onResume);
@@ -58,6 +60,10 @@ public class PauseMenu extends UiLayer {
     /** Changes the pause menu heading */
     public void setTitle(String text) {
         title.setText(text);
+    }
+
+    public void setResumeVisible(boolean visible) {
+        resumeButton.setVisible(visible);
     }
 
     /** Changes the first button's text */
