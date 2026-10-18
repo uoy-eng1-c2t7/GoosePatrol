@@ -1,22 +1,17 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.rendering;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.AssetPaths;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.GameWorld;
-import io.github.uoy.eng1.c2t7.goosepatrol.world.HiddenEvent;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Goose;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.items.GroundItem;
 
@@ -38,7 +33,6 @@ public class WorldRenderer implements Disposable {
     private final GameCamera gameCamera;
     private final SpriteBatch batch;
     private final OrthogonalTiledMapRenderer mapRenderer;
-    private final ShapeRenderer debugShapes = new ShapeRenderer();
 
     private final Texture playerTexture;
     private final Texture gooseTexture;
@@ -69,7 +63,6 @@ public class WorldRenderer implements Disposable {
         mapRenderer.setView(cam);
         mapRenderer.render();
 
-        debugShapes.setProjectionMatrix(cam.combined);
         batch.begin();
         drawGroundItems();
         drawLures();
@@ -148,7 +141,6 @@ public class WorldRenderer implements Disposable {
     @Override
     public void dispose() {
         mapRenderer.dispose();
-        debugShapes.dispose();
         debug.dispose();
     }
 }

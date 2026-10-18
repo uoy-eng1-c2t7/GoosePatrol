@@ -29,7 +29,7 @@ public class PathFinder {
         this.collision = collision;
         this.clearance = clearance;
         this.finder = new IndexedAStarPathFinder<NavNode>(graph);
-        this.heuristic = (a, b) -> Vector2.dst2(a.getX(), a.getY(), b.getX(), b.getY()) / graph.getCellSize();
+        this.heuristic = (a, b) -> Vector2.dst(a.getX(), a.getY(), b.getX(), b.getY()) / graph.getCellSize();
     }
 
     /** True if there is a clear straight line between the two points */

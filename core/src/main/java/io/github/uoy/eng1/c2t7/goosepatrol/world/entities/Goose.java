@@ -54,6 +54,7 @@ public class Goose extends Entity {
 
     // CHASE
     private float timeSinceSeen;
+    private boolean hasEverSeenPlayer; // only start the lose-sight timer once LOS is first established
     private final Vector2 lastSeen = new Vector2();
     private float reaggroCooldown;
 
@@ -175,9 +176,11 @@ public class Goose extends Entity {
 
     private void updateChase(float delta) {
         if (pathfinder.canSee(getPosition(), target.getPosition())) {
+            hasEverSeenPlayer = true;
             timeSinceSeen = 0f;
             lastSeen.set(target.getPosition());
-        } else {
+        } else if (hasEverSeenPlayer) {
+            // Only start losing track once we've actually spotted them at least once
             timeSinceSeen += delta;
         }
 
@@ -234,6 +237,7 @@ public class Goose extends Entity {
     private void startChase() {
         state = State.CHASE;
         timeSinceSeen = 0f;
+        hasEverSeenPlayer = false;
         lastSeen.set(target.getPosition());
         path.clear();
         repathTimer = 0f;
@@ -327,7 +331,7 @@ public class Goose extends Entity {
         }
         currentGoal.set(wanderPoint);
         hasGoal = true;
-        head(wanderPoint, getSpeed() * config.wanderSpeedFactor);
+        moveToward(wanderPoint, getSpeed() * config.wanderSpeedFactor, delta);
     }
 
     private void pickWanderPoint() {

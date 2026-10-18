@@ -31,34 +31,37 @@ public class MapCollision {
         pos.x = MathUtils.clamp(pos.x, radius, mapWidth - radius);
         pos.y = MathUtils.clamp(pos.y, radius, mapHeight - radius);
 
-        // Wall collision
-        for (Rectangle r : walls) {
-            float nearestX = MathUtils.clamp(pos.x, r.x, r.x + r.width);
-            float nearestY = MathUtils.clamp(pos.y, r.y, r.y + r.height);
-            float dx = pos.x - nearestX;
-            float dy = pos.y - nearestY;
-            float dist2 = dx * dx + dy * dy;
-            if (dist2 >= radius * radius)
-                continue;
+        // Wall collision – 3 passes so corner cases (literally) settle correctly.
+        // A single pass can push into a second wall; iterating converges quickly.
+        for (int pass = 0; pass < 3; pass++) {
+            for (Rectangle r : walls) {
+                float nearestX = MathUtils.clamp(pos.x, r.x, r.x + r.width);
+                float nearestY = MathUtils.clamp(pos.y, r.y, r.y + r.height);
+                float dx = pos.x - nearestX;
+                float dy = pos.y - nearestY;
+                float dist2 = dx * dx + dy * dy;
+                if (dist2 >= radius * radius)
+                    continue;
 
-            if (dist2 > 0) {
-                float dist = (float) Math.sqrt(dist2);
-                pos.add(dx / dist * (radius - dist), dy / dist * (radius - dist));
-            } else {
-                // Center is inside wall, leave by nearest edge
-                float left = pos.x - r.x;
-                float right = r.x + r.width - pos.x;
-                float down = pos.y - r.y;
-                float up = r.y + r.height - pos.y;
-                float min = Math.min(Math.min(left, right), Math.min(down, up));
-                if (min == left)
-                    pos.x = r.x - radius;
-                else if (min == right)
-                    pos.x = r.x + r.width + radius;
-                else if (min == down)
-                    pos.y = r.y - radius;
-                else
-                    pos.y = r.y + r.height + radius;
+                if (dist2 > 0) {
+                    float dist = (float) Math.sqrt(dist2);
+                    pos.add(dx / dist * (radius - dist), dy / dist * (radius - dist));
+                } else {
+                    // Center is inside wall, leave by nearest edge
+                    float left = pos.x - r.x;
+                    float right = r.x + r.width - pos.x;
+                    float down = pos.y - r.y;
+                    float up = r.y + r.height - pos.y;
+                    float min = Math.min(Math.min(left, right), Math.min(down, up));
+                    if (min == left)
+                        pos.x = r.x - radius;
+                    else if (min == right)
+                        pos.x = r.x + r.width + radius;
+                    else if (min == down)
+                        pos.y = r.y - radius;
+                    else
+                        pos.y = r.y + r.height + radius;
+                }
             }
         }
     }
