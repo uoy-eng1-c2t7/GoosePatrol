@@ -1,4 +1,4 @@
-package io.github.uoy.eng1.c2t7.goosepatrol.world;
+package io.github.uoy.eng1.c2t7.goosepatrol.world.map;
 
 import com.badlogic.gdx.math.Rectangle;
 

@@ -54,7 +54,7 @@ public class Goose extends Entity {
 
     // CHASE
     private float timeSinceSeen;
-    private boolean hasEverSeenPlayer; // only start the lose-sight timer once LOS is first established
+    private boolean hasEverSeenPlayer; 
     private final Vector2 lastSeen = new Vector2();
     private float reaggroCooldown;
 

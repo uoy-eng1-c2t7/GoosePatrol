@@ -10,8 +10,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-import io.github.uoy.eng1.c2t7.goosepatrol.world.HiddenEvent;
-
 /**
  * Reads game data out of a {@link TiledMap}. Expected object layers:
  * <ul>

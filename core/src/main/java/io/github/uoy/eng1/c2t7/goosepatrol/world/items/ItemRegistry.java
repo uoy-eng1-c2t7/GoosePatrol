@@ -24,14 +24,6 @@ public final class ItemRegistry {
                 "Throw it ahead. Nearby geese run over and eat it.",
                 ctx -> ctx.lure(ctx.throwTarget(120f), 220f, 6f));
 
-        register("chips", "Chips",
-                "A big, tasty lure that keeps geese busy for longer.",
-                ctx -> ctx.lure(ctx.throwTarget(140f), 300f, 9f));
-
-        register("frisbee", "Frisbee",
-                "Fling it far away. Geese chase it for a short while.",
-                ctx -> ctx.lure(ctx.throwTarget(300f), 160f, 4f));
-
         // --- Buffs ---
         register("energy_drink", "Energy Drink",
                 "Drink it for a big speed boost for 5 seconds.",

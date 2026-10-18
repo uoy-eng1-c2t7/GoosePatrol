@@ -15,8 +15,8 @@ import com.badlogic.gdx.utils.Disposable;
 import io.github.uoy.eng1.c2t7.goosepatrol.ai.NavGraph;
 import io.github.uoy.eng1.c2t7.goosepatrol.ai.NavNode;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.GameWorld;
-import io.github.uoy.eng1.c2t7.goosepatrol.world.HiddenEvent;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Goose;
+import io.github.uoy.eng1.c2t7.goosepatrol.world.map.HiddenEvent;
 
 /**
  * Developer overlays, drawn on top of the world. Nothing here affects gameplay.

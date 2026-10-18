@@ -18,6 +18,7 @@ import io.github.uoy.eng1.c2t7.goosepatrol.world.items.Inventory;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.items.ItemContext;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.items.ItemDefinition;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.items.ItemRegistry;
+import io.github.uoy.eng1.c2t7.goosepatrol.world.map.HiddenEvent;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.map.MapLoader;
 
 /**

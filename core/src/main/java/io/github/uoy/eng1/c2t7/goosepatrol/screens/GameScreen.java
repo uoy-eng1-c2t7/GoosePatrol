@@ -122,6 +122,7 @@ public class GameScreen implements Screen, WorldListener {
 
         ScreenUtils.clear(Color.BLACK);
         worldRenderer.render();
+        hud.draw();
         if (state != GameState.RUNNING) {
             pauseMenu.draw();
         }
