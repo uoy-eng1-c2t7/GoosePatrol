@@ -5,9 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import io.github.uoy.eng1.c2t7.goosepatrol.screens.MainMenuScreen;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.Assets;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
-import io.github.uoy.eng1.screens.MainMenuScreen;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class GoosePatrol extends Game {

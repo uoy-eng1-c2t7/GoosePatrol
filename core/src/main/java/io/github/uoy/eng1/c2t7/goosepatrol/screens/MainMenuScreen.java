@@ -1,4 +1,4 @@
-package io.github.uoy.eng1.screens;
+package io.github.uoy.eng1.c2t7.goosepatrol.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;

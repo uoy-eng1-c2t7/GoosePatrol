@@ -40,6 +40,12 @@ public class Assets implements Disposable {
         manager.finishLoading();
     }
 
+    /** Queues the gameplay assets. The call {@link #update()} each frame until it returns true. */
+    public void queueGame() {
+        manager.load(SPRITES, TextureAtlas.class);
+        manager.load(MAP, TiledMap.class);
+    }
+
     /** Loads a bit more, returns true when everything queued has finished. */
     public boolean update() {
         return manager.update();
@@ -66,7 +72,7 @@ public class Assets implements Disposable {
      * A sprite by its name in the atals ("goose", "player", "bread"...).
      * A missing name shows a magenta square and logs once instead of crashing.
      */
-    public TextureRegion sprite(String name) {
+    public TextureRegion getSprite(String name) {
         TextureRegion region = manager.get(SPRITES, TextureAtlas.class).findRegion(name);
         if (region != null) {
             return region;
@@ -78,7 +84,7 @@ public class Assets implements Disposable {
     }
 
     /** Animation frames, e.g goose_walk_0, goose_walk_1, ... */
-    public Array<TextureAtlas.AtlasRegion> frames(String name) {
+    public Array<TextureAtlas.AtlasRegion> getFrames(String name) {
         return  manager.get(SPRITES, TextureAtlas.class).findRegions(name);
     }
 
