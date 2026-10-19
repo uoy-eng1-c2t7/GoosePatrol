@@ -1,0 +1,12 @@
+{
+    "gameDurationSeconds": 300,
+    "minLoadTimeSeconds": 1.0,
+    "startingItems": ["bread", "energy_drink"],
+    "player": {
+        "speed": 120,
+        "radius": 8
+    },
+    "physics": {
+        "pixelsPerMeter": 32
+    }
+}
