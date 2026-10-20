@@ -1,6 +1,6 @@
 {
     "gameDurationSeconds": 300,
-    "minLoadTimeSeconds": 1.0,
+    "minLoadTimeSeconds": 1,
     "startingItems": ["bread", "energy_drink"],
     "player": {
         "speed": 120,

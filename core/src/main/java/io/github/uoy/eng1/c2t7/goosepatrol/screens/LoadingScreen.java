@@ -1,6 +1,14 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -17,6 +25,10 @@ import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 public class LoadingScreen implements Screen {
     private final GoosePatrol game;
     private final Stage stage;
+    private final Label percentage;
+    private float shown = 0f;
+    private final GoosePatrol game;
+    private final Stage stage;
     private final Label percent;
     private float shown = 0f;
 
@@ -27,17 +39,18 @@ public class LoadingScreen implements Screen {
         this.game = game;
         stage = new Stage(new FitViewport(1280, 720), game.getBatch());
 
-        // Loading progress text
-        Skin skin = game.getAssets().getSkin();
-        percent = new Label("Loading... 0%", skin);
+        percentage = new Label("Loading... 0%", game.getAssets().getSkin());
+        percentage.setAlignment(Align.center);
 
-        // Table to hold loading text in center of screen
-        Table root = new Table();
-        root.setFillParent(true);
-        root.add(percent);
-        stage.addActor(root);
+        Table table = new Table();
+        table.setFillParent(true);
+        table.add(percentage);
+        stage.addActor(table);
+    }
 
-        // Get the heavy game assets ready to be loaded
+    @Override
+    public void show() {
+        Gdx.input.setInputProcessor(null);
         game.getAssets().queueGame();
     }
 
@@ -59,18 +72,13 @@ public class LoadingScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-         // If window is minimised it is 0, so don't do anything
-        if (width <= 0 || height <= 0)
-            return;
+        if (width <= 0 || height <= 0) return;
         stage.getViewport().update(width, height, true);
     }
 
     @Override
-    public void show() {
-    }
-
-    @Override
     public void pause() {
+
     }
 
     @Override

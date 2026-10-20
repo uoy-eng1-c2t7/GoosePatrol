@@ -1,0 +1,13 @@
+
+game.png
+size: 33,43
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+student.png
+  rotate: false
+  xy: 0,0
+  size: 33,43
+  orig: 33,43
+  offset: 0,0
+  index: -1
