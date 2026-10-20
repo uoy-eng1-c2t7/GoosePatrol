@@ -22,7 +22,9 @@ public class GameScreen implements Screen {
     private final TextureRegion playerSprite;
     final SpriteBatch batch;
     OrthographicCamera camera;
+
     final Player player;
+    final int PLAYER_SPEED = 100;
 
 
     public GameScreen(GoosePatrol game) {
@@ -32,7 +34,7 @@ public class GameScreen implements Screen {
 
         playerSprite = game.getAssets().getSprite("student.png");
         batch = game.getBatch();
-        player = new Player(new Vector2(), playerSprite);
+        player = new Player(new Vector2(), playerSprite, PLAYER_SPEED);
 
     }
 
@@ -43,12 +45,12 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        int SPEED = 1000;
+        player.velocity.set(0, 0);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) player.position.x += SPEED * delta;
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))  player.position.x -= SPEED * delta;
-        if (Gdx.input.isKeyPressed(Input.Keys.UP))    player.position.y += SPEED * delta;
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN))  player.position.y -= SPEED * delta;
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) player.velocity.x += 1;
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) player.velocity.x -= 1;
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) player.velocity.y += 1;
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) player.velocity.y -= 1;
 
         camera.position.x = player.position.x;
         camera.position.y = player.position.y;
@@ -60,6 +62,7 @@ public class GameScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
+        player.updatePosition(delta);
         player.draw(batch);
         batch.end();
     }
