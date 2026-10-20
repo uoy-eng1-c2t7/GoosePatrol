@@ -27,7 +27,7 @@ public class LoadingScreen implements Screen {
 
         Table table = new Table();
         table.setFillParent(true);
-        table.addActor(percentage);
+        table.add(percentage);
         stage.addActor(table);
     }
 
@@ -43,12 +43,12 @@ public class LoadingScreen implements Screen {
 
         ScreenUtils.clear(Color.WHITE);
 
-        percentage.setText("Loading... " + (int) game.getAssets().getProgress() * 100 + "%");
+        percentage.setText("Loading... " + ((int) game.getAssets().getProgress() * 100) + " / 100");
 
         stage.act();
         stage.draw();
 
-        if (game.getAssets().update(16) && shown >= game.getConfig().minLoadTimeMiliseconds) {
+        if (game.getAssets().update(16) && shown >= game.getConfig().minLoadTimeSeconds) {
             game.setScreen(new GameScreen(game));
         }
     }

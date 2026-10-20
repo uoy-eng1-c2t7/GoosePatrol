@@ -1,6 +1,8 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.screens;
 
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.utils.ScreenUtils;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 
@@ -17,7 +19,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
+        ScreenUtils.clear(Color.PURPLE);
     }
 
     @Override
@@ -42,6 +44,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        
+
     }
 }
