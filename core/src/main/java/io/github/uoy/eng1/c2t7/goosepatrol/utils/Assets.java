@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapLoader;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -42,13 +44,16 @@ public class Assets implements Disposable {
 
     /** Queues the gameplay assets. The call {@link #update()} each frame until it returns true. */
     public void queueGame() {
+        manager.setLoader(TiledMap.class, new TmxMapLoader());
         manager.load(SPRITES, TextureAtlas.class);
         manager.load(MAP, TiledMap.class);
     }
 
-    /** Loads a bit more, returns true when everything queued has finished. */
-    public boolean update() {
-        return manager.update();
+    /** Loads a bit more, returns true when everything queued has finished.
+     * @param ms how many miliseconds of loading to do each frame.
+     */
+    public boolean update(int ms) {
+        return manager.update(ms);
     }
 
     /** 0 to 1 for loading progress UI. */

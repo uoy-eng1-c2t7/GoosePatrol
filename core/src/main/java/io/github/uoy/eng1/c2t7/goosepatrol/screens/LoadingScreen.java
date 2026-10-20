@@ -1,56 +1,82 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 
 public class LoadingScreen implements Screen {
-    GoosePatrol game;
+    private final GoosePatrol game;
+    private final Stage stage;
+    private final Label percentage;
+    private float shown = 0f;
 
     public LoadingScreen(GoosePatrol game) {
         this.game = game;
+        stage = new Stage(new FitViewport(1280, 720), game.getBatch());
+
+        percentage = new Label("Loading... 0%", game.getAssets().getSkin());
+        percentage.setAlignment(Align.center);
+
+        Table table = new Table();
+        table.setFillParent(true);
+        table.addActor(percentage);
+        stage.addActor(table);
     }
 
     @Override
     public void show() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show'");
+        Gdx.input.setInputProcessor(null);
+        game.getAssets().queueGame();
     }
 
     @Override
     public void render(float delta) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'render'");
+        shown += delta;
+
+        ScreenUtils.clear(Color.WHITE);
+
+        percentage.setText("Loading... " + (int) game.getAssets().getProgress() * 100 + "%");
+
+        stage.act();
+        stage.draw();
+
+        if (game.getAssets().update(16) && shown >= game.getConfig().minLoadTimeMiliseconds) {
+            game.setScreen(new GameScreen(game));
+        }
     }
 
     @Override
     public void resize(int width, int height) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'resize'");
+        if (width <= 0 || height <= 0) return;
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
     public void pause() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'pause'");
+
     }
 
     @Override
     public void resume() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'resume'");
+
     }
 
     @Override
     public void hide() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'hide'");
+        dispose();
     }
 
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'dispose'");
+        stage.dispose();
     }
     
 }

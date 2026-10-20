@@ -5,7 +5,7 @@ import com.badlogic.gdx.utils.Json;
 
 public class GameConfig {
     public int gameDurationSeconds;
-    public float minLoadTimeSeconds;
+    public float minLoadTimeMiliseconds;
     public String[] startingItems;
     public PlayerConfig player;
     public PhysicsConfig physics;
