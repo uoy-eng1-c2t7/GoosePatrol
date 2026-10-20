@@ -5,13 +5,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 import io.github.uoy.eng1.c2t7.goosepatrol.entities.Player;
@@ -51,6 +49,8 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) player.velocity.x -= 1;
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) player.velocity.y += 1;
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) player.velocity.y -= 1;
+
+        player.velocity.nor();
 
         camera.position.x = player.position.x;
         camera.position.y = player.position.y;
