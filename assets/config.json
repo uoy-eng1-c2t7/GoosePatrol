@@ -8,5 +8,9 @@
     },
     "audio": {
         "sfxVolume": 1
+    },
+    "camera": {
+        "viewWidth": 640,
+        "viewHeight": 360
     }
 }

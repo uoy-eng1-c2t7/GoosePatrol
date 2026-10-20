@@ -1,7 +1,12 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.rendering;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Disposable;
 
+import io.github.uoy.eng1.c2t7.goosepatrol.utils.Assets;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.GameWorld;
 
 /** Handles rendering the GameWorld to the screen. 
@@ -9,16 +14,29 @@ import io.github.uoy.eng1.c2t7.goosepatrol.world.GameWorld;
  */
 public class WorldRenderer implements Disposable {
     private final GameWorld world;
+    private final SpriteBatch batch;
+    private final OrthogonalTiledMapRenderer mapRenderer;
+    private final TextureRegion playerSprite, gooseSprite;
 
-    public WorldRenderer(GameWorld world) {
+    public WorldRenderer(GameWorld world, Assets assets, SpriteBatch batch) {
         this.world = world;
+        this.batch = batch;
+        mapRenderer = new OrthogonalTiledMapRenderer(assets.getMap(), batch);
+        this.playerSprite = assets.getSprite("student.png");
+        this.gooseSprite = assets.getSprite("goose.png");
     }
 
-    public void update(float delta) {
+    public void render(OrthographicCamera camera) {
+        mapRenderer.setView(camera);
+        mapRenderer.render();
 
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        
+        batch.end();
     }
     
     public void dispose() {
-        
+        mapRenderer.dispose();
     }
 }

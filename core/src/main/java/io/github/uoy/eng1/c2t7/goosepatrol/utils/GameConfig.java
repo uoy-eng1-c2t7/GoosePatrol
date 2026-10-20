@@ -9,6 +9,7 @@ public class GameConfig {
     public String[] startingItems;
     public PlayerConfig player;
     public AudioConfig audio;
+    public CameraConfig camera;
 
     public static class PlayerConfig {
         public float speed;
@@ -23,6 +24,11 @@ public class GameConfig {
 
     public static class AudioConfig {
         public float sfxVolume;
+    }
+
+    public static class CameraConfig {
+        public float viewWidth;
+        public float viewHeight;
     }
 
     private void validate() {
