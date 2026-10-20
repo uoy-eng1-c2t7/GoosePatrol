@@ -8,15 +8,11 @@ public class GameConfig {
     public float minLoadTimeSeconds;
     public String[] startingItems;
     public PlayerConfig player;
-    public PhysicsConfig physics;
+    public AudioConfig audio;
 
     public static class PlayerConfig {
         public float speed;
         public float radius;
-    }
-
-    public static class PhysicsConfig {
-        public float pixelsPerMeter;
     }
 
     public static GameConfig load(FileHandle file) {
@@ -25,10 +21,14 @@ public class GameConfig {
         return config;
     }
 
+    public static class AudioConfig {
+        public float sfxVolume;
+    }
+
     private void validate() {
         require(gameDurationSeconds > 0, "gameDurationSeconds");
         require(player != null && player.speed > 0 && player.radius > 0, "player.speed / player.radius");
-        require(physics != null && physics.pixelsPerMeter > 0, "physics.pixelsPerMeter");
+        require(audio.sfxVolume >= 0 && audio.sfxVolume <= 1, "sfxVolume");
     }
 
     private static void require(boolean ok, String what) {

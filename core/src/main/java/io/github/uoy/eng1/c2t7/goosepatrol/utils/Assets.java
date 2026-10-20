@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -29,6 +30,7 @@ public class Assets implements Disposable {
     private static final String LOGO = "ui/logo.png";
     private static final String SPRITES = "sprites/game.atlas";
     private static final String MAP = "tiled/campus.tmx";
+    private static final String[] SOUNDS = {"pain"};
 
     private final AssetManager manager = new AssetManager();
     private final Set<String> warned = new HashSet<>();
@@ -46,6 +48,10 @@ public class Assets implements Disposable {
         manager.setLoader(TiledMap.class, new TmxMapLoader());
         manager.load(SPRITES, TextureAtlas.class);
         manager.load(MAP, TiledMap.class);
+
+        for (String name : SOUNDS) {
+            manager.load("sounds/" + name + ".ogg", Sound.class);
+        }
     }
 
     /** Loads a bit more, returns true when everything queued has finished.
@@ -70,6 +76,10 @@ public class Assets implements Disposable {
 
     public TiledMap getMap() {
         return manager.get(MAP, TiledMap.class);
+    }
+
+    public Sound getSound(String name) {
+        return manager.get("sounds/" + name + ".ogg", Sound.class);
     }
 
     /**

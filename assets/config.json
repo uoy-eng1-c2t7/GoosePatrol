@@ -6,7 +6,7 @@
         "speed": 120,
         "radius": 8
     },
-    "physics": {
-        "pixelsPerMeter": 32
+    "audio": {
+        "sfxVolume": 1
     }
 }
