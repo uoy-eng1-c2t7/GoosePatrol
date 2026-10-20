@@ -30,7 +30,7 @@ public class MainMenuScreen implements Screen {
     /**
      * Construct a new MainMenuScreen and initialise it with the
      * main game instance.
-     * 
+     *
      * @param game the main GoosePatrol game instance.
      */
     public MainMenuScreen(GoosePatrol game) {
@@ -55,7 +55,7 @@ public class MainMenuScreen implements Screen {
 
     /**
      * Creates the animated logo and adds it to the layout table.
-     * 
+     *
      * @param table   The Scene2D layout table.
      * @param logoTex The loaded logo texture.
      */
@@ -75,7 +75,7 @@ public class MainMenuScreen implements Screen {
     /**
      * Creates the Start and Exit buttons, adds their listeners, and packs them into
      * the table.
-     * 
+     *
      * @param table The Scene2D layout table.
      * @param skin  The loaded UI skin containing fonts and graphics.
      */

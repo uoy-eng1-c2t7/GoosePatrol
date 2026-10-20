@@ -18,10 +18,10 @@ import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Every file the game loads, the only class that knows where they are.
- * Screens and renderes ask this for what they need so they don't have 
+ * Screens and renderers ask this for what they need so they don't have
  * to manage file paths or the AssetManager themselves.
- * 
- * <p> To add an asset: add a path constant, queue it in {@link #queueGame()} 
+ *
+ * <p> To add an asset: add a path constant, queue it in {@link #queueGame()}
  * and add a getter. </p>
  * <p> To add a sprite: drop the PNG into the atlas. </p>
  */
@@ -32,10 +32,10 @@ public class Assets implements Disposable {
     private static final String MAP = "tiled/campus.tmx";
 
     private final AssetManager manager = new AssetManager();
-    private final Set<String> warned = new HashSet<>();              
+    private final Set<String> warned = new HashSet<>();
     private TextureRegion missing; // Only created if a sprite lookup fails
 
-    /** Load things needed intiially for the title and loading screen (fast). */
+    /** Load things needed initially for the title and loading screen (fast). */
     public void loadBoot() {
         manager.load(SKIN, Skin.class);
         manager.load(LOGO, Texture.class);
@@ -73,8 +73,8 @@ public class Assets implements Disposable {
         return manager.get(MAP, TiledMap.class);
     }
 
-    /** 
-     * A sprite by its name in the atals ("goose", "player", "bread"...).
+    /**
+     * A sprite by its name in the atlas ("goose", "player", "bread"...).
      * A missing name shows a magenta square and logs once instead of crashing.
      */
     public TextureRegion getSprite(String name) {
@@ -88,11 +88,12 @@ public class Assets implements Disposable {
         return missingSprite();
     }
 
-    /** Animation frames, e.g goose_walk_0, goose_walk_1, ... */
+    /** Animation frames, e.g. goose_walk_0, goose_walk_1, ... */
     public Array<TextureAtlas.AtlasRegion> getFrames(String name) {
-        return  manager.get(SPRITES, TextureAtlas.class).findRegions(name);
+        return manager.get(SPRITES, TextureAtlas.class).findRegions(name);
     }
 
+    /** Returns a magenta pixel that is used in place of missing sprites. Created only if required */
     private TextureRegion missingSprite() {
         if (missing == null) {
             Pixmap p = new Pixmap(16, 16, Pixmap.Format.RGBA8888);
@@ -101,10 +102,11 @@ public class Assets implements Disposable {
             missing = new TextureRegion(new Texture(p));
             p.dispose();
         }
+
         return missing;
     }
 
-    @Override 
+    @Override
     public void dispose() {
         manager.dispose();
         if (missing != null) {
