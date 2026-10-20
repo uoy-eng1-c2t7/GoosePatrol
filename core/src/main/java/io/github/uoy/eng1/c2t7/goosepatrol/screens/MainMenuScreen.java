@@ -21,16 +21,12 @@ import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 
 /**
  * The main menu screen displayed when the game launches.
- * Handles UI layout and navif
  */
 public class MainMenuScreen implements Screen {
     private final GoosePatrol game;
     private final Stage stage;
 
     /**
-     * Construct a new MainMenuScreen and initialise it with the
-     * main game instance.
-     * 
      * @param game the main GoosePatrol game instance.
      */
     public MainMenuScreen(GoosePatrol game) {
