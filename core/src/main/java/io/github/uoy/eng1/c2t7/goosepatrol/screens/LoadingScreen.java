@@ -9,14 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 
 /**
@@ -26,10 +18,6 @@ public class LoadingScreen implements Screen {
     private final GoosePatrol game;
     private final Stage stage;
     private final Label percentage;
-    private float shown = 0f;
-    private final GoosePatrol game;
-    private final Stage stage;
-    private final Label percent;
     private float shown = 0f;
 
     /**
@@ -58,7 +46,7 @@ public class LoadingScreen implements Screen {
     public void render(float delta) {
         shown += delta;
         boolean loaded = game.getAssets().update(16); // 16ms of loading this frame
-        percent.setText("Loading... " + ((int) (game.getAssets().getProgress() * 100)) + "%");
+        percentage.setText("Loading... " + ((int) (game.getAssets().getProgress() * 100)) + "%");
 
         ScreenUtils.clear(Color.WHITE);
         stage.act(delta);
