@@ -4,13 +4,14 @@
     "startingItems": ["bread", "energy_drink"],
     "player": {
         "speed": 120,
-        "radius": 8
+        "radius": 16
     },
     "audio": {
         "sfxVolume": 1
     },
     "camera": {
         "viewWidth": 640,
-        "viewHeight": 360
+        "viewHeight": 360,
+        "lerpSpeed" : 5
     }
 }

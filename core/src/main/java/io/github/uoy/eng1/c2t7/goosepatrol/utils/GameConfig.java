@@ -29,6 +29,7 @@ public class GameConfig {
     public static class CameraConfig {
         public float viewWidth;
         public float viewHeight;
+        public float lerpSpeed;
     }
 
     private void validate() {

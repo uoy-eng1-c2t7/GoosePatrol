@@ -16,8 +16,12 @@ public class Player extends Entity {
         moveInput.set(direction);
     }
 
-    @Override 
+    @Override
     public void updateIntent(float delta) {
-        getVelocity().set(moveInput).nor().scl(speed);
+        if (moveInput.isZero()) {
+            getVelocity().setZero();
+        } else {
+            getVelocity().set(moveInput).nor().scl(speed);
+        }
     }
 }

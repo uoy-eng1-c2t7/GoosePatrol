@@ -4,13 +4,16 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.Assets;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.GameWorld;
+import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Entity;
 
-/** Handles rendering the GameWorld to the screen. 
- *  Does not handle logic, just reads and renders.
+/**
+ * Handles rendering the GameWorld to the screen.
+ * Does not handle logic, just reads and renders.
  */
 public class WorldRenderer implements Disposable {
     private final GameWorld world;
@@ -32,10 +35,20 @@ public class WorldRenderer implements Disposable {
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
+
+        drawEntity(playerSprite, world.getPlayer());
         
         batch.end();
     }
-    
+
+    private void drawEntity(TextureRegion sprite, Entity entity) {
+        Vector2 pos = entity.getPosition();
+        float width = sprite.getRegionWidth();
+        float height = sprite.getRegionHeight();
+
+        batch.draw(sprite, pos.x - width / 2f, pos.y - height / 2f, width, height);
+    }
+
     public void dispose() {
         mapRenderer.dispose();
     }

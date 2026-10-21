@@ -10,6 +10,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
+import io.github.uoy.eng1.c2t7.goosepatrol.rendering.CameraController;
+import io.github.uoy.eng1.c2t7.goosepatrol.rendering.DebugRenderer;
 import io.github.uoy.eng1.c2t7.goosepatrol.rendering.WorldRenderer;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.GameWorld;
@@ -19,41 +21,47 @@ public class GameScreen implements Screen, WorldListener {
     private final GoosePatrol game;
     private final GameWorld world;
     private final WorldRenderer renderer;
+    private final DebugRenderer debugRenderer;
     private final OrthographicCamera camera = new OrthographicCamera();
+    private final CameraController cameraController;
     private final ExtendViewport viewport;
     private final Vector2 moveInput = new Vector2();
 
     public GameScreen(GoosePatrol game) {
         this.game = game;
         GameConfig config = game.getConfig();
-        this.world = new GameWorld(config, this);
-        this.renderer = new WorldRenderer(world, game.getAssets(), game.getBatch());
-        this.viewport = new ExtendViewport(config.camera.viewWidth, config.camera.viewHeight, camera);
+
+        world = new GameWorld(config, this);
+        renderer = new WorldRenderer(world, game.getAssets(), game.getBatch());
+        debugRenderer = new DebugRenderer(world, game.getBatch());
+        viewport = new ExtendViewport(config.camera.viewWidth, config.camera.viewHeight, camera);
+
+        float m = 800f;
+        float h = 800f;
+        this.cameraController = new CameraController(camera, m, h, config.camera);
     }
 
     @Override
     public void show() {
+        cameraController.setTarget(world.getPlayer().getPosition());
+        debugRenderer.toggle();
     }
 
     @Override
     public void render(float delta) {
         // Pass input to world
         moveInput.set(
-            (Gdx.input.isKeyPressed(Input.Keys.D) ? 1 : 0) - (Gdx.input.isKeyPressed(Input.Keys.A) ? 1 : 0),
-            (Gdx.input.isKeyPressed(Input.Keys.W) ? 1 : 0) - (Gdx.input.isKeyPressed(Input.Keys.S) ? 1 : 0)
-        );
+                (Gdx.input.isKeyPressed(Input.Keys.D) ? 1 : 0) - (Gdx.input.isKeyPressed(Input.Keys.A) ? 1 : 0),
+                (Gdx.input.isKeyPressed(Input.Keys.W) ? 1 : 0) - (Gdx.input.isKeyPressed(Input.Keys.S) ? 1 : 0));
         world.update(delta, moveInput);
 
-
         // Camera follows player
-        viewport.apply();
-        camera.position.x = 100;
-        camera.position.y = 100;
-        
+        cameraController.update(delta);
 
         // Draw
         ScreenUtils.clear(Color.BLACK);
         renderer.render(camera);
+        debugRenderer.render(camera);
     }
 
     @Override
