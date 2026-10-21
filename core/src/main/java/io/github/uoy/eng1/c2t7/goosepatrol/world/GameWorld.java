@@ -1,5 +1,6 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.world;
 
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
@@ -18,12 +19,15 @@ public class GameWorld {
     private final GameConfig config;
     private final Player player;
     private final Array<Entity> entities = new Array<>();
+    private final MapLoader map;
 
-    public GameWorld(GameConfig config, WorldListener listener) {
+    public GameWorld(GameConfig config, WorldListener listener, TiledMap map) {
         this.config = config;
         this.listener = listener;
         this.player = new Player(new Vector2(100, 100), config.player);
         entities.add(player);
+
+        this.map = new MapLoader(map);
     }
 
     public void update(float delta, Vector2 moveInput) {
@@ -40,6 +44,7 @@ public class GameWorld {
         pos.y += vel.y * delta;
 
         player.syncBounds();
+        player.update(delta);
     }
 
     public Player getPlayer() {
@@ -48,5 +53,9 @@ public class GameWorld {
 
     public Array<Entity> getEntities() {
         return entities;
+    }
+
+    public MapLoader getMap() {
+        return map;
     }
 }

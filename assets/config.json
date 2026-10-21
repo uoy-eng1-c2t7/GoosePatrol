@@ -4,7 +4,12 @@
     "startingItems": ["bread", "energy_drink"],
     "player": {
         "speed": 120,
-        "radius": 16
+        "radius": 16,
+        "turnSpeed": 10
+    },
+    "goose": {
+        "radius": 16,
+        "turnSpeed": 10
     },
     "audio": {
         "sfxVolume": 1

@@ -43,10 +43,22 @@ public class WorldRenderer implements Disposable {
 
     private void drawEntity(TextureRegion sprite, Entity entity) {
         Vector2 pos = entity.getPosition();
+        float rotation = entity.getRotation();
         float width = sprite.getRegionWidth();
         float height = sprite.getRegionHeight();
 
-        batch.draw(sprite, pos.x - width / 2f, pos.y - height / 2f, width, height);
+        batch.draw(
+            sprite,
+            pos.x - width / 2f,  // Bottom left x
+            pos.y - height / 2f, // Bottom left y
+            width / 2f,          
+            height / 2f,         
+            width,            
+            height,             
+            1f,
+            1f,
+            rotation
+        );
     }
 
     public void dispose() {

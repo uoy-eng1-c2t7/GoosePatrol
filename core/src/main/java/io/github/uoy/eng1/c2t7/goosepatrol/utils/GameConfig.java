@@ -8,12 +8,20 @@ public class GameConfig {
     public float minLoadTimeSeconds;
     public String[] startingItems;
     public PlayerConfig player;
+    public GooseConfig goose;
     public AudioConfig audio;
     public CameraConfig camera;
 
     public static class PlayerConfig {
         public float speed;
         public float radius;
+        public float turnSpeed;
+    }
+
+    public static class GooseConfig {
+        public float speed;
+        public float radius;
+        public float turnSpeed;
     }
 
     public static GameConfig load(FileHandle file) {

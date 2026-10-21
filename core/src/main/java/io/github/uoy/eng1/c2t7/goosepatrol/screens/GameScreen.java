@@ -31,14 +31,11 @@ public class GameScreen implements Screen, WorldListener {
         this.game = game;
         GameConfig config = game.getConfig();
 
-        world = new GameWorld(config, this);
+        world = new GameWorld(config, this, game.getAssets().getMap());
         renderer = new WorldRenderer(world, game.getAssets(), game.getBatch());
         debugRenderer = new DebugRenderer(world, game.getBatch());
         viewport = new ExtendViewport(config.camera.viewWidth, config.camera.viewHeight, camera);
-
-        float m = 800f;
-        float h = 800f;
-        this.cameraController = new CameraController(camera, m, h, config.camera);
+        this.cameraController = new CameraController(camera, world.getMap().getWidth(), world.getMap().getHeight(), config.camera);
     }
 
     @Override

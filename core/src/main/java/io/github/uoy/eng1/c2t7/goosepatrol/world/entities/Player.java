@@ -8,7 +8,7 @@ public class Player extends Entity {
     private final float speed;
 
     public Player(Vector2 startPosition, GameConfig.PlayerConfig config) {
-        super(startPosition, config.radius);
+        super(startPosition, config.radius, config.turnSpeed);
         this.speed = config.speed;
     }
 
