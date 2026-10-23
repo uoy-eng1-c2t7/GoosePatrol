@@ -14,7 +14,7 @@ import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Player;
 
 public class GameWorld {
     public enum Status {
-        RUNNING, 
+        RUNNING,
         WON,
         LOST
     }
@@ -29,7 +29,7 @@ public class GameWorld {
         this.config = config;
         this.listener = listener;
         this.player = new Player(new Vector2(100, 100), config.player);
-        
+
         if (config.startingItems != null) {
             for (String itemId : config.startingItems) {
                 Item item = ItemRegistry.get(itemId);
@@ -46,32 +46,36 @@ public class GameWorld {
     public void update(float delta, Vector2 moveInput) {
         player.setMoveInput(moveInput);
 
-        Vector2 pos = player.getPosition();
-        Vector2 vel = player.getVelocity();
+        for (Entity entity : entities) {
+            entity.updateIntent(delta);
 
-        // Move X and check collision
-        pos.x += vel.x * delta;
-        player.syncBounds();
-        for (Rectangle wall : map.getWalls()) {
-            if (Intersector.overlaps(player.getBounds(), wall)) {
-                pos.x -= vel.x * delta;
-                player.syncBounds();
-                break;
+            Vector2 pos = entity.getPosition();
+            Vector2 vel = entity.getVelocity();
+
+            // Move X and check collision
+            pos.x += vel.x * delta;
+            entity.syncBounds();
+            for (Rectangle wall : map.getWalls()) {
+                if (Intersector.overlaps(entity.getBounds(), wall)) {
+                    pos.x -= vel.x * delta;
+                    entity.syncBounds();
+                    break;
+                }
             }
-        }
 
-        // Move Y and check collision
-        pos.y += vel.y * delta;
-        player.syncBounds();
-        for (Rectangle wall : map.getWalls()) {
-            if (Intersector.overlaps(player.getBounds(), wall)) {
-                pos.y -= vel.y * delta;
-                player.syncBounds();
-                break;
+            // Move Y and check collision
+            pos.y += vel.y * delta;
+            entity.syncBounds();
+            for (Rectangle wall : map.getWalls()) {
+                if (Intersector.overlaps(entity.getBounds(), wall)) {
+                    pos.y -= vel.y * delta;
+                    entity.syncBounds();
+                    break;
+                }
             }
-        }
 
-        player.update(delta);
+            entity.update(delta);
+        }
     }
 
     public Player getPlayer() {
