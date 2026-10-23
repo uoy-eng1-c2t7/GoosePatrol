@@ -5,7 +5,6 @@ import java.util.Vector;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
-import com.badlogic.gdx.maps.objects.PointMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
@@ -51,6 +50,10 @@ public class MapLoader {
                 }
             } 
         }
+
+        // Exit win layer
+        MapLayer exitLayer = map.getLayers().get("exit");
+        
     }
 
     public Vector2 getPlayerSpawn() {

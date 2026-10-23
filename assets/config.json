@@ -8,6 +8,7 @@
         "turnSpeed": 10
     },
     "goose": {
+        "speed": 95,
         "radius": 16,
         "turnSpeed": 10,
         "sightRange": 140,

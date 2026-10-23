@@ -11,7 +11,6 @@ import io.github.uoy.eng1.c2t7.goosepatrol.utils.Assets;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.GameWorld;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Entity;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Goose;
-import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Player;
 
 /**
  * Handles rendering the GameWorld to the screen.
@@ -41,11 +40,12 @@ public class WorldRenderer implements Disposable {
         for (Entity entity : world.getEntities()) {
             if (entity instanceof Goose) {
                 drawEntity(gooseSprite, entity);
-            } else if (entity instanceof Player) {
-                drawEntity(playerSprite, entity);
             }
         }
-        
+
+        // Draw player last so its always ontop
+        drawEntity(playerSprite, world.getPlayer());
+
         batch.end();
     }
 
@@ -56,17 +56,16 @@ public class WorldRenderer implements Disposable {
         float height = sprite.getRegionHeight();
 
         batch.draw(
-            sprite,
-            pos.x - width / 2f,  // Bottom left x
-            pos.y - height / 2f, // Bottom left y
-            width / 2f,          
-            height / 2f,         
-            width,            
-            height,             
-            1f,
-            1f,
-            rotation
-        );
+                sprite,
+                pos.x - width / 2f, // Bottom left x
+                pos.y - height / 2f, // Bottom left y
+                width / 2f,
+                height / 2f,
+                width,
+                height,
+                1f,
+                1f,
+                rotation);
     }
 
     public void dispose() {
