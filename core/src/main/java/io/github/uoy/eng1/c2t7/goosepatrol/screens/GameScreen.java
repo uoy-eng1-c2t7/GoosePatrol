@@ -47,7 +47,7 @@ public class GameScreen implements Screen {
         Texture breadTexture = game.getAssets().getBread();
         bread = new InventoryItem(breadTexture, "bread", "a piece of bread") {
             @Override
-            public void onUse() {
+            public void use() {
                 System.out.println("im being used");
             }
         };

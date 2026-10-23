@@ -76,5 +76,9 @@ public class InventorySlot {
         batch.draw(itemTexture, posX, posY, itemTexture.getHeight(), itemTexture.getWidth());
     }
 
+    public void useItem() {
+        item.use();
+    }
+
 
 }

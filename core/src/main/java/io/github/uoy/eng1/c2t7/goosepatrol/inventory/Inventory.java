@@ -1,5 +1,6 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.inventory;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -30,10 +31,18 @@ public class Inventory {
     }
 
     public void update(OrthographicCamera camera) {
+        boolean inventoryClicked = false;
         for (InventorySlot slot: slots) {
             if (slot.checkIfClicked(camera)) {
                 slot.toggleSelected();
                 deselectPreviouslySelected(slot.id);
+                inventoryClicked = true;
+            }
+        }
+        // if there is a selected slot and there was a click event, use the selected item
+        if (Gdx.input.justTouched()) {
+            for (InventorySlot slot: slots) {
+                if (slot.isSelected && slot.getItem() != null) slot.useItem();
             }
         }
     }

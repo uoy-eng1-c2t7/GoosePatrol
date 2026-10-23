@@ -15,5 +15,5 @@ public abstract class InventoryItem {
 
     public Texture getTexture() { return this.texture; }
 
-    public abstract void onUse();
+    public abstract void use();
 }
