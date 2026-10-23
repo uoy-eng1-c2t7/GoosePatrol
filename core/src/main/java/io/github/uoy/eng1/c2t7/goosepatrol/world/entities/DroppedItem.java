@@ -54,7 +54,7 @@ public class DroppedItem extends Entity {
     }
 
     public boolean canPickup() {
-        return pickupCooldown <= 0 && !destroyed;
+        return !isDistraction && pickupCooldown <= 0 && !destroyed;
     }
 
     public boolean isDistraction() {

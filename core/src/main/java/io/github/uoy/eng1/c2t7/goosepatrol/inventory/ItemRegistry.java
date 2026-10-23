@@ -9,14 +9,13 @@ public class ItemRegistry {
     public static final Item BREAD = register(new Item(
             "bread", "Bread", "bread.png", 16,
             (world, player) -> {
-
+                world.throwFood(player.getPosition(), player.getRotation(), ItemRegistry.get("bread"), 8f, 180f, 3.0f);
                 return true;
             }));
 
     public static final Item ENERGY_DRINK = register(new Item(
             "energy_drink", "Energy Drink", "energy_drink.png", 5,
             (world, player) -> {
-                world.throwFood(player.getPosition(), player.getRotation(), BREAD, 8f, 180f, 3.0f);
                 return true;
             }));
 

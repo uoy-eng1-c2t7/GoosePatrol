@@ -1,6 +1,6 @@
 
 game.png
-size: 69,85
+size: 69,71
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -14,7 +14,7 @@ player.png
 bread.png
   rotate: false
   xy: 0,43
-  size: 42,42
+  size: 38,28
   orig: 42,42
   offset: 0,0
   index: -1
