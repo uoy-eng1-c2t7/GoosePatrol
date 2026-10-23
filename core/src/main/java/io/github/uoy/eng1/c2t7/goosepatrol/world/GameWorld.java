@@ -1,6 +1,8 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.world;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
@@ -44,17 +46,31 @@ public class GameWorld {
     public void update(float delta, Vector2 moveInput) {
         player.setMoveInput(moveInput);
 
-
-        // TEST CODE FOR MOVEMENT
-        // NEED TO IMPLEMENT COLLISION
-        player.updateIntent(delta);
-
         Vector2 pos = player.getPosition();
         Vector2 vel = player.getVelocity();
-        pos.x += vel.x * delta;
-        pos.y += vel.y * delta;
 
+        // Move X and check collision
+        pos.x += vel.x * delta;
         player.syncBounds();
+        for (Rectangle wall : map.getWalls()) {
+            if (Intersector.overlaps(player.getBounds(), wall)) {
+                pos.x -= vel.x * delta;
+                player.syncBounds();
+                break;
+            }
+        }
+
+        // Move Y and check collision
+        pos.y += vel.y * delta;
+        player.syncBounds();
+        for (Rectangle wall : map.getWalls()) {
+            if (Intersector.overlaps(player.getBounds(), wall)) {
+                pos.y -= vel.y * delta;
+                player.syncBounds();
+                break;
+            }
+        }
+
         player.update(delta);
     }
 

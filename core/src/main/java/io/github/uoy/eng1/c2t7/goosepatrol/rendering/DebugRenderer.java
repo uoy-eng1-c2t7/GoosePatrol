@@ -46,6 +46,12 @@ public class DebugRenderer implements Disposable {
             draw(e.getBounds());
         }
 
+        // Draw walls
+        shapes.setColor(Color.GREEN);
+        for (Rectangle wall : world.getMap().getWalls()) {
+            draw(wall);
+        }
+
         shapes.end();
     }
 

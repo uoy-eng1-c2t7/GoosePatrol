@@ -9,7 +9,7 @@ public class ItemRegistry {
     public static final Item BREAD = register(new Item(
         "bread", "Bread", "bread.png", 16,
         (world, player) -> {
-            // do something
+    
             return true; 
         }
     ));

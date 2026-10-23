@@ -124,6 +124,11 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
             return true;
         }
 
+        // Toggle debug 
+        if (keycode == Input.Keys.F3) {
+            debugRenderer.toggle();
+        }
+
         return false;
     }
 
