@@ -30,7 +30,7 @@ public class TicketScreen implements Screen {
         // Paper background
         ticket.setBackground(skin.newDrawable("white", new Color(0.95f, 0.94f, 0.88f, 1f)));
         ticket.pad(30);
-        Label header = new Label("=== FIRST YORK BUSES ===", skin);
+        Label header = new Label("=== SECOND BUS ===", skin);
         header.setColor(Color.DARK_GRAY);
         Label title = new Label(won ? "BOARDED ON TIME!" : "BUS DEPARTED - MISSED!", skin);
         title.setColor(won ? new Color(0.1f, 0.6f, 0.1f, 1f) : Color.FIREBRICK);

@@ -2,6 +2,7 @@ package io.github.uoy.eng1.c2t7.goosepatrol.world;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.Item;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.ItemRegistry;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
+import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.DroppedItem;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Entity;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Goose;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Player;
@@ -24,6 +26,7 @@ public class GameWorld {
     private final Player player;
     private final Array<Entity> entities = new Array<>();
     private final MapLoader map;
+    private float exitCooldown = 0f;
 
     public GameWorld(GameConfig config, WorldListener listener, TiledMap tiledMap) {
         this.listener = listener;
@@ -35,6 +38,10 @@ public class GameWorld {
         for (Vector2 spawnPos : map.getGooseSpawns()) {
             Goose goose = new Goose(spawnPos, config.goose, player);
             entities.add(goose);
+        }
+
+        for (MapLoader.ItemSpawn spawn : map.getItemSpawns()) {
+            entities.add(new DroppedItem(spawn.position, spawn.item, 1));
         }
 
         if (config.startingItems != null) {
@@ -49,7 +56,25 @@ public class GameWorld {
 
     public void update(float delta, Vector2 moveInput) {
         player.setMoveInput(moveInput);
+        updateEntities(entities, delta);
+        checkExit(delta);
+    }
 
+    private void updateEntities(Array<Entity> entities, float delta) {
+        // Check if player walks over any item
+        for (Entity entity : entities) {
+            if (entity instanceof DroppedItem) {
+                DroppedItem drop = (DroppedItem) entity;
+                if (drop.canPickup() && player.getBounds().overlaps(drop.getBounds())) {
+                    if (player.getInventory().addItem(drop.getItem(), drop.getCount())) {
+                        drop.destroy(); // Mark for removal
+                        listener.onInventoryChanged(); // Refresh hotbar UI
+                    }
+                }
+            }
+        }
+
+        // Update entity positions and check for collisions
         for (Entity entity : entities) {
             entity.updateIntent(delta);
 
@@ -66,7 +91,6 @@ public class GameWorld {
                     break;
                 }
             }
-
             // Move Y and check collision
             pos.y += vel.y * delta;
             entity.syncBounds();
@@ -77,8 +101,56 @@ public class GameWorld {
                     break;
                 }
             }
-
             entity.update(delta);
+        }
+
+        // Clean up destroyed items
+        for (int i = entities.size - 1; i >= 0; i--) {
+            Entity e = entities.get(i);
+            if (e instanceof DroppedItem && ((DroppedItem) e).isDestroyed()) {
+                entities.removeIndex(i);
+            }
+        }
+    }
+
+    private void checkExit(float delta) {
+        if (exitCooldown > 0) {
+            exitCooldown -= delta;
+        }
+
+        if (map.getExitZone() != null && Intersector.overlaps(player.getBounds(), map.getExitZone())
+                && exitCooldown <= 0) {
+            listener.onExitReached(isPlayerBeingChased());
+            exitCooldown = 2.0f; // wait 2 seconds before trying again
+        }
+    }
+
+    private boolean isPlayerBeingChased() {
+        for (Entity entity : entities) {
+            if (entity instanceof Goose) {
+                if (((Goose) entity).isChasing())
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public void throwBread(Vector2 fromPos, float rotationDeg) {
+        Vector2 throwDir = new Vector2(MathUtils.cosDeg(rotationDeg), MathUtils.sinDeg(rotationDeg));
+        Vector2 spawnPos = fromPos.cpy().add(throwDir.cpy().scl(20f));
+        Vector2 throwVel = throwDir.scl(200f);
+        // Thrown item: isDistraction = true, 0.6s cooldown so you don't instantly pick
+        // it back up
+        DroppedItem thrownBread = new DroppedItem(spawnPos, ItemRegistry.BREAD, 1, throwVel, true, 0.6f);
+        entities.add(thrownBread);
+        // ONLY alert nearby chasing geese to this THROWN bread
+        for (Entity entity : entities) {
+            if (entity instanceof Goose) {
+                Goose goose = (Goose) entity;
+                if (goose.isChasing() && goose.getPosition().dst(spawnPos) < 220f) {
+                    goose.distract(spawnPos);
+                }
+            }
         }
     }
 

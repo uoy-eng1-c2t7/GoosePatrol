@@ -1,6 +1,6 @@
 
 game.png
-size: 47,85
+size: 69,85
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -18,9 +18,16 @@ bread.png
   orig: 42,42
   offset: 0,0
   index: -1
-goose.png
-  rotate: true
+gun.png
+  rotate: false
   xy: 33,0
+  size: 36,23
+  orig: 42,42
+  offset: 0,0
+  index: -1
+goose.png
+  rotate: false
+  xy: 33,23
   size: 20,14
   orig: 24,24
   offset: 0,0

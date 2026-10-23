@@ -79,6 +79,9 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
         // Update game - freeze when paused
         if (!isPaused) {
             timeRemaining = Math.max(0, timeRemaining - delta);
+            if (timeRemaining <= 0) {
+                game.setScreen(new TicketScreen(game, false, 0));
+            }
             hudUI.updateTimer(timeRemaining);
 
             moveInput.set(
@@ -181,6 +184,11 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
             float timeTaken = game.getConfig().gameDurationSeconds - timeRemaining;
             game.setScreen(new TicketScreen(game, true, timeTaken));
         }
+    }
+
+    @Override 
+    public void onInventoryChanged() {
+        hudUI.updateHotbar();
     }
 
     @Override

@@ -11,12 +11,27 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import io.github.uoy.eng1.c2t7.goosepatrol.inventory.Item;
+import io.github.uoy.eng1.c2t7.goosepatrol.inventory.ItemRegistry;
+
 public class MapLoader {
+    public static class ItemSpawn {
+        public final Item item;
+        public final Vector2 position;
+
+        public ItemSpawn(Item item, Vector2 position) {
+            this.item = item;
+            this.position = position;
+        }
+    }
+
     private final float width;
     private final float height; 
     private final Array<Rectangle> walls = new Array<>();
     private final Array<Vector2> gooseSpawns = new Array<>();
+    private final Array<ItemSpawn> itemSpawns = new Array<>();
     private final Vector2 playerSpawn = new Vector2(100, 100); // Default if not set in Tiled
+    private Rectangle exitZone = null;
 
     public MapLoader(TiledMap map) {
         MapProperties props = map.getProperties();
@@ -47,13 +62,24 @@ public class MapLoader {
                     playerSpawn.set(x, y);
                 } else if ("goose".equalsIgnoreCase(name)) {
                     gooseSpawns.add(new Vector2(x, y));
+                } else {
+                    Item item = ItemRegistry.get(name.toLowerCase());
+                    if (item != null) {
+                        itemSpawns.add(new ItemSpawn(item, new Vector2(x, y)));
+                    }
                 }
             } 
         }
 
         // Exit win layer
         MapLayer exitLayer = map.getLayers().get("exit");
-        
+        if (exitLayer != null) {
+            var obj = exitLayer.getObjects().get(0);
+            if (obj instanceof RectangleMapObject) {
+                exitZone = ((RectangleMapObject) obj).getRectangle();
+            }
+        }
+
     }
 
     public Vector2 getPlayerSpawn() {
@@ -66,6 +92,14 @@ public class MapLoader {
 
     public Array<Rectangle> getWalls() {
         return walls;
+    }
+
+    public Rectangle getExitZone() {
+        return exitZone;
+    }
+
+    public Array<ItemSpawn> getItemSpawns() {
+        return itemSpawns;
     }
 
     public float getWidth() {
