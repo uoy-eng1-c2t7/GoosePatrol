@@ -36,6 +36,8 @@ public class Assets implements Disposable {
 
     //inventory
     public static final String SLOT = "ui/inventoryslot.png";
+    public static final String SELECTED_SLOT = "ui/selectedslot.png";
+    public static final String BREAD = "sprites/bread.png";
 
     /** Load things needed initially for the title and loading screen (fast). */
     public void loadBoot() {
@@ -51,6 +53,8 @@ public class Assets implements Disposable {
         manager.load(MAP, TiledMap.class);
 
         manager.load(SLOT, Texture.class);
+        manager.load(SELECTED_SLOT, Texture.class);
+        manager.load(BREAD, Texture.class);
     }
 
     /** Loads a bit more, returns true when everything queued has finished.
@@ -77,7 +81,12 @@ public class Assets implements Disposable {
         return manager.get(MAP, TiledMap.class);
     }
 
+    // this is temporary for inventory implementation, can be replaced with an atlas later
     public Texture getInventorySlot() { return manager.get(SLOT, Texture.class); }
+
+    public Texture getSelectedSlot() { return manager.get(SELECTED_SLOT, Texture.class); }
+
+    public Texture getBread() { return manager.get(BREAD, Texture.class); }
 
     /**
      * A sprite by its name in the atlas ("goose", "player", "bread"...).

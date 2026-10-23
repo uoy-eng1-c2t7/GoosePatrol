@@ -1,25 +1,44 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.inventory;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 
 public class Inventory {
     public final Array<InventorySlot> slots;
     public final int capacity;
     public boolean visible;
+    private final GoosePatrol game;
 
-    public Inventory(int capacity, Texture slotSprite) {
+    private final Texture slotSprite;
+    private final Texture selectedSlotSprite;
+
+    public Inventory(int capacity, GoosePatrol game) {
         this.slots = new Array<>(capacity);
         this.capacity = capacity;
+        this.game = game;
+
+        this.slotSprite = game.getAssets().getInventorySlot();
+        this.selectedSlotSprite = game.getAssets().getSelectedSlot();
+
         for (int i = 0; i < capacity; i++) {
-            slots.add(new InventorySlot(slotSprite, slotSprite.getWidth() * i, 0));
+            slots.add(new InventorySlot(slotSprite, selectedSlotSprite, slotSprite.getWidth() * i, 0));
+        }
+
+    }
+
+    public void update(OrthographicCamera camera) {
+        for (InventorySlot slot: slots) {
+            slot.update(camera);
         }
     }
 
+
     public void draw(SpriteBatch batch, float posX, float posY) {
-        for (int i = 0; i < capacity; i++) {
-            slots.get(i).draw(batch, posX, posY);
+        for (InventorySlot slot: slots) {
+            slot.draw(batch, posX, posY);
         }
     }
 

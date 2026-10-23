@@ -27,13 +27,12 @@ public class GameScreen implements Screen {
     OrthographicCamera camera;
     final Player player;
 
-    private final Texture inventorySlotSprite;
     private final int INVENTORY_SIZE = 5;
     Inventory inventory;
 
+    InventoryItem bread;
 
     public GameScreen(GoosePatrol game) {
-
         this.game = game;
         camera = new OrthographicCamera();
         fitViewport = new FitViewport(1280, 720, camera);
@@ -42,9 +41,23 @@ public class GameScreen implements Screen {
         batch = game.getBatch();
         player = new Player(new Vector2(), playerSprite);
 
-        inventorySlotSprite = game.getAssets().getInventorySlot();
-        inventory = new Inventory(INVENTORY_SIZE, inventorySlotSprite);
+        inventory = new Inventory(INVENTORY_SIZE, game);
 
+        // temp, move to separate class later
+        Texture breadTexture = game.getAssets().getBread();
+        bread = new InventoryItem(breadTexture, "bread", "a piece of bread") {
+            @Override
+            public void onUse() {
+                System.out.println("im being used");
+            }
+        };
+
+        initialiseInventory();
+
+    }
+
+    public void initialiseInventory() {
+        inventory.slots.get(0).setItem(bread);
     }
 
     @Override
@@ -76,6 +89,7 @@ public class GameScreen implements Screen {
 
         // draw all inventory slots
         if (inventory.visible) inventory.draw(batch, 0, 0);
+        inventory.update(camera);
 
         batch.end();
     }

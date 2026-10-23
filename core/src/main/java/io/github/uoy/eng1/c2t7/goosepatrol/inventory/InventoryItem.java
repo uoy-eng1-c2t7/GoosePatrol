@@ -3,7 +3,7 @@ package io.github.uoy.eng1.c2t7.goosepatrol.inventory;
 import com.badlogic.gdx.graphics.Texture;
 
 public abstract class InventoryItem {
-    private Texture texture;
+    private final Texture texture;
     String name;
     String description;
 
