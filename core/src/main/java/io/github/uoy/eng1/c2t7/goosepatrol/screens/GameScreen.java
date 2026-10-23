@@ -59,8 +59,8 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
 
         // UI stage setup
         uiStage = new Stage(new FitViewport(1280, 720), game.getBatch());
-        hudUI = new HudUI(world.getPlayer().getInventory, game.getAssets());
-
+        hudUI = new HudUI(world.getPlayer().getInventory(), game.getAssets());
+        pauseMenuUI = new PauseMenuUI(game, game.getAssets().getSkin(), this);
         uiStage.addActor(hudUI);
         uiStage.addActor(pauseMenuUI);
     }
@@ -100,7 +100,7 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
 
     // Input Handling
     @Override
-    public boolean KeyDown(int keycode) {
+    public boolean keyDown(int keycode) {
         // Toggle Pause
         if (keycode == Input.Keys.ESCAPE) {
             togglePause();
@@ -173,6 +173,7 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
         // If window is minimised it is 0, so don't do anything
         if (width <= 0 || height <= 0)
             return;
+        uiStage.getViewport().update(width, height, true);
         viewport.update(width, height);
     }
 

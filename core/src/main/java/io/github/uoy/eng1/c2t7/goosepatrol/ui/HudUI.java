@@ -45,6 +45,8 @@ public class HudUI extends Table {
         hotbarTable = new Table();
         buildHotbar();
         add(hotbarTable).bottom().padBottom(20);
+
+        updateHotbar();
     }
 
     private void buildHotbar() {
