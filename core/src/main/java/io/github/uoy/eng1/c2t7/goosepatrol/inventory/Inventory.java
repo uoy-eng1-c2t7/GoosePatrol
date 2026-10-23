@@ -31,12 +31,10 @@ public class Inventory {
     }
 
     public void update(OrthographicCamera camera) {
-        boolean inventoryClicked = false;
         for (InventorySlot slot: slots) {
             if (slot.checkIfClicked(camera)) {
                 slot.toggleSelected();
                 deselectPreviouslySelected(slot.id);
-                inventoryClicked = true;
             }
         }
         // if there is a selected slot and there was a click event, use the selected item
