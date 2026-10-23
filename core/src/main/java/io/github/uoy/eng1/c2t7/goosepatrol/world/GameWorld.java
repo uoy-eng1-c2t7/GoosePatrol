@@ -4,6 +4,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import io.github.uoy.eng1.c2t7.goosepatrol.inventory.Item;
+import io.github.uoy.eng1.c2t7.goosepatrol.inventory.ItemRegistry;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Entity;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Player;
@@ -25,6 +27,15 @@ public class GameWorld {
         this.config = config;
         this.listener = listener;
         this.player = new Player(new Vector2(100, 100), config.player);
+        
+        if (config.startingItems != null) {
+            for (String itemId : config.startingItems) {
+                Item item = ItemRegistry.get(itemId);
+                if (item != null) {
+                    player.getInventory().addItem(item, 1);
+                }
+            }
+        }
         entities.add(player);
 
         this.map = new MapLoader(map);

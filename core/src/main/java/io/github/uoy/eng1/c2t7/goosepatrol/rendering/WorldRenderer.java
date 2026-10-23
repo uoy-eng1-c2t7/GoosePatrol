@@ -25,7 +25,7 @@ public class WorldRenderer implements Disposable {
         this.world = world;
         this.batch = batch;
         mapRenderer = new OrthogonalTiledMapRenderer(assets.getMap(), batch);
-        this.playerSprite = assets.getSprite("student.png");
+        this.playerSprite = assets.getSprite("player.png");
         this.gooseSprite = assets.getSprite("goose.png");
     }
 

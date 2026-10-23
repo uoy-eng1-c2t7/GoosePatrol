@@ -7,8 +7,9 @@ public class ItemRegistry {
     private static final Map<String, Item> ITEMS = new HashMap<>();
 
     public static final Item BREAD = register(new Item(
-        "bread", "Bread", "bread", 16,
+        "bread", "Bread", "bread.png", 16,
         (world, player) -> {
+            // do something
             return true; 
         }
     ));

@@ -1,13 +1,27 @@
 
 game.png
-size: 33,43
+size: 47,85
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-student.png
+player.png
   rotate: false
   xy: 0,0
   size: 33,43
   orig: 33,43
+  offset: 0,0
+  index: -1
+bread.png
+  rotate: false
+  xy: 0,43
+  size: 42,42
+  orig: 42,42
+  offset: 0,0
+  index: -1
+goose.png
+  rotate: true
+  xy: 33,0
+  size: 20,14
+  orig: 24,24
   offset: 0,0
   index: -1
