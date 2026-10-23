@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 import io.github.uoy.eng1.c2t7.goosepatrol.entities.Player;
+import io.github.uoy.eng1.c2t7.goosepatrol.inventory.Inventory;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.InventoryItem;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.InventorySlot;
 
@@ -28,8 +29,7 @@ public class GameScreen implements Screen {
 
     private final Texture inventorySlotSprite;
     private final int INVENTORY_SIZE = 5;
-    private boolean inventoryVisible;
-    Array<InventorySlot> inventory;
+    Inventory inventory;
 
 
     public GameScreen(GoosePatrol game) {
@@ -43,13 +43,7 @@ public class GameScreen implements Screen {
         player = new Player(new Vector2(), playerSprite);
 
         inventorySlotSprite = game.getAssets().getInventorySlot();
-        inventory = new Array<>(5);
-        for (int i = 0; i < INVENTORY_SIZE; i++) {
-            System.out.println(inventory.size);
-            System.out.println(INVENTORY_SIZE);
-            inventory.add(new InventorySlot(inventorySlotSprite, i + 1, inventorySlotSprite.getWidth() * i, 0));
-        }
-        inventoryVisible = false;
+        inventory = new Inventory(INVENTORY_SIZE, inventorySlotSprite);
 
     }
 
@@ -66,7 +60,7 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT))  player.position.x -= SPEED * delta;
         if (Gdx.input.isKeyPressed(Input.Keys.UP))    player.position.y += SPEED * delta;
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN))  player.position.y -= SPEED * delta;
-        if (Gdx.input.isKeyJustPressed(Input.Keys.E))     toggleInventory();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) inventory.toggleVisible();
 
         camera.position.x = 0;
         camera.position.y = 0;
@@ -81,18 +75,15 @@ public class GameScreen implements Screen {
         player.draw(batch);
 
         // draw all inventory slots
-        if (inventoryVisible) {
+        if (inventory.visible) {
             for (int i = 0; i < INVENTORY_SIZE; i++) {
-                inventory.get(i).draw(batch, 0, 0);
+                inventory.slots.get(i).draw(batch, 0, 0);
             }
         }
 
         batch.end();
     }
 
-    private void toggleInventory() {
-        inventoryVisible = !inventoryVisible;
-    }
 
     @Override
     public void resize(int width, int height) {
