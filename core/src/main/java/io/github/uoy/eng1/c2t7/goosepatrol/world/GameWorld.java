@@ -21,18 +21,21 @@ public class GameWorld {
     }
 
     private final WorldListener listener;
-    private final GameConfig config;
     private final Player player;
     private final Array<Entity> entities = new Array<>();
     private final MapLoader map;
 
-    public GameWorld(GameConfig config, WorldListener listener, TiledMap map) {
-        this.config = config;
+    public GameWorld(GameConfig config, WorldListener listener, TiledMap tiledMap) {
         this.listener = listener;
-        this.player = new Player(new Vector2(100, 100), config.player);
+        this.map = new MapLoader(tiledMap);
 
-        Goose goose = new Goose(new Vector2(150, 100), config.goose, player);
-        entities.add(goose);
+        this.player = new Player(map.getPlayerSpawn(), config.player);
+        entities.add(player);
+
+        for (Vector2 spawnPos : map.getGooseSpawns()) {
+            Goose goose = new Goose(spawnPos, config.goose, player);
+            entities.add(goose);
+        }
 
         if (config.startingItems != null) {
             for (String itemId : config.startingItems) {
@@ -42,9 +45,6 @@ public class GameWorld {
                 }
             }
         }
-        entities.add(player);
-
-        this.map = new MapLoader(map);
     }
 
     public void update(float delta, Vector2 moveInput) {
