@@ -10,6 +10,7 @@ import io.github.uoy.eng1.c2t7.goosepatrol.inventory.Item;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.ItemRegistry;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Entity;
+import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Goose;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Player;
 
 public class GameWorld {
@@ -29,6 +30,9 @@ public class GameWorld {
         this.config = config;
         this.listener = listener;
         this.player = new Player(new Vector2(100, 100), config.player);
+
+        Goose goose = new Goose(new Vector2(150, 100), config.goose, player);
+        entities.add(goose);
 
         if (config.startingItems != null) {
             for (String itemId : config.startingItems) {

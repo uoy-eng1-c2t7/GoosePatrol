@@ -10,6 +10,8 @@ import com.badlogic.gdx.utils.Disposable;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.Assets;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.GameWorld;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Entity;
+import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Goose;
+import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Player;
 
 /**
  * Handles rendering the GameWorld to the screen.
@@ -36,7 +38,13 @@ public class WorldRenderer implements Disposable {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
-        drawEntity(playerSprite, world.getPlayer());
+        for (Entity entity : world.getEntities()) {
+            if (entity instanceof Goose) {
+                drawEntity(gooseSprite, entity);
+            } else if (entity instanceof Player) {
+                drawEntity(playerSprite, entity);
+            }
+        }
         
         batch.end();
     }

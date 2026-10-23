@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 /**
  * Anything that has a position and need to be updated
- * every frame. Every entity has a bounds represented 
+ * every frame. Every entity has a bounds represented
  * by a circle.
  */
 public abstract class Entity {
@@ -14,11 +14,14 @@ public abstract class Entity {
     private final Vector2 velocity = new Vector2();
     private final Circle bounds;
     private final float turnSpeed;
+    private final float speed;
+
     private float rotation;
 
-    public Entity(Vector2 startPosition, float radius, float turnSpeed) {
+    public Entity(Vector2 startPosition, float radius, float speed, float turnSpeed) {
         this.position = startPosition;
         this.turnSpeed = turnSpeed;
+        this.speed = speed;
         this.bounds = new Circle(startPosition.x, startPosition.y, radius);
     }
 
@@ -32,6 +35,10 @@ public abstract class Entity {
 
     public Circle getBounds() {
         return bounds;
+    }
+
+    public float getSpeed() {
+        return speed;
     }
 
     /** Direction last moved in, in degrees (0 = right, 90 = up). */

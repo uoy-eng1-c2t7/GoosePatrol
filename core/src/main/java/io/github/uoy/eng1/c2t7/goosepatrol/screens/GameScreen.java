@@ -173,6 +173,16 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
         game.setScreen(new GameScreen(game));
     }
 
+    @Override 
+    public void onExitReached(boolean isChased) {
+        if (isChased) {
+            hudUI.showToast("Driver: 'NO GEESE ON THE BUS! SHAKE THEM OFF'");
+        } else {
+            float timeTaken = game.getConfig().gameDurationSeconds - timeRemaining;
+            game.setScreen(new TicketScreen(game, true, timeTaken));
+        }
+    }
+
     @Override
     public void resize(int width, int height) {
         // If window is minimised it is 0, so don't do anything
