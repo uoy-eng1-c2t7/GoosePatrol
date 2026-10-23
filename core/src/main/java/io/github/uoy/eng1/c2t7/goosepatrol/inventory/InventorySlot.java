@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class InventorySlot {
+    final int id;
     private final Texture texture;
     private final Texture selectedTexture;
     private Texture currentTexture;
@@ -22,15 +23,18 @@ public class InventorySlot {
 
     boolean isSelected = false;
     private final Rectangle hitbox;
+    private final Inventory inventory;
 
-    public InventorySlot(Texture texture, Texture selectedTexture, float cameraOffsetX, float cameraOffsetY) {
+    public InventorySlot(int id, Texture texture, Texture selectedTexture, float cameraOffsetX, float cameraOffsetY, Inventory inventory) {
+        this.id = id;
         this.texture = texture;
         this.currentTexture = texture;
         this.selectedTexture = selectedTexture;
         this.item = null;
+
         this.cameraOffset = new Vector2(cameraOffsetX, cameraOffsetY);
         this.hitbox = new Rectangle(cameraOffsetX, cameraOffsetY, texture.getWidth(), texture.getHeight());
-
+        this.inventory = inventory;
     }
 
     public InventoryItem getItem() {
@@ -41,18 +45,25 @@ public class InventorySlot {
         this.item = item;
     }
 
-    public void update(OrthographicCamera camera) {
+    public boolean checkIfClicked(OrthographicCamera camera) {
         if (Gdx.input.justTouched()) {
             Vector3 touch = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touch);
-            if (hitbox.contains(touch.x, touch.y)) toggleSelected();
+            return hitbox.contains(touch.x, touch.y);
         }
+
+        return false;
     }
 
     public void toggleSelected() {
-        if (currentTexture == texture) currentTexture = selectedTexture;
-        else if (currentTexture == selectedTexture) currentTexture = texture;
+        if (currentTexture == texture) { currentTexture = selectedTexture; }
+        else if (currentTexture == selectedTexture) { currentTexture = texture; }
         isSelected = !isSelected;
+    }
+
+    public void deselect() {
+        currentTexture = texture;
+        isSelected = false;
     }
 
     public void draw(SpriteBatch batch, float posX, float posY) {

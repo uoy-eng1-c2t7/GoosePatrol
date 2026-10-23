@@ -24,17 +24,26 @@ public class Inventory {
         this.selectedSlotSprite = game.getAssets().getSelectedSlot();
 
         for (int i = 0; i < capacity; i++) {
-            slots.add(new InventorySlot(slotSprite, selectedSlotSprite, slotSprite.getWidth() * i, 0));
+            slots.add(new InventorySlot(i, slotSprite, selectedSlotSprite, slotSprite.getWidth() * i, 0, this));
         }
 
     }
 
     public void update(OrthographicCamera camera) {
         for (InventorySlot slot: slots) {
-            slot.update(camera);
+            if (slot.checkIfClicked(camera)) {
+                slot.toggleSelected();
+                deselectPreviouslySelected(slot.id);
+            }
         }
     }
 
+    public void deselectPreviouslySelected(int id) {
+        // cant use inventory slots iterator twice. since the above function will already be using it need to do this instead
+        for (int i = 0; i < capacity; i++) {
+            if (i != id) slots.get(i).deselect();
+        }
+    }
 
     public void draw(SpriteBatch batch, float posX, float posY) {
         for (InventorySlot slot: slots) {
