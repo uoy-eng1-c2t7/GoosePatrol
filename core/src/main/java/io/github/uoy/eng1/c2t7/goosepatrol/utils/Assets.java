@@ -34,6 +34,9 @@ public class Assets implements Disposable {
     private final Set<String> warned = new HashSet<>();
     private TextureRegion missing; // Only created if a sprite lookup fails
 
+    //inventory
+    public static final String SLOT = "ui/inventoryslot.png";
+
     /** Load things needed initially for the title and loading screen (fast). */
     public void loadBoot() {
         manager.load(SKIN, Skin.class);
@@ -46,6 +49,8 @@ public class Assets implements Disposable {
         manager.setLoader(TiledMap.class, new TmxMapLoader());
         manager.load(SPRITES, TextureAtlas.class);
         manager.load(MAP, TiledMap.class);
+
+        manager.load(SLOT, Texture.class);
     }
 
     /** Loads a bit more, returns true when everything queued has finished.
@@ -71,6 +76,8 @@ public class Assets implements Disposable {
     public TiledMap getMap() {
         return manager.get(MAP, TiledMap.class);
     }
+
+    public Texture getInventorySlot() { return manager.get(SLOT, Texture.class); }
 
     /**
      * A sprite by its name in the atlas ("goose", "player", "bread"...).
