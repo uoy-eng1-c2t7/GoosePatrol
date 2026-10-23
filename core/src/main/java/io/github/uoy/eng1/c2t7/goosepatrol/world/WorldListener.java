@@ -6,6 +6,10 @@ public interface WorldListener {
     }
 
     default void onInventoryChanged() {
+
+    }
+
+    default void onPlayerPecked() {
         
     }
  }

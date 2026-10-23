@@ -19,8 +19,8 @@
         "sfxVolume": 1
     },
     "camera": {
-        "viewWidth": 640,
-        "viewHeight": 360,
+        "viewWidth": 1280,
+        "viewHeight": 720,
         "lerpSpeed" : 5
     }
 }

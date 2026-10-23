@@ -91,6 +91,9 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
             cameraController.update(delta);
         }
 
+        boolean sprintPressed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT);
+        world.getPlayer().setSprinting(sprintPressed);
+
         // Render Game World
         ScreenUtils.clear(Color.BLACK);
         renderer.render(camera);
@@ -189,6 +192,12 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
     @Override 
     public void onInventoryChanged() {
         hudUI.updateHotbar();
+    }
+
+    @Override 
+    public void onPlayerPecked() {
+        game.getAssets().getSound("pain").play(game.getConfig().audio.sfxVolume);
+        hudUI.showToast("OUCH! Pecked by a goose!");
     }
 
     @Override
