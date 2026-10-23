@@ -25,7 +25,7 @@ public class InventorySlot {
         this.item = item;
     }
 
-    public void draw(SpriteBatch batch, int posX, int posY) {
+    public void draw(SpriteBatch batch, float posX, float posY) {
         batch.draw(texture, posX + cameraOffset.x, posY + cameraOffset.y, texture.getHeight(), texture.getWidth());
         if (item != null) drawItem(batch, posX + cameraOffset.x, posY + cameraOffset.y);
     }

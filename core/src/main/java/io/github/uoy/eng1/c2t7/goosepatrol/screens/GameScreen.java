@@ -75,11 +75,7 @@ public class GameScreen implements Screen {
         player.draw(batch);
 
         // draw all inventory slots
-        if (inventory.visible) {
-            for (int i = 0; i < INVENTORY_SIZE; i++) {
-                inventory.slots.get(i).draw(batch, 0, 0);
-            }
-        }
+        if (inventory.visible) inventory.draw(batch, 0, 0);
 
         batch.end();
     }
