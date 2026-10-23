@@ -4,9 +4,19 @@
     "startingItems": ["bread", "energy_drink"],
     "player": {
         "speed": 120,
-        "radius": 8
+        "radius": 16,
+        "turnSpeed": 10
     },
-    "physics": {
-        "pixelsPerMeter": 32
+    "goose": {
+        "radius": 16,
+        "turnSpeed": 10
+    },
+    "audio": {
+        "sfxVolume": 1
+    },
+    "camera": {
+        "viewWidth": 640,
+        "viewHeight": 360,
+        "lerpSpeed" : 5
     }
 }
