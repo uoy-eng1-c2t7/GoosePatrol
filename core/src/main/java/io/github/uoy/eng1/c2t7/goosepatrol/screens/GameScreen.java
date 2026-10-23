@@ -9,11 +9,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 import io.github.uoy.eng1.c2t7.goosepatrol.entities.Player;
+import io.github.uoy.eng1.c2t7.goosepatrol.inventory.InventoryItem;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.InventorySlot;
 
 public class GameScreen implements Screen {
@@ -25,11 +27,13 @@ public class GameScreen implements Screen {
     final Player player;
 
     private final Texture inventorySlotSprite;
+    private final int INVENTORY_SIZE = 5;
     private boolean inventoryVisible;
-    final InventorySlot slot1;
+    Array<InventorySlot> inventory;
 
 
     public GameScreen(GoosePatrol game) {
+
         this.game = game;
         camera = new OrthographicCamera();
         fitViewport = new FitViewport(1280, 720, camera);
@@ -39,7 +43,12 @@ public class GameScreen implements Screen {
         player = new Player(new Vector2(), playerSprite);
 
         inventorySlotSprite = game.getAssets().getInventorySlot();
-        slot1 = new InventorySlot(inventorySlotSprite, 1);
+        inventory = new Array<>(5);
+        for (int i = 0; i < INVENTORY_SIZE; i++) {
+            System.out.println(inventory.size);
+            System.out.println(INVENTORY_SIZE);
+            inventory.add(new InventorySlot(inventorySlotSprite, i + 1, inventorySlotSprite.getWidth() * i, 0));
+        }
         inventoryVisible = false;
 
     }
@@ -71,9 +80,13 @@ public class GameScreen implements Screen {
         batch.begin();
         player.draw(batch);
 
+        // draw all inventory slots
         if (inventoryVisible) {
-            slot1.draw(batch, 0, 0);
+            for (int i = 0; i < INVENTORY_SIZE; i++) {
+                inventory.get(i).draw(batch, 0, 0);
+            }
         }
+
         batch.end();
     }
 
