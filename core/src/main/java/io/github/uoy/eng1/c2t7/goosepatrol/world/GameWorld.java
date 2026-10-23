@@ -135,20 +135,21 @@ public class GameWorld {
         return false;
     }
 
-    public void throwBread(Vector2 fromPos, float rotationDeg) {
-        Vector2 throwDir = new Vector2(MathUtils.cosDeg(rotationDeg), MathUtils.sinDeg(rotationDeg));
+    public void throwFood(Vector2 fromPos, float rotDeg, Item item, float lifetime, float attractRadius,
+            float distractTime) {
+        Vector2 throwDir = new Vector2(MathUtils.cosDeg(rotDeg), MathUtils.sinDeg(rotDeg));
         Vector2 spawnPos = fromPos.cpy().add(throwDir.cpy().scl(20f));
         Vector2 throwVel = throwDir.scl(200f);
-        // Thrown item: isDistraction = true, 0.6s cooldown so you don't instantly pick
-        // it back up
-        DroppedItem thrownBread = new DroppedItem(spawnPos, ItemRegistry.BREAD, 1, throwVel, true, 0.6f);
-        entities.add(thrownBread);
-        // ONLY alert nearby chasing geese to this THROWN bread
+
+        DroppedItem drop = new DroppedItem(spawnPos, item, 1, throwVel, true, 0.6f);
+        entities.add(drop);
+
+        // Alert nearby geese with this item's specific duration and radius
         for (Entity entity : entities) {
             if (entity instanceof Goose) {
                 Goose goose = (Goose) entity;
-                if (goose.isChasing() && goose.getPosition().dst(spawnPos) < 220f) {
-                    goose.distract(spawnPos);
+                if (goose.isChasing() && goose.getPosition().dst(spawnPos) < attractRadius) {
+                    goose.distract(spawnPos, distractTime);
                 }
             }
         }

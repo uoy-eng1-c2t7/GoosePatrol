@@ -24,6 +24,7 @@ public class Goose extends Entity {
     private float wanderTimer = 0f;
     private float peckTimer = 0f;
     private float stuckTimer = 0f;
+    private float distractDuration;
     private final Vector2 detourDir = new Vector2();
     private Vector2 distractionPos = null;
 
@@ -72,10 +73,10 @@ public class Goose extends Entity {
 
             case DISTRACTED:
                 if (distractionPos != null) {
-                    float distToBread = getPosition().dst(distractionPos);
-                    if (distToBread < 16f) {
+                    float distToFood = getPosition().dst(distractionPos);
+                    if (distToFood < 16f) {
                         state = State.PECKING;
-                        peckTimer = 2.5f;
+                        peckTimer = distractDuration;
                         getVelocity().setZero();
                     } else {
                         steerTowards(distractionPos, getSpeed() * 0.9f, delta);
@@ -133,8 +134,9 @@ public class Goose extends Entity {
         getVelocity().set(direct).scl(speed);
     }
 
-    public void distract(Vector2 breadPos) {
-        this.distractionPos = new Vector2(breadPos);
+    public void distract(Vector2 foodPos, float duration) {
+        this.distractionPos = new Vector2(foodPos);
+        this.distractDuration = duration;
         this.state = State.DISTRACTED;
     }
 
