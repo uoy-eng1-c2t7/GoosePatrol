@@ -13,7 +13,7 @@ public class Inventory {
         this.slots = new Array<>(capacity);
         this.capacity = capacity;
         for (int i = 0; i < capacity; i++) {
-            slots.add(new InventorySlot(slotSprite, i + 1, slotSprite.getWidth() * i, 0));
+            slots.add(new InventorySlot(slotSprite, slotSprite.getWidth() * i, 0));
         }
     }
 

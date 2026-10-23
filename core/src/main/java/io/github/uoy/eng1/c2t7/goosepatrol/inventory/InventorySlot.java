@@ -7,12 +7,10 @@ import com.badlogic.gdx.math.Vector2;
 public class InventorySlot {
     private final Texture texture;
     private InventoryItem item;
-    int id;
     private final Vector2 cameraOffset;
 
-    public InventorySlot(Texture texture, int id, float cameraOffsetX, float cameraOffsetY) {
+    public InventorySlot(Texture texture, float cameraOffsetX, float cameraOffsetY) {
         this.texture = texture;
-        this.id = id;
         this.item = null;
         this.cameraOffset = new Vector2(cameraOffsetX, cameraOffsetY);
     }
