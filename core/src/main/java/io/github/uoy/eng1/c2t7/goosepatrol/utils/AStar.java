@@ -86,6 +86,10 @@ public class AStar {
         startNode.fCost = startNode.hCost + startNode.gCost;
         AStarHeap.add(startNode);
 
+        //test
+        Vector2 tx = tileCoords(new Vector2(14, 3188));
+        Object s = layer.getCell((int) tx.x, (int) tx.y).getTile().getId();
+
         while (!AStarHeap.isEmpty()) {
             ANode curNode = AStarHeap.poll();
             if (!visited.add(curNode)) continue;
@@ -107,7 +111,7 @@ public class AStar {
                 neighbourNode.fCost = neighbourNode.gCost + neighbourNode.hCost;
 
                 // if tile can be traversed, add to heap
-                if ((boolean) neighbour.getTile().getProperties().get("walkable") && !visited.contains(neighbourNode)) {
+                if (!visited.contains(neighbourNode)) {
                     // convert back to world coordinates
                     AStarHeap.add(neighbourNode);
                 }
@@ -134,11 +138,11 @@ public class AStar {
 
 
     public Vector2 tileCoords(Vector2 worldCoordinates) {
-        return new Vector2((float) Math.floor(worldCoordinates.x / TILE_WIDTH), (float) Math.floor((3200 - worldCoordinates.y) / TILE_WIDTH));
+        return new Vector2((float) Math.floor(worldCoordinates.x / TILE_WIDTH), (float) Math.floor((worldCoordinates.y) / TILE_WIDTH));
     }
 
     public Vector2 worldCoords(Vector2 tileCoordinates) {
-        return new Vector2(tileCoordinates.x * 32, (3200 - (tileCoordinates.y * 32)));
+        return new Vector2(tileCoordinates.x * 32 + 16, ((tileCoordinates.y * 32)) + 16);
     }
 
     private int calculateHCost(Vector2 startCellCoords, Vector2 endCellCoords) {

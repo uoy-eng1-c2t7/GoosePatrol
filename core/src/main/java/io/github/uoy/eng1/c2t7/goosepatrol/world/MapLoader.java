@@ -51,7 +51,13 @@ public class MapLoader {
         }
 
         // Ground layer
+        for (MapLayer layer: map.getLayers()) {
+            System.out.println(layer.getName());
+        }
+        System.out.println(map.getLayers());
         groundLayer = (TiledMapTileLayer) map.getLayers().get("ground");
+        System.out.println(groundLayer.getCell(0, 0).getTile().getProperties().get("walkable")); //always returns 2 regardless of what tile
+
 
         // Entities layer
         MapLayer entityLayer = map.getLayers().get("entities");
