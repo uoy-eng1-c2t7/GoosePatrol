@@ -13,7 +13,8 @@
         "turnSpeed": 10,
         "sightRange": 140,
         "loseSightRange": 1000,
-        "territoryRadius": 180
+        "territoryRadius": 180,
+        "pathfindCooldown": 0.05
     },
     "audio": {
         "sfxVolume": 1

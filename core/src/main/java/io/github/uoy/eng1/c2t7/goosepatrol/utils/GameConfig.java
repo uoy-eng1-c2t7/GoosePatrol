@@ -22,9 +22,10 @@ public class GameConfig {
         public float speed;
         public float radius;
         public float turnSpeed;
-        public float sightRange;      // Distance to notice player 
+        public float sightRange;      // Distance to notice player
         public float loseSightRange;  // Distance player must escape to lose goose
         public float territoryRadius; // Max wander distance from home
+        public float pathfindCooldown;
     }
 
     public static GameConfig load(FileHandle file) {
