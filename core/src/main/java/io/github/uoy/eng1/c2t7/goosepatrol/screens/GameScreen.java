@@ -130,7 +130,7 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
             return true;
         }
 
-        // Toggle debug 
+        // Toggle debug
         if (keycode == Input.Keys.F3) {
             debugRenderer.toggle();
         }
@@ -179,7 +179,7 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
         game.setScreen(new GameScreen(game));
     }
 
-    @Override 
+    @Override
     public void onExitReached(boolean isChased) {
         if (isChased) {
             hudUI.showToast("Driver: 'NO GEESE ON THE BUS! SHAKE THEM OFF'");
@@ -189,12 +189,12 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
         }
     }
 
-    @Override 
+    @Override
     public void onInventoryChanged() {
         hudUI.updateHotbar();
     }
 
-    @Override 
+    @Override
     public void onPlayerPecked() {
         game.getAssets().getSound("pain").play(game.getConfig().audio.sfxVolume);
         hudUI.showToast("OUCH! Pecked by a goose!");

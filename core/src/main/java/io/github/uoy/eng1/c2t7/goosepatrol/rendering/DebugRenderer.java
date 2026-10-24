@@ -80,9 +80,10 @@ public class DebugRenderer implements Disposable {
                 shapes.circle(pos.x, pos.y, 140f);
 
                 //Draw path
-                for (Vector2 step: goose.path) {
-                    shapes.setColor(0f, 1f, 1f, 0.25f);
-                    shapes.circle(step.x, step.y, 2f);
+                for (int i = 0; i < goose.path.size; i++) {
+                    Vector2 step = goose.path.get(i);
+                    shapes.setColor(Color.RED);
+                    shapes.circle(step.x, step.y, 1f);
                 }
             }
 

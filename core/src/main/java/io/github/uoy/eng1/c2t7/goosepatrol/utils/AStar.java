@@ -13,6 +13,7 @@ public class AStar {
     private final TiledMapTileLayer layer;
     final float TILE_WIDTH = 32f;
 
+
     private final Vector2[] DIRECTIONS;
 
 
@@ -22,46 +23,21 @@ public class AStar {
         int gCost;
         int hCost;
         int fCost;
-        Array<Vector2> currPath;
+        final ANode parent;
 
         public ANode(Vector2 pos) {
             this.x = (int) pos.x;
             this.y = (int) pos.y;
-            this.currPath = new Array<>();
+            this.parent = null;
         }
 
-        public ANode(Vector2 pos, Array<Vector2> path) {
+        public ANode(Vector2 pos, ANode parent) {
             this.x = (int) pos.x;
             this.y = (int) pos.y;
-            this.currPath = path;
+            this.parent = parent;
         }
 
 
-        public void updateCosts(Vector2 startCellCoords, Vector2 endCellCoords) {
-            setGCost(startCellCoords);
-            setHCost(endCellCoords);
-            setFCost();
-        }
-
-        private void setGCost(Vector2 startCellCoords) {
-            int diffX = Math.abs((int) startCellCoords.x - this.x);
-            int diffY = Math.abs((int) startCellCoords.y - this.y);
-
-            Vector2 v = new Vector2(diffX, diffY);
-            this.gCost = (int) Math.floor(v.len() * 10);
-        }
-
-        private void setHCost(Vector2 endCellCoords) {
-            int diffX = Math.abs((int) endCellCoords.x - this.x);
-            int diffY = Math.abs((int) endCellCoords.y - this.y);
-
-            Vector2 v = new Vector2(diffX, diffY);
-            this.hCost = (int) Math.floor(v.len() * 10);
-        }
-
-        private void setFCost() {
-            this.fCost = this.gCost + this.hCost;
-        }
 
         @Override
         public boolean equals(Object o) {
@@ -92,41 +68,48 @@ public class AStar {
             new Vector2(-1, -1)};
     }
 
+
     public Array<Vector2> findPath(Vector2 from, Vector2 to) {
         // Use a heap to track the next node to visit dependent on its f cost (distance from start node + distance from end node)
         // Node with lowest f cost always appears on top of heap
-        PriorityQueue<ANode> AStarHeap = new PriorityQueue<>((ANode n1, ANode n2) -> Integer.compare(n2.fCost, n1.fCost));
+        PriorityQueue<ANode> AStarHeap = new PriorityQueue<>((ANode n1, ANode n2) -> Integer.compare(n1.fCost, n2.fCost));
         Set<ANode> visited = new HashSet<>();
 
         Vector2 startCellCoords = tileCoords(from);
         ANode startNode = new ANode(startCellCoords);
-        AStarHeap.add(startNode);
-        visited.add(startNode);
 
         Vector2 endCellCoords = tileCoords(to);
         ANode endNode = new ANode(endCellCoords);
 
+        startNode.hCost = calculateHCost(startCellCoords, endCellCoords);
+        startNode.gCost = 0;
+        startNode.fCost = startNode.hCost + startNode.gCost;
+        AStarHeap.add(startNode);
+
         while (!AStarHeap.isEmpty()) {
             ANode curNode = AStarHeap.poll();
-            Array<Vector2> curNodePath = curNode.currPath;
+            if (!visited.add(curNode)) continue;
 
             for (Vector2 direction: DIRECTIONS) {
                 Vector2 newDirection = new Vector2(curNode.x + direction.x, curNode.y + direction.y);
                 TiledMapTileLayer.Cell neighbour = layer.getCell((int) newDirection.x, (int) newDirection.y);
                 if (neighbour == null || neighbour.getTile().getProperties().get("walkable") == null) continue;
-                ANode neighbourNode = new ANode(newDirection, curNodePath);
+                ANode neighbourNode = new ANode(newDirection, curNode);
 
 
-                if (neighbourNode.equals(endNode)) return curNodePath;
-                neighbourNode.updateCosts(startCellCoords, endCellCoords);
+                if (neighbourNode.equals(endNode)) return buildPath(neighbourNode);
+                boolean diagonal = (direction.x != 0 && direction.y != 0);
+                // 14 is approximately sqrt(2) * 10
+                int distance = diagonal ? 14 : 10;
+
+                neighbourNode.gCost = curNode.gCost + distance;
+                neighbourNode.hCost = calculateHCost(newDirection, endCellCoords);
+                neighbourNode.fCost = neighbourNode.gCost + neighbourNode.hCost;
 
                 // if tile can be traversed, add to heap
                 if ((boolean) neighbour.getTile().getProperties().get("walkable") && !visited.contains(neighbourNode)) {
-                    curNodePath.add(newDirection);
+                    // convert back to world coordinates
                     AStarHeap.add(neighbourNode);
-                    // this is suboptimal, a path to any given node is now not guaranteed to be the shortest
-                    // to be fixed
-                    visited.add(neighbourNode);
                 }
             }
         }
@@ -135,12 +118,34 @@ public class AStar {
         return new Array<>();
     }
 
-    public boolean inBounds(Vector2 pos) {
-        return pos.x >= 0 && pos.y >= 0;
+    public Array<Vector2> buildPath(ANode node) {
+        Array<Vector2> path = new Array<>();
+
+        while (node != null) {
+            Vector2 v = new Vector2(node.x, node.y);
+            path.add(worldCoords(v));
+            node = node.parent;
+        }
+
+        path.reverse();
+
+        return path;
     }
+
 
     public Vector2 tileCoords(Vector2 worldCoordinates) {
-        return new Vector2((float) Math.floor(worldCoordinates.x / TILE_WIDTH), (float) Math.floor(worldCoordinates.y / TILE_WIDTH));
+        return new Vector2((float) Math.floor(worldCoordinates.x / TILE_WIDTH), (float) Math.floor((3200 - worldCoordinates.y) / TILE_WIDTH));
     }
 
+    public Vector2 worldCoords(Vector2 tileCoordinates) {
+        return new Vector2(tileCoordinates.x * 32, (3200 - (tileCoordinates.y * 32)));
+    }
+
+    private int calculateHCost(Vector2 startCellCoords, Vector2 endCellCoords) {
+        int diffX = (int) Math.abs(endCellCoords.x - startCellCoords.x);
+        int diffY = (int) Math.abs(endCellCoords.y - startCellCoords.y);
+
+        Vector2 v = new Vector2(diffX, diffY);
+        return (int) Math.floor(v.len() * 10);
+    }
 }
