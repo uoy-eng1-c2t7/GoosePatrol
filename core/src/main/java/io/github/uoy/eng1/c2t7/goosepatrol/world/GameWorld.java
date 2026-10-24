@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.Item;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.ItemRegistry;
+import io.github.uoy.eng1.c2t7.goosepatrol.utils.AStar;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.DroppedItem;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Entity;
@@ -36,7 +37,7 @@ public class GameWorld {
         entities.add(player);
 
         for (Vector2 spawnPos : map.getGooseSpawns()) {
-            Goose goose = new Goose(spawnPos, config.goose, player);
+            Goose goose = new Goose(spawnPos, config.goose, player, new AStar(map.getGroundLayer()));
             entities.add(goose);
         }
 
@@ -52,6 +53,8 @@ public class GameWorld {
                 }
             }
         }
+
+
     }
 
     public void update(float delta, Vector2 moveInput) {

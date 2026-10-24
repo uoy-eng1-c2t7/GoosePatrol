@@ -8,12 +8,12 @@
         "turnSpeed": 10
     },
     "goose": {
-        "speed": 95,
+        "speed": 90,
         "radius": 16,
         "turnSpeed": 10,
         "sightRange": 140,
-        "loseSightRange": 250,
-        "territoryRadius": 180        
+        "loseSightRange": 1000,
+        "territoryRadius": 180
     },
     "audio": {
         "sfxVolume": 1

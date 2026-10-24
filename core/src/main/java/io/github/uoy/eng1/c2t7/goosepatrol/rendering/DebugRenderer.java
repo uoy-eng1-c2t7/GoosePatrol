@@ -38,7 +38,7 @@ public class DebugRenderer implements Disposable {
         shapes.setProjectionMatrix(camera.combined);
         shapes.begin(ShapeRenderer.ShapeType.Line);
 
-        // Walls 
+        // Walls
         shapes.setColor(Color.GREEN);
         for (Rectangle wall : world.getMap().getWalls()) {
             shapes.rect(wall.x, wall.y, wall.width, wall.height);
@@ -78,6 +78,12 @@ public class DebugRenderer implements Disposable {
                 // Draw Sight Radius
                 shapes.setColor(1f, 1f, 0f, 0.25f);
                 shapes.circle(pos.x, pos.y, 140f);
+
+                //Draw path
+                for (Vector2 step: goose.path) {
+                    shapes.setColor(0f, 1f, 1f, 0.25f);
+                    shapes.circle(step.x, step.y, 2f);
+                }
             }
 
             // Draw Velocity Direction Rays

@@ -2,6 +2,8 @@ package io.github.uoy.eng1.c2t7.goosepatrol.world.entities;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import io.github.uoy.eng1.c2t7.goosepatrol.utils.AStar;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
 
 public class Goose extends Entity {
@@ -28,13 +30,19 @@ public class Goose extends Entity {
     private final Vector2 detourDir = new Vector2();
     private Vector2 distractionPos = null;
 
-    public Goose(Vector2 startPosition, GameConfig.GooseConfig config, Player player) {
+    private final AStar pathfinder;
+    public Array<Vector2> path;
+
+    public Goose(Vector2 startPosition, GameConfig.GooseConfig config, Player player, AStar pathfinder) {
         super(startPosition, config.radius, config.speed, config.turnSpeed);
         this.player = player;
         sightRange = config.sightRange;
         loseSightRange = config.loseSightRange;
         territoryRadius = config.territoryRadius;
         homePosition = new Vector2(startPosition);
+
+        this.pathfinder = pathfinder;
+        path = new Array<>();
     }
 
     @Override
@@ -95,6 +103,8 @@ public class Goose extends Entity {
                 }
                 break;
         }
+
+        path = pathfinder.findPath(getPosition(), player.getPosition());
     }
 
     private void wanderAroundHome(float delta) {

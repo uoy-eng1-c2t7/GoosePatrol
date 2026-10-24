@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -26,12 +27,13 @@ public class MapLoader {
     }
 
     private final float width;
-    private final float height; 
+    private final float height;
     private final Array<Rectangle> walls = new Array<>();
     private final Array<Vector2> gooseSpawns = new Array<>();
     private final Array<ItemSpawn> itemSpawns = new Array<>();
     private final Vector2 playerSpawn = new Vector2(100, 100); // Default if not set in Tiled
     private Rectangle exitZone = null;
+    private final TiledMapTileLayer groundLayer;
 
     public MapLoader(TiledMap map) {
         MapProperties props = map.getProperties();
@@ -47,6 +49,9 @@ public class MapLoader {
                 walls.add(obj.getRectangle());
             }
         }
+
+        // Ground layer
+        groundLayer = (TiledMapTileLayer) map.getLayers().get("ground");
 
         // Entities layer
         MapLayer entityLayer = map.getLayers().get("entities");
@@ -68,7 +73,7 @@ public class MapLoader {
                         itemSpawns.add(new ItemSpawn(item, new Vector2(x, y)));
                     }
                 }
-            } 
+            }
         }
 
         // Exit win layer
@@ -80,6 +85,10 @@ public class MapLoader {
             }
         }
 
+    }
+
+    public TiledMapTileLayer getGroundLayer() {
+        return groundLayer;
     }
 
     public Vector2 getPlayerSpawn() {
