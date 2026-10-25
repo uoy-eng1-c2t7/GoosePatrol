@@ -73,7 +73,8 @@ public class Goose extends Entity {
                     path = pathfinder.findPath(getPosition(), player.getPosition());
                     pathfindCooldown = pathfindConfigCooldown;
                 }
-                if (path.size < 3) { steerTowards(player.getPosition(), getSpeed() * 0.9f, delta); }
+                System.out.println(path.size);
+                if (Math.abs(getPosition().len() - player.getPosition().len()) < 16 || path.size < 3) { steerTowards(player.getPosition(), getSpeed() * 0.9f, delta); }
                 else { steerTowards(path.get(1), getSpeed() * 0.9f, delta); }
 
                 break;

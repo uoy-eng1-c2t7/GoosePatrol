@@ -112,7 +112,6 @@ public class AStar {
 
                 // if tile can be traversed, add to heap
                 if (!visited.contains(neighbourNode)) {
-                    // convert back to world coordinates
                     AStarHeap.add(neighbourNode);
                 }
             }
