@@ -33,6 +33,7 @@ public class Goose extends Entity {
     private final AStar pathfinder;
     public Array<Vector2> path;
     private float pathfindCooldown;
+    private float pathfindConfigCooldown;
 
     public Goose(Vector2 startPosition, GameConfig.GooseConfig config, Player player, AStar pathfinder) {
         super(startPosition, config.radius, config.speed, config.turnSpeed);
@@ -40,7 +41,8 @@ public class Goose extends Entity {
         sightRange = config.sightRange;
         loseSightRange = config.loseSightRange;
         territoryRadius = config.territoryRadius;
-        pathfindCooldown = config.pathfindCooldown;
+        pathfindConfigCooldown = config.pathfindCooldown;
+        pathfindCooldown = pathfindConfigCooldown;
         homePosition = new Vector2(startPosition);
 
         this.pathfinder = pathfinder;
@@ -67,12 +69,13 @@ public class Goose extends Entity {
                     break;
                 }
                 pathfindCooldown -= delta;
-                if (pathfindCooldown < 0) {
+                if (pathfindCooldown <= 0) {
                     path = pathfinder.findPath(getPosition(), player.getPosition());
-                    pathfindCooldown = 0.1f;
+                    pathfindCooldown = pathfindConfigCooldown;
                 }
-                if (path.size < 2) return;
-                steerTowards(path.get(1), getSpeed() * 0.9f, delta);
+                if (path.size < 3) { steerTowards(player.getPosition(), getSpeed() * 0.9f, delta); }
+                else { steerTowards(path.get(1), getSpeed() * 0.9f, delta); }
+
                 break;
 
             case RETURNING:
