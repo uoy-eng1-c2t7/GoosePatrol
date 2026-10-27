@@ -13,9 +13,7 @@ public class AStar {
     private final TiledMapTileLayer layer;
     final float TILE_WIDTH = 32f;
 
-
     private final Vector2[] DIRECTIONS;
-
 
     class ANode {
         int x;
@@ -36,8 +34,6 @@ public class AStar {
             this.y = (int) pos.y;
             this.parent = parent;
         }
-
-
 
         @Override
         public boolean equals(Object o) {
@@ -86,10 +82,6 @@ public class AStar {
         startNode.fCost = startNode.hCost + startNode.gCost;
         AStarHeap.add(startNode);
 
-        //test
-        Vector2 tx = tileCoords(new Vector2(14, 3188));
-        Object s = layer.getCell((int) tx.x, (int) tx.y).getTile().getId();
-
         while (!AStarHeap.isEmpty()) {
             ANode curNode = AStarHeap.poll();
             if (!visited.add(curNode)) continue;
@@ -99,7 +91,6 @@ public class AStar {
                 TiledMapTileLayer.Cell neighbour = layer.getCell((int) newDirection.x, (int) newDirection.y);
                 if (neighbour == null || neighbour.getTile().getProperties().get("walkable") == null) continue;
                 ANode neighbourNode = new ANode(newDirection, curNode);
-
 
                 if (neighbourNode.equals(endNode)) return buildPath(neighbourNode);
                 boolean diagonal = (direction.x != 0 && direction.y != 0);
