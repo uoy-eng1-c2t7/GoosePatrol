@@ -12,6 +12,7 @@ This walkthrough shows you how open up the map in Tiled and edit it.
 ## Files
 
 - `assets/tiled/` - The map and tilemap is stored here.
+- `src/.../goosepatrol/world/MapLoader.java` - The map is parsed by the game here
 
 
 ## Opening the Map in Tiled
@@ -29,3 +30,24 @@ Draw the wall on a 'tile layer', then go on the 'object layer' called collision 
 
 ## Special Layers
 Currently the only other layer is called exit, the game looks for a rectangle on this layer and checks if the player enters it, if they do (and aren't being chased by any geese) the game ends.
+
+## Map Parsing
+When a GameScreen is created it initialises a bunch of stuff, one thing being the GameWorld, the world contains all the data for the game. It is the 'simulation' , it doesn't handle any rendering. 
+So GameScreen creates a GameWorld, and GameWorld creates a map, it does this using the MapLoader class, which as you may have guessed loads the map. 
+
+Look in MapLoaders contructor:
+``` Java
+MapLayer collisionLayer = map.getLayers().get("collision");
+        if (collisionLayer != null) {
+            for (var obj : collisionLayer.getObjects().getByType(RectangleMapObject.class)) {
+                walls.add(obj.getRectangle());
+            }
+        }
+```
+It gets the collision layer, loops through all the rectangle objects and adds them to an array of rectangles called 'walls'. Pretty simple right? The rest of the layers work similairly, get the layer, loop through everything in it and store it. 
+``` Java
+ public Array<Rectangle> getWalls() {
+        return walls;
+    }
+```
+The walls are exposed through a public getter, the game world uses this for collisions. It can be used anywhere else that has a reference to the map too, such as pathfinding. 
