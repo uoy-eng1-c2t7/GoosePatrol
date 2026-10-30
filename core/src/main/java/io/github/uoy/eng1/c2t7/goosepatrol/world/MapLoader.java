@@ -1,7 +1,5 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.world;
 
-import java.util.Vector;
-
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;

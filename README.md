@@ -37,8 +37,6 @@ Select a guide below based on what you are working on:
 - 🎒 **[...add a new item](docs/adding-items.md)**  
   *How to register an item in `ItemRegistry.java`, define what it does, and give it starting inventory or map spawns.*
 
-- 🎨 **[...add a new sprite, texture, or sound](docs/adding-sprites.md)**  
-  *How to add images to the texture atlas, load sound effects, and reference them via `Assets.java`.*
 
 
 

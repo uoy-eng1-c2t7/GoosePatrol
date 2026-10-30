@@ -59,3 +59,5 @@ As well as all of these arguments, you must also pass a 'lambda function' which 
 You have two ways to give the player access to this item:
 - Add your item to the starting Inventory in `assets/config.json` by its ID which you just defined.
 - As a map pickup in Tiled, open up the entities layer and add a 'point object', the objects name determined which item will spawn there, as always use the item's ID. 
+
+
