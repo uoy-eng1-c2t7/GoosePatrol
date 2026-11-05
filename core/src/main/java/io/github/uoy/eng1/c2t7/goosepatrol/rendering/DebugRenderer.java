@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.world.GameWorld;
@@ -33,18 +34,25 @@ public class DebugRenderer implements Disposable {
     }
 
     public void render(OrthographicCamera camera) {
-        if (!enabled) return;
+        if (!enabled)
+            return;
 
         shapes.setProjectionMatrix(camera.combined);
         shapes.begin(ShapeRenderer.ShapeType.Line);
 
-        // Walls 
+        // Walls
         shapes.setColor(Color.GREEN);
         for (Rectangle wall : world.getMap().getWalls()) {
             shapes.rect(wall.x, wall.y, wall.width, wall.height);
         }
 
-        // Exit (Blue)
+        // Areas geese treat as blocked
+        shapes.setColor(Color.DARK_GRAY);
+        for (Rectangle wall : world.getNavGrid().getGrownWalls()) {
+            shapes.rect(wall.x, wall.y, wall.width, wall.height);
+        }
+
+        // Exit
         if (world.getMap().getExitZone() != null) {
             shapes.setColor(Color.CYAN);
             Rectangle exit = world.getMap().getExitZone();
@@ -77,7 +85,19 @@ public class DebugRenderer implements Disposable {
 
                 // Draw Sight Radius
                 shapes.setColor(1f, 1f, 0f, 0.25f);
-                shapes.circle(pos.x, pos.y, 140f);
+                shapes.circle(pos.x, pos.y, goose.getSightRange());
+
+                // Draw Current Route
+                Goose.State state = goose.getState();
+                if (state != Goose.State.WANDERING && state != Goose.State.PECKING) {
+                    Array<Vector2> path = goose.getPathFollower().getWaypoints();
+                    shapes.setColor(Color.ORANGE);
+                    Vector2 from = pos;
+                    for (int i = goose.getPathFollower().getNextWaypoint(); i < path.size; i++) {
+                        shapes.line(from, path.get(i));
+                        from = path.get(i);
+                    }
+                }
             }
 
             // Draw Velocity Direction Rays
@@ -109,13 +129,12 @@ public class DebugRenderer implements Disposable {
 
         Player p = world.getPlayer();
         String stats = String.format(
-            "FPS: %d | Entities: %d\nPos: (%.1f, %.1f) | Angle: %.1f°\nSpeed: %.1f | Stamina: %.0f%%",
-            Gdx.graphics.getFramesPerSecond(),
-            world.getEntities().size,
-            p.getPosition().x, p.getPosition().y, p.getRotation(),
-            p.getVelocity().len(),
-            p.getStaminaPercent() * 100f
-        );
+                "FPS: %d | Entities: %d\nPos: (%.1f, %.1f) | Angle: %.1f°\nSpeed: %.1f | Stamina: %.0f%%",
+                Gdx.graphics.getFramesPerSecond(),
+                world.getEntities().size,
+                p.getPosition().x, p.getPosition().y, p.getRotation(),
+                p.getVelocity().len(),
+                p.getStaminaPercent() * 100f);
         font.draw(batch, stats, startX, startY);
 
         batch.end();

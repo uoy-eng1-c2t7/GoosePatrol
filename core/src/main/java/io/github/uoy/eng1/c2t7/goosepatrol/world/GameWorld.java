@@ -14,6 +14,7 @@ import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.DroppedItem;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Entity;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Goose;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Player;
+import io.github.uoy.eng1.c2t7.goosepatrol.world.pathfinding.NavGrid;
 
 public class GameWorld {
     public enum Status {
@@ -26,17 +27,18 @@ public class GameWorld {
     private final Player player;
     private final Array<Entity> entities = new Array<>();
     private final MapLoader map;
+    private final NavGrid navGrid;
     private float exitCooldown = 0f;
 
     public GameWorld(GameConfig config, WorldListener listener, TiledMap tiledMap) {
         this.listener = listener;
         this.map = new MapLoader(tiledMap);
-
+        navGrid = new NavGrid(map.getWidth(), map.getHeight(), map.getWalls(), config.goose.radius);
         this.player = new Player(map.getPlayerSpawn(), config.player);
         entities.add(player);
 
         for (Vector2 spawnPos : map.getGooseSpawns()) {
-            Goose goose = new Goose(spawnPos, config.goose, player);
+            Goose goose = new Goose(spawnPos, config.goose, player, navGrid);
             entities.add(goose);
         }
 
@@ -161,6 +163,10 @@ public class GameWorld {
 
     public Array<Entity> getEntities() {
         return entities;
+    }
+
+    public NavGrid getNavGrid() {
+        return navGrid;
     }
 
     public MapLoader getMap() {

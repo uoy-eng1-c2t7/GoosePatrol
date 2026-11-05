@@ -3,6 +3,8 @@ package io.github.uoy.eng1.c2t7.goosepatrol.world.entities;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
+import io.github.uoy.eng1.c2t7.goosepatrol.world.pathfinding.NavGrid;
+import io.github.uoy.eng1.c2t7.goosepatrol.world.pathfinding.PathFollower;
 
 public class Goose extends Entity {
     public enum State {
@@ -15,6 +17,7 @@ public class Goose extends Entity {
 
     private final Player player;
     private final Vector2 homePosition;
+    private final PathFollower pathFollower;
     private State state = State.WANDERING;
 
     private final float sightRange;
@@ -28,13 +31,14 @@ public class Goose extends Entity {
     private final Vector2 detourDir = new Vector2();
     private Vector2 distractionPos = null;
 
-    public Goose(Vector2 startPosition, GameConfig.GooseConfig config, Player player) {
+    public Goose(Vector2 startPosition, GameConfig.GooseConfig config, Player player, NavGrid navGrid) {
         super(startPosition, config.radius, config.speed, config.turnSpeed);
         this.player = player;
         sightRange = config.sightRange;
         loseSightRange = config.loseSightRange;
         territoryRadius = config.territoryRadius;
         homePosition = new Vector2(startPosition);
+        pathFollower = new PathFollower(navGrid);
     }
 
     @Override
@@ -115,23 +119,8 @@ public class Goose extends Entity {
     }
 
     private void steerTowards(Vector2 target, float speed, float delta) {
-        Vector2 direct = target.cpy().sub(getPosition()).nor();
-
-        // Corner unstuck feeler
-        if (getVelocity().len2() < 10f) {
-            stuckTimer += delta;
-            if (stuckTimer > 0.3f) {
-                if (detourDir.isZero())
-                    detourDir.set(-direct.y, direct.x);
-                getVelocity().set(detourDir).scl(speed);
-                return;
-            }
-        } else {
-            stuckTimer = 0f;
-            detourDir.setZero();
-        }
-
-        getVelocity().set(direct).scl(speed);
+        Vector2 next = pathFollower.nextPoint(getPosition(), target, delta);
+        getVelocity().set(next).sub(getPosition()).nor().scl(speed);
     }
 
     public void distract(Vector2 foodPos, float duration) {
@@ -146,5 +135,13 @@ public class Goose extends Entity {
 
     public State getState() {
         return state;
+    }
+
+    public PathFollower getPathFollower() {
+        return pathFollower;
+    }
+
+    public float getSightRange() {
+        return sightRange;
     }
 }

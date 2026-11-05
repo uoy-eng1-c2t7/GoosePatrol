@@ -12,7 +12,7 @@
         "radius": 16,
         "turnSpeed": 10,
         "sightRange": 140,
-        "loseSightRange": 250,
+        "loseSightRange": 400,
         "territoryRadius": 180        
     },
     "audio": {
