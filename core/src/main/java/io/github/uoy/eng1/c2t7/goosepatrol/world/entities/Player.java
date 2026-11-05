@@ -11,6 +11,7 @@ public class Player extends Entity {
     private float stamina = 100f;
     private final float maxStamina = 100f;
     private boolean isSprinting = false;
+    private boolean exhausted = false;
 
     public Player(Vector2 startPosition, GameConfig.PlayerConfig config) {
         super(startPosition, config.radius, config.speed, config.turnSpeed);
@@ -21,7 +22,11 @@ public class Player extends Entity {
     }
 
     public void setSprinting(boolean sprinting) {
-        this.isSprinting = sprinting && stamina > 5f;
+        if (stamina <= 5f)
+            exhausted = true;
+        if (stamina >= 25f)
+            exhausted = false;
+        this.isSprinting = sprinting && !exhausted;
     }
 
     public Inventory getInventory() {
@@ -32,14 +37,15 @@ public class Player extends Entity {
         return stamina / maxStamina;
     }
 
-    @Override 
+    @Override
     public void update(float delta) {
         super.update(delta);
 
         if (isSprinting && !getVelocity().isZero()) {
             stamina = Math.max(0, stamina - delta * 35f);
-            if (stamina <= 0) isSprinting = false;
-        } else  {
+            if (stamina <= 0)
+                isSprinting = false;
+        } else {
             stamina = Math.min(maxStamina, stamina + delta * 20f);
         }
     }

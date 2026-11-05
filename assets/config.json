@@ -1,7 +1,7 @@
 {
     "gameDurationSeconds": 300,
     "minLoadTimeSeconds": 1,
-    "startingItems": ["bread", "gun"],
+    "startingItems": ["bread"],
     "player": {
         "speed": 120,
         "radius": 16,

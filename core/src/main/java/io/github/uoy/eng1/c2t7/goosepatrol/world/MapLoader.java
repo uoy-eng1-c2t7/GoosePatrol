@@ -24,7 +24,7 @@ public class MapLoader {
     }
 
     private final float width;
-    private final float height; 
+    private final float height;
     private final Array<Rectangle> walls = new Array<>();
     private final Array<Vector2> gooseSpawns = new Array<>();
     private final Array<ItemSpawn> itemSpawns = new Array<>();
@@ -36,7 +36,9 @@ public class MapLoader {
         int tileWidth = props.get("tilewidth", Integer.class);
         int tileHeight = props.get("tileheight", Integer.class);
         width = props.get("width", Integer.class) * tileWidth;
-        height = props.get("height",Integer.class) * tileHeight;
+        height = props.get("height", Integer.class) * tileHeight;
+
+        addMapBoundary();
 
         // Collision Layer
         MapLayer collisionLayer = map.getLayers().get("collision");
@@ -51,7 +53,8 @@ public class MapLoader {
         if (entityLayer != null) {
             for (MapObject obj : entityLayer.getObjects()) {
                 String name = obj.getName();
-                if (name == null) continue;
+                if (name == null)
+                    continue;
 
                 float x = obj.getProperties().get("x", float.class);
                 float y = obj.getProperties().get("y", float.class);
@@ -66,7 +69,7 @@ public class MapLoader {
                         itemSpawns.add(new ItemSpawn(item, new Vector2(x, y)));
                     }
                 }
-            } 
+            }
         }
 
         // Exit win layer
@@ -78,6 +81,15 @@ public class MapLoader {
             }
         }
 
+    }
+
+    /** Adds walls just outside the map so entities can't leave it. */
+    private void addMapBoundary() {
+        float thickness = 64f;
+        walls.add(new Rectangle(-thickness, -thickness, width + thickness * 2, thickness)); // Bottom
+        walls.add(new Rectangle(-thickness, height, width + thickness * 2, thickness)); // Top
+        walls.add(new Rectangle(-thickness, 0, thickness, height)); // Left
+        walls.add(new Rectangle(width, 0, thickness, height)); // Right
     }
 
     public Vector2 getPlayerSpawn() {

@@ -32,7 +32,7 @@ To run the game on your desktop:
 Select a guide below based on what you are working on:
 
 - 🗺️ **[...edit the map, walls, or spawn points](docs/editing-maps.md)**  
-  *How to open `campus.tmx` in Tiled, set up collision rectangles, and place spawn markers.*
+  *How to open `campus.tmx` in Tiled, set up collision rectangles, add new tiles and place spawn markers.*
 
 - 🎒 **[...add a new item](docs/adding-items.md)**  
   *How to register an item in `ItemRegistry.java`, define what it does, and give it starting inventory or map spawns.*

@@ -19,12 +19,6 @@ public class ItemRegistry {
                 return true;
             }));
 
-    public static final Item GUN = register(new Item(
-            "gun", "Gun", "gun.png", 5,
-            (world, player) -> {
-                return false;
-            }));
-
     public static Item register(Item item) {
         ITEMS.put(item.getId(), item);
         return item;
