@@ -9,7 +9,7 @@ public class ItemRegistry {
     public static final Item BREAD = register(new Item(
             "bread", "Bread", "bread", 16,
             (world, player) -> {
-                world.throwFood(player.getPosition(), player.getRotation(), ItemRegistry.get("bread"), 8f, 180f, 3.0f);
+                world.throwFood(player.getPosition(), player.getRotation(), ItemRegistry.get("bread"), 6f, 260f, 2.5f);
                 return true;
             }));
 

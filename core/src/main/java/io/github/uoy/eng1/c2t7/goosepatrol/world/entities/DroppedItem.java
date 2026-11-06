@@ -61,6 +61,10 @@ public class DroppedItem extends Entity {
         return isDistraction && !destroyed;
     }
 
+    public void setLifetime(float lifetime) {
+        this.lifetime = lifetime;
+    }
+
     public Item getItem() {
         return item;
     }

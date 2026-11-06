@@ -10,6 +10,10 @@ public interface WorldListener {
     }
 
     default void onPlayerPecked() {
-        
+
     }
- }
+
+    default void onGooseDispersed() {
+
+    }
+}

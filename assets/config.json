@@ -1,7 +1,12 @@
 {
     "gameDurationSeconds": 300,
     "minLoadTimeSeconds": 1,
-    "startingItems": ["bread", "bread", "bread"],
+    "geeseToDisperse": 6,
+    "startingItems": [
+        "bread",
+        "bread",
+        "bread"
+    ],
     "player": {
         "speed": 150,
         "radius": 16,
@@ -11,12 +16,16 @@
         "invulnerableSeconds": 1.5
     },
     "goose": {
-        "speed": 110,
+        "speed": 135,
         "radius": 16,
-        "turnSpeed": 10,
-        "sightRange": 140,
-        "loseSightRange": 400,
-        "territoryRadius": 180        
+        "turnSpeed": 14,
+        "sightRange": 200,
+        "loseSightRange": 450,
+        "territoryRadius": 180,
+        "giveUpSeconds": 5,
+        "alertRange": 300,   
+        "leaveSeconds": 3,
+        "geesePerFood": 3
     },
     "audio": {
         "sfxVolume": 1
@@ -24,6 +33,6 @@
     "camera": {
         "viewWidth": 1280,
         "viewHeight": 720,
-        "lerpSpeed" : 9
+        "lerpSpeed": 9
     }
 }

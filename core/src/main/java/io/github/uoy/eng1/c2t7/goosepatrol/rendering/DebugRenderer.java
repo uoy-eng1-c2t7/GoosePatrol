@@ -89,7 +89,7 @@ public class DebugRenderer implements Disposable {
 
                 // Draw Current Route
                 Goose.State state = goose.getState();
-                if (state != Goose.State.WANDERING && state != Goose.State.PECKING) {
+                if (state != Goose.State.WANDERING && state != Goose.State.EATING) {
                     Array<Vector2> path = goose.getPathFollower().getWaypoints();
                     shapes.setColor(Color.ORANGE);
                     Vector2 from = pos;

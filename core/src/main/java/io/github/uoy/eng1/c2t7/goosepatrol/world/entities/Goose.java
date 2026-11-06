@@ -12,7 +12,8 @@ public class Goose extends Entity {
         CHASING,
         RETURNING,
         DISTRACTED,
-        PECKING
+        EATING,
+        LEAVING
     }
 
     private final Player player;
@@ -23,20 +24,26 @@ public class Goose extends Entity {
     private final float sightRange;
     private final float loseSightRange;
     private final float territoryRadius;
+    private final float giveUpSeconds;
+    private final float leaveSeconds;
 
+    private boolean spottedPlayer = false;
+
+    private float lostTimer = 0f;
     private float wanderTimer = 0f;
-    private float peckTimer = 0f;
-    private float stuckTimer = 0f;
+    private float eatTimer = 0f;
+    private float leaveTimer = 0f;
     private float distractDuration;
-    private final Vector2 detourDir = new Vector2();
     private Vector2 distractionPos = null;
 
     public Goose(Vector2 startPosition, GameConfig.GooseConfig config, Player player, NavGrid navGrid) {
         super(startPosition, config.radius, config.speed, config.turnSpeed);
         this.player = player;
+        leaveSeconds = config.leaveSeconds;
         sightRange = config.sightRange;
         loseSightRange = config.loseSightRange;
         territoryRadius = config.territoryRadius;
+        giveUpSeconds = config.giveUpSeconds;
         homePosition = new Vector2(startPosition);
         pathFollower = new PathFollower(navGrid);
     }
@@ -48,7 +55,7 @@ public class Goose extends Entity {
         switch (state) {
             case WANDERING:
                 if (distToPlayer < sightRange) {
-                    state = State.CHASING;
+                    spotPlayer();
                     break;
                 }
                 wanderAroundHome(delta);
@@ -56,8 +63,13 @@ public class Goose extends Entity {
 
             case CHASING:
                 if (distToPlayer > loseSightRange) {
-                    state = State.RETURNING;
-                    break;
+                    lostTimer += delta;
+                    if (lostTimer >= giveUpSeconds) {
+                        state = State.RETURNING;
+                        break;
+                    }
+                } else {
+                    lostTimer = 0f;
                 }
                 if (getBounds().overlaps(player.getBounds())) {
                     getVelocity().setZero(); // Already touching, no need to get closer
@@ -68,7 +80,7 @@ public class Goose extends Entity {
 
             case RETURNING:
                 if (distToPlayer < sightRange) {
-                    state = State.CHASING;
+                    spotPlayer();
                     break;
                 }
                 float distToHome = getPosition().dst(homePosition);
@@ -83,8 +95,8 @@ public class Goose extends Entity {
                 if (distractionPos != null) {
                     float distToFood = getPosition().dst(distractionPos);
                     if (distToFood < 16f) {
-                        state = State.PECKING;
-                        peckTimer = distractDuration;
+                        state = State.EATING;
+                        eatTimer = distractDuration;
                         getVelocity().setZero();
                     } else {
                         steerTowards(distractionPos, getSpeed() * 0.9f, delta);
@@ -94,13 +106,16 @@ public class Goose extends Entity {
                 }
                 break;
 
-            case PECKING:
+            case EATING:
                 getVelocity().setZero();
-                peckTimer -= delta;
-                if (peckTimer <= 0) {
-                    distractionPos = null;
-                    state = State.RETURNING;
+                eatTimer -= delta;
+                if (eatTimer <= 0) {
+                    flyAway();
                 }
+                break;
+
+            case LEAVING:
+                leaveTimer -= delta;
                 break;
         }
     }
@@ -127,8 +142,24 @@ public class Goose extends Entity {
         getVelocity().set(next).sub(getPosition()).nor().scl(speed);
     }
 
+    private void flyAway() {
+        distractionPos = null;
+        state = State.LEAVING;
+        leaveTimer = leaveSeconds;
+        getVelocity().set(getPosition()).sub(player.getPosition()).nor().scl(getSpeed() * 2f);
+    }
+
+    public boolean isGone() {
+        return state == State.LEAVING && leaveTimer <= 0f;
+    }
+
+    @Override
+    public boolean ignoresWalls() {
+        return state == State.LEAVING;
+    }
+
     public void distract(Vector2 foodPos, float duration) {
-        this.distractionPos = new Vector2(foodPos);
+        this.distractionPos = foodPos;
         this.distractDuration = duration;
         this.state = State.DISTRACTED;
     }
@@ -139,6 +170,27 @@ public class Goose extends Entity {
 
     public State getState() {
         return state;
+    }
+
+    private void spotPlayer() {
+        startChasing();
+        spottedPlayer = true;
+    }
+
+    public void startChasing() {
+        state = State.CHASING;
+        lostTimer = 0f;
+    }
+
+    /** True once, on the frame after this goose notices the player by itself. */
+    public boolean consumeSpottedPlayer() {
+        boolean spotted = spottedPlayer;
+        spottedPlayer = false;
+        return spotted;
+    }
+
+    public boolean canBeLured() {
+        return state == State.WANDERING || state == State.CHASING || state == State.RETURNING;
     }
 
     public PathFollower getPathFollower() {

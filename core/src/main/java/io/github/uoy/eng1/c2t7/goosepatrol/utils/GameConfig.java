@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Json;
 public class GameConfig {
     public int gameDurationSeconds;
     public float minLoadTimeSeconds;
+    public int geeseToDisperse;
     public String[] startingItems;
     public PlayerConfig player;
     public GooseConfig goose;
@@ -25,9 +26,13 @@ public class GameConfig {
         public float speed;
         public float radius;
         public float turnSpeed;
-        public float sightRange;      
-        public float loseSightRange; 
-        public float territoryRadius; 
+        public float sightRange;
+        public float loseSightRange;
+        public float territoryRadius;
+        public float giveUpSeconds;
+        public float alertRange;
+        public float leaveSeconds;
+        public int geesePerFood;
     }
 
     public static GameConfig load(FileHandle file) {
@@ -53,6 +58,8 @@ public class GameConfig {
         require(player.maxHearts >= 1, "maxHearts");
         require(player.invulnerableSeconds >= 0.1, "invulnerableSeconds");
         require(player.sprintMultiplier > 1, "sprintMultiplier");
+        require(geeseToDisperse >= 1, "geeseToDisperse");
+        require(goose.leaveSeconds > 0 && goose.geesePerFood >= 1, "goose.leaveSeconds / goose.geesePerFood");
     }
 
     private static void require(boolean ok, String what) {

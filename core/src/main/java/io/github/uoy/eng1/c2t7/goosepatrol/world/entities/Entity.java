@@ -59,6 +59,11 @@ public abstract class Entity {
         bounds.setPosition(position.x, position.y);
     }
 
+    /** True if this entity should pass through walls. */
+    public boolean ignoresWalls() {
+        return false;
+    }
+
     /** Set the velocity to whatever this entity wants to do this frame. */
     public abstract void updateIntent(float delta);
 }
