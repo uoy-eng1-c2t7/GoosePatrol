@@ -29,9 +29,9 @@ public class GameWorld {
     private final MapLoader map;
     private final NavGrid navGrid;
     private final GameConfig config;
-    private float exitCooldown = 0f;
     private static final float THROW_SPEED = 500f;
     private static final Array<Rectangle> NO_WALLS = new Array<>();
+    private static final float DRIVER_TALK_RANGE = 320f;
     private int geeseDispersed = 0;
 
     public GameWorld(GameConfig config, WorldListener listener, TiledMap tiledMap) {
@@ -66,7 +66,7 @@ public class GameWorld {
         updateEntities(entities, delta);
         alertNearbyGeese();
         checkPecks();
-        checkExit(delta);
+        checkExit();
     }
 
     private void updateEntities(Array<Entity> entities, float delta) {
@@ -153,16 +153,33 @@ public class GameWorld {
         }
     }
 
-    private void checkExit(float delta) {
-        if (exitCooldown > 0) {
-            exitCooldown -= delta;
-        }
-
+    private void checkExit() {
         if (map.getExitZone() != null && Intersector.overlaps(player.getBounds(), map.getExitZone())
-                && exitCooldown <= 0) {
-            listener.onExitReached(isPlayerBeingChased());
-            exitCooldown = 2.0f; // wait 2 seconds before trying again
+                && hasDispersedEnough() && !isPlayerBeingChased()) {
+            listener.onExitReached();
         }
+    }
+
+    public boolean hasDispersedEnough() {
+        return geeseDispersed >= config.geeseToDisperse;
+    }
+
+    /**
+     * What the bus driver is saying, or null if the player is too far away to hear.
+     */
+    public String getDriverMessage() {
+        Rectangle exit = map.getExitZone();
+        if (exit == null) {
+            return null;
+        }
+        float distance = player.getPosition().dst(exit.x + exit.width / 2f, exit.y + exit.height / 2f);
+        if (distance > DRIVER_TALK_RANGE) {
+            return null;
+        }
+        if (!hasDispersedEnough()) {
+            return "Feed " + (config.geeseToDisperse - geeseDispersed) + " more geese first!";
+        }
+        return isPlayerBeingChased() ? "No geese on the bus!" : "Hop on!";
     }
 
     private boolean isPlayerBeingChased() {

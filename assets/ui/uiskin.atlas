@@ -1,33 +1,68 @@
 
 uiskin.png
-size: 512, 512
+size: 1024, 1024
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
+arrow
+  rotate: false
+  xy: 1, 395
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 ds_goose
   rotate: false
-  xy: 1, 352
+  xy: 1, 462
   size: 505, 155
   orig: 505, 155
   offset: 0, 0
   index: -1
+heart_empty
+  rotate: false
+  xy: 508, 535
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+heart_full
+  rotate: false
+  xy: 558, 585
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+receipt_divider
+  rotate: false
+  xy: 64, 456
+  size: 16, 4
+  orig: 16, 4
+  offset: 0, 0
+  index: -1
 slot
   rotate: false
-  xy: 1, 269
+  xy: 508, 569
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+slot_bg
+  rotate: false
+  xy: 508, 569
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 slot_selected
   rotate: false
-  xy: 1, 219
+  xy: 803, 881
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 startbtn
   rotate: false
-  xy: 1, 319
+  xy: 1, 429
   size: 61, 31
   split: 3, 3, 3, 3
   orig: 61, 31
@@ -35,36 +70,46 @@ startbtn
   index: -1
 white-pixel
   rotate: false
-  xy: 508, 506
+  xy: 1, 392
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
-arrow
+bar_bg
   rotate: false
-  xy: 1, 185
-  size: 32, 32
-  orig: 32, 32
+  xy: 997, 1003
+  size: 24, 16
+  split: 8, 8, 7, 7
+  orig: 24, 16
   offset: 0, 0
   index: -1
-heart_empty
+bar_fill
   rotate: false
-  xy: 1, 151
-  size: 32, 32
-  orig: 32, 32
+  xy: 853, 917
+  size: 16, 12
+  split: 6, 6, 5, 5
+  orig: 16, 12
   offset: 0, 0
   index: -1
-heart_full
+bus
   rotate: false
-  xy: 1, 117
-  size: 32, 32
-  orig: 32, 32
+  xy: 803, 931
+  size: 192, 88
+  orig: 192, 88
   offset: 0, 0
   index: -1
-receipt_divider
+logo
   rotate: false
-  xy: 64, 346
-  size: 16, 4
-  orig: 16, 4
+  xy: 1, 619
+  size: 800, 400
+  orig: 800, 400
+  offset: 0, 0
+  index: -1
+panel
+  rotate: false
+  xy: 803, 847
+  size: 32, 32
+  split: 12, 12, 12, 12
+  orig: 32, 32
   offset: 0, 0
   index: -1

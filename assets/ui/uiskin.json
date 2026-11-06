@@ -27,6 +27,12 @@
 		"fontColor": "RGBA_0_0_0_255"
 	}
 },
+"com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle": {
+	"default-horizontal": {
+		"background": "bar_bg",
+		"knobBefore": "bar_fill"
+	}
+},
 "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
 	"default": {
 		"font": "ds_goose_large",

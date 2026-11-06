@@ -1,9 +1,9 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.ui;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -25,7 +25,8 @@ public class HudUI extends Table {
     private final Table hotbarTable;
     private final Stack[] slotStacks;
     private final Image[] heartImages;
-    private final Image staminaFill;
+    private final ProgressBar staminaBar;
+    private final Table toastPanel;
 
     public HudUI(Inventory inventory, Assets assets, int maxHearts) {
         this.inventory = inventory;
@@ -47,20 +48,34 @@ public class HudUI extends Table {
 
         geeseLabel = new Label("", skin);
         Table topBar = new Table();
-        staminaFill = new Image(skin.newDrawable("white", new Color(0.35f, 0.8f, 0.4f, 1f)));
-        Table status = new Table();
+        staminaBar = new ProgressBar(0f, 1f, 0.01f, false, skin);
+        staminaBar.setValue(1f);
+        Table status = panel();
         status.add(hearts).left().row();
-        status.add(staminaFill).size(180, 8).left().padTop(6);
+        status.add(staminaBar).width(150).left().padTop(8);
 
-        topBar.add(status).expandX().uniformX().left().top();
-        topBar.add(timerLabel).top();
-        topBar.add(geeseLabel).expandX().uniformX().right().top();
+        Table timerPanel = panel();
+        timerPanel.add(timerLabel);
+
+        Table geesePanel = panel();
+        geesePanel.add(geeseLabel);
+
+        Table left = new Table();
+        left.add(status).left().top();
+        Table right = new Table();
+        right.add(geesePanel).right().top();
+
+        topBar.add(left).expandX().uniformX().left().top();
+        topBar.add(timerPanel).top();
+        topBar.add(right).expandX().uniformX().right().top();
         add(topBar).growX().top().pad(20, 20, 0, 20).row();
 
         // TOAST
         toastLabel = new Label("", skin);
-        toastLabel.getColor().a = 0f;
-        add(toastLabel).expand().bottom().padBottom(15).row();
+        toastPanel = panel();
+        toastPanel.add(toastLabel);
+        toastPanel.getColor().a = 0f;
+        add(toastPanel).expand().bottom().padBottom(15).row();
 
         // HOTBAR
         hotbarTable = new Table();
@@ -68,6 +83,13 @@ public class HudUI extends Table {
         add(hotbarTable).bottom().padBottom(20);
 
         updateHotbar();
+    }
+
+    private Table panel() {
+        Table panel = new Table();
+        panel.setBackground(skin.getDrawable("panel"));
+        panel.pad(10, 16, 10, 16);
+        return panel;
     }
 
     private void buildHotbar() {
@@ -106,7 +128,7 @@ public class HudUI extends Table {
     }
 
     public void updateGeese(int dispersed, int target) {
-        geeseLabel.setText("Geese fed: " + dispersed + " / " + target);
+        geeseLabel.setText(dispersed >= target ? "Get to the bus!" : "Geese fed: " + dispersed + " / " + target);
     }
 
     public void updateTimer(float remainingSeconds) {
@@ -122,14 +144,14 @@ public class HudUI extends Table {
     }
 
     public void updateStamina(float percent) {
-        staminaFill.setScaleX(percent);
+        staminaBar.setValue(percent);
     }
 
     public void showToast(String message) {
         toastLabel.setText(message);
-        toastLabel.clearActions();
-        toastLabel.getColor().a = 0f;
-        toastLabel.addAction(Actions.sequence(
+        toastPanel.clearActions();
+        toastPanel.getColor().a = 0f;
+        toastPanel.addAction(Actions.sequence(
                 Actions.fadeIn(0.15f),
                 Actions.delay(1.0f),
                 Actions.fadeOut(0.4f)));

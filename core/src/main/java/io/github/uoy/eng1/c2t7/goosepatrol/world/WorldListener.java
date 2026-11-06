@@ -16,4 +16,8 @@ public interface WorldListener {
     default void onGooseDispersed() {
 
     }
+
+    default void onExitReached() {
+
+    }
 }

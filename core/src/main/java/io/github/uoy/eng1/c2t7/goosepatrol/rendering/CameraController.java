@@ -6,8 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
 
-/** 
- * Controls the main game camera, will always keep it 
+/**
+ * Controls the main game camera, will always keep it
  * in the map, follow the player.
  */
 public class CameraController {
@@ -17,22 +17,24 @@ public class CameraController {
     private float mapHeight;
     private float lerpSpeed;
 
-    public CameraController(OrthographicCamera camera, float mapWidth, float mapHeight, GameConfig.CameraConfig config) {
+    public CameraController(OrthographicCamera camera, float mapWidth, float mapHeight,
+            GameConfig.CameraConfig config) {
         this.camera = camera;
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
         this.lerpSpeed = config.lerpSpeed;
     }
-    
+
     public void update(float delta) {
-        if (target == null) return;
+        if (target == null)
+            return;
 
         // Lerp towards target
         float alpha = 1.0f - (float) Math.exp(-lerpSpeed * delta);
         camera.position.x += (target.x - camera.position.x) * alpha;
         camera.position.y += (target.y - camera.position.y) * alpha;
 
-        // Clamp within map 
+        // Clamp within map
         clamp();
 
         camera.update(false);
@@ -59,5 +61,15 @@ public class CameraController {
     /** Set the target for the camera to follow. */
     public void setTarget(Vector2 pos) {
         target = pos;
+    }
+
+    /** Jumps straight to the target, for when the game starts paused. */
+    public void snapToTarget() {
+        if (target == null)
+            return;
+        camera.position.x = target.x;
+        camera.position.y = target.y;
+        clamp();
+        camera.update(false);
     }
 }

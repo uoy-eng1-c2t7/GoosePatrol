@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.ItemStack;
@@ -20,6 +19,7 @@ import io.github.uoy.eng1.c2t7.goosepatrol.rendering.DebugRenderer;
 import io.github.uoy.eng1.c2t7.goosepatrol.rendering.WorldRenderer;
 import io.github.uoy.eng1.c2t7.goosepatrol.ui.HudUI;
 import io.github.uoy.eng1.c2t7.goosepatrol.ui.PauseMenuUI;
+import io.github.uoy.eng1.c2t7.goosepatrol.ui.StartOverlayUI;
 import io.github.uoy.eng1.c2t7.goosepatrol.ui.PauseMenuUI.PauseListener;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.GameWorld;
@@ -39,10 +39,16 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
     private final Stage uiStage;
     private final HudUI hudUI;
     private final PauseMenuUI pauseMenuUI;
+    private final StartOverlayUI startOverlay;
 
     // State
-    private boolean isPaused = false;
+    private boolean isPaused = true;
+    private boolean waitingToStart = true;
     private float timeRemaining;
+
+    private static final float BUS_DEPART_SECONDS = 1.2f;
+    private float departTimer = 0f;
+    private float winTime;
 
     public GameScreen(GoosePatrol game) {
         this.game = game;
@@ -58,17 +64,23 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
                 config.camera);
 
         // UI stage setup
-        uiStage = new Stage(new FitViewport(1280, 720), game.getBatch());
+        uiStage = new Stage(new ExtendViewport(1280, 720), game.getBatch());
         hudUI = new HudUI(world.getPlayer().getInventory(), game.getAssets(), game.getConfig().player.maxHearts);
         pauseMenuUI = new PauseMenuUI(game, game.getAssets().getSkin(), this);
         hudUI.updateGeese(0, world.getGeeseToDisperse());
         uiStage.addActor(hudUI);
         uiStage.addActor(pauseMenuUI);
+        startOverlay = new StartOverlayUI(game.getAssets().getSkin(), world.getGeeseToDisperse());
+        uiStage.addActor(startOverlay);
     }
 
     @Override
     public void show() {
         cameraController.setTarget(world.getPlayer().getPosition());
+
+        if (isPaused) {
+            cameraController.snapToTarget(); // The camera doesn't update itself while paused
+        }
 
         // Multiplex input - UI recieves clicks first, if not handled go to gamescreen
         InputMultiplexer multiplexer = new InputMultiplexer(uiStage, this);
@@ -79,7 +91,13 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
     public void render(float delta) {
         delta = Math.min(delta, 0.05f); // A long frame must not skip through walls
         // Update game - freeze when paused
-        if (!isPaused) {
+        if (departTimer > 0f) {
+            departTimer -= delta;
+            if (departTimer <= 0f) {
+                game.setScreen(new TicketScreen(game, true, winTime));
+                return;
+            }
+        } else if (!isPaused) {
             timeRemaining = Math.max(0, timeRemaining - delta);
             if (timeRemaining <= 0) {
                 game.setScreen(new TicketScreen(game, false, 0));
@@ -110,6 +128,13 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
     // Input Handling
     @Override
     public boolean keyDown(int keycode) {
+        if (waitingToStart) {
+            if (keycode == Input.Keys.SPACE) {
+                startGame();
+            }
+            return true;
+        }
+
         // Toggle Pause
         if (keycode == Input.Keys.ESCAPE) {
             togglePause();
@@ -167,6 +192,12 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
         }
     }
 
+    private void startGame() {
+        waitingToStart = false;
+        isPaused = false;
+        startOverlay.setVisible(false);
+    }
+
     public void togglePause() {
         isPaused = !isPaused;
         pauseMenuUI.setVisible(isPaused);
@@ -183,16 +214,10 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
     }
 
     @Override
-    public void onExitReached(boolean isChased) {
-        int geeseLeft = world.getGeeseToDisperse() - world.getGeeseDispersed();
-        if (geeseLeft > 0) {
-            hudUI.showToast("Driver: 'Feed " + geeseLeft + " more geese first!'");
-        } else if (isChased) {
-            hudUI.showToast("Driver: 'NO GEESE ON THE BUS! SHAKE THEM OFF'");
-        } else {
-            float timeTaken = game.getConfig().gameDurationSeconds - timeRemaining;
-            game.setScreen(new TicketScreen(game, true, timeTaken));
-        }
+    public void onExitReached() {
+        winTime = game.getConfig().gameDurationSeconds - timeRemaining;
+        departTimer = BUS_DEPART_SECONDS;
+        renderer.startBusLeaving();
     }
 
     @Override

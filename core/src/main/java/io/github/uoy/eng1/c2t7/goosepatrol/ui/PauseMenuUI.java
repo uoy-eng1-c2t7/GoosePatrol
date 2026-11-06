@@ -11,6 +11,7 @@ import io.github.uoy.eng1.c2t7.goosepatrol.screens.MainMenuScreen;
 public class PauseMenuUI extends Table {
     public interface PauseListener {
         void onResume();
+
         void onRestart();
     }
 
@@ -21,8 +22,13 @@ public class PauseMenuUI extends Table {
         // Semi-transparent black background overlay
         setBackground(skin.newDrawable("white", new Color(0, 0, 0, 0.75f)));
 
+        Table card = new Table();
+        card.setBackground(skin.getDrawable("panel"));
+        card.pad(30, 50, 30, 50);
+        add(card);
+
         Label title = new Label("PAUSED", skin);
-        add(title).padBottom(40).row();
+        card.add(title).padBottom(30).row();
 
         TextButton resumeBtn = new TextButton("Resume", skin);
         TextButton restartBtn = new TextButton("Restart", skin);
@@ -49,8 +55,8 @@ public class PauseMenuUI extends Table {
             }
         });
 
-        add(resumeBtn).size(220, 50).padBottom(15).row();
-        add(restartBtn).size(220, 50).padBottom(15).row();
-        add(exitBtn).size(220, 50).row();
+        card.add(resumeBtn).size(220, 50).padBottom(15).row();
+        card.add(restartBtn).size(220, 50).padBottom(15).row();
+        card.add(exitBtn).size(220, 50).row();
     }
 }
