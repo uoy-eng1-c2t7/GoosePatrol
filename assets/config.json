@@ -3,9 +3,10 @@
     "minLoadTimeSeconds": 1,
     "startingItems": ["bread", "bread", "bread"],
     "player": {
-        "speed": 120,
+        "speed": 150,
         "radius": 16,
-        "turnSpeed": 10,
+        "turnSpeed": 18,
+        "sprintMultiplier": 1.35,
         "maxHearts": 5,
         "invulnerableSeconds": 1.5
     },
@@ -23,6 +24,6 @@
     "camera": {
         "viewWidth": 1280,
         "viewHeight": 720,
-        "lerpSpeed" : 5
+        "lerpSpeed" : 9
     }
 }

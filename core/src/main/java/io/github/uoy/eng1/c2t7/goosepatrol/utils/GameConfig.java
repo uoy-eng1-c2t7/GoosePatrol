@@ -18,6 +18,7 @@ public class GameConfig {
         public float turnSpeed;
         public int maxHearts;
         public float invulnerableSeconds;
+        public float sprintMultiplier;
     }
 
     public static class GooseConfig {
@@ -51,6 +52,7 @@ public class GameConfig {
         require(audio.sfxVolume >= 0 && audio.sfxVolume <= 1, "sfxVolume");
         require(player.maxHearts >= 1, "maxHearts");
         require(player.invulnerableSeconds >= 0.1, "invulnerableSeconds");
+        require(player.sprintMultiplier > 1, "sprintMultiplier");
     }
 
     private static void require(boolean ok, String what) {

@@ -15,11 +15,13 @@ public class Player extends Entity {
     private int hearts;
     private final float invulnerableSeconds;
     private float invulnerableTimer;
+    private final float sprintMultiplier;
 
     public Player(Vector2 startPosition, GameConfig.PlayerConfig config) {
         super(startPosition, config.radius, config.speed, config.turnSpeed);
         hearts = config.maxHearts;
         invulnerableSeconds = config.invulnerableSeconds;
+        sprintMultiplier = config.sprintMultiplier;
     }
 
     public void setMoveInput(Vector2 direction) {
@@ -29,8 +31,8 @@ public class Player extends Entity {
     public void setSprinting(boolean sprinting) {
         if (stamina <= 5f)
             exhausted = true;
-        if (stamina >= 25f)
-            exhausted = false;
+        if (!sprinting && stamina >= 25f)
+            exhausted = false; // Must let go of sprint before it works again
         this.isSprinting = sprinting && !exhausted;
     }
 
@@ -82,7 +84,7 @@ public class Player extends Entity {
         if (moveInput.isZero()) {
             getVelocity().setZero();
         } else {
-            float currentSpeed = getSpeed() * (isSprinting ? 1.6f : 1.0f);
+            float currentSpeed = getSpeed() * (isSprinting ? sprintMultiplier : 1.0f);
             getVelocity().set(moveInput).nor().scl(currentSpeed);
         }
     }

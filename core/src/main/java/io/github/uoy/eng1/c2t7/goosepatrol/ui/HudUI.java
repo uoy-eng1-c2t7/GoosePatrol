@@ -1,5 +1,6 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.ui;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -23,6 +24,7 @@ public class HudUI extends Table {
     private final Table hotbarTable;
     private final Stack[] slotStacks;
     private final Image[] heartImages;
+    private final Image staminaFill;
 
     public HudUI(Inventory inventory, Assets assets, int maxHearts) {
         this.inventory = inventory;
@@ -43,8 +45,13 @@ public class HudUI extends Table {
         }
 
         Table topBar = new Table();
-        topBar.add(hearts).expandX().uniformX().left();
-        topBar.add(timerLabel);
+        staminaFill = new Image(skin.newDrawable("white", new Color(0.35f, 0.8f, 0.4f, 1f)));
+        Table status = new Table();
+        status.add(hearts).left().row();
+        status.add(staminaFill).size(180, 8).left().padTop(6);
+
+        topBar.add(status).expandX().uniformX().left().top();
+        topBar.add(timerLabel).top();
         topBar.add().expandX().uniformX();
         add(topBar).growX().top().pad(20, 20, 0, 20).row();
 
@@ -106,6 +113,10 @@ public class HudUI extends Table {
         for (int i = 0; i < heartImages.length; i++) {
             heartImages[i].setDrawable(skin.getDrawable(i < hearts ? "heart_full" : "heart_empty"));
         }
+    }
+
+    public void updateStamina(float percent) {
+        staminaFill.setScaleX(percent);
     }
 
     public void showToast(String message) {

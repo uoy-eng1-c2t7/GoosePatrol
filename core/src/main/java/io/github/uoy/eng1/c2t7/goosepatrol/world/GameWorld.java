@@ -59,6 +59,7 @@ public class GameWorld {
     public void update(float delta, Vector2 moveInput) {
         player.setMoveInput(moveInput);
         updateEntities(entities, delta);
+        checkPecks();
         checkExit(delta);
     }
 

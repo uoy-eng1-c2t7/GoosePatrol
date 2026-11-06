@@ -13,6 +13,7 @@ import io.github.uoy.eng1.c2t7.goosepatrol.world.GameWorld;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.DroppedItem;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Entity;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Goose;
+import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Player;
 
 /**
  * Handles rendering the GameWorld to the screen.
@@ -26,6 +27,7 @@ public class WorldRenderer implements Disposable {
     private final TextureRegion playerSprite, gooseSprite;
     private final Animation<TextureRegion> playerWalk, gooseWalk;
     private float animationTime;
+    private float playerWalkTime;
 
     private static final float WALK_FRAME_SECONDS = 0.15f;
 
@@ -47,6 +49,9 @@ public class WorldRenderer implements Disposable {
     public void render(OrthographicCamera camera, float delta) {
         animationTime += delta;
 
+        Player player = world.getPlayer();
+        playerWalkTime += delta * player.getVelocity().len() / player.getSpeed();
+
         mapRenderer.setView(camera);
         mapRenderer.render();
 
@@ -63,9 +68,10 @@ public class WorldRenderer implements Disposable {
         }
 
         // Draw player last so its always ontop
-        boolean blinkedOff = world.getPlayer().isInvulnerable() && (int) (animationTime * 10f) % 2 == 0;
+        boolean blinkedOff = player.isInvulnerable() && (int) (animationTime * 10f) % 2 == 0;
         if (!blinkedOff) {
-            drawEntity(currentFrame(playerWalk, playerSprite, world.getPlayer()), world.getPlayer());
+            TextureRegion frame = player.getVelocity().isZero() ? playerSprite : playerWalk.getKeyFrame(playerWalkTime);
+            drawEntity(frame, player);
         }
 
         batch.end();

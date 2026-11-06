@@ -59,6 +59,10 @@ public class Goose extends Entity {
                     state = State.RETURNING;
                     break;
                 }
+                if (getBounds().overlaps(player.getBounds())) {
+                    getVelocity().setZero(); // Already touching, no need to get closer
+                    break;
+                }
                 steerTowards(player.getPosition(), getSpeed(), delta);
                 break;
 

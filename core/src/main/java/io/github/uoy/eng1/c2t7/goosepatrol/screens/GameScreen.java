@@ -84,6 +84,7 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
                 game.setScreen(new TicketScreen(game, false, 0));
             }
             hudUI.updateTimer(timeRemaining);
+            hudUI.updateStamina(world.getPlayer().getStaminaPercent());
 
             moveInput.set(
                     (Gdx.input.isKeyPressed(Input.Keys.D) ? 1 : 0) - (Gdx.input.isKeyPressed(Input.Keys.A) ? 1 : 0),
