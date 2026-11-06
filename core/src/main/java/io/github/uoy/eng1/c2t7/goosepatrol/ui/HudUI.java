@@ -21,6 +21,7 @@ public class HudUI extends Table {
 
     private final Label timerLabel;
     private final Label toastLabel;
+    private final Label geeseLabel;
     private final Table hotbarTable;
     private final Stack[] slotStacks;
     private final Image[] heartImages;
@@ -44,6 +45,7 @@ public class HudUI extends Table {
             hearts.add(heartImages[i]).size(32).padRight(4);
         }
 
+        geeseLabel = new Label("", skin);
         Table topBar = new Table();
         staminaFill = new Image(skin.newDrawable("white", new Color(0.35f, 0.8f, 0.4f, 1f)));
         Table status = new Table();
@@ -52,7 +54,7 @@ public class HudUI extends Table {
 
         topBar.add(status).expandX().uniformX().left().top();
         topBar.add(timerLabel).top();
-        topBar.add().expandX().uniformX();
+        topBar.add(geeseLabel).expandX().uniformX().right().top();
         add(topBar).growX().top().pad(20, 20, 0, 20).row();
 
         // TOAST
@@ -101,6 +103,10 @@ public class HudUI extends Table {
                 }
             }
         }
+    }
+
+    public void updateGeese(int dispersed, int target) {
+        geeseLabel.setText("Geese fed: " + dispersed + " / " + target);
     }
 
     public void updateTimer(float remainingSeconds) {

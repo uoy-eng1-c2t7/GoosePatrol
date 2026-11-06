@@ -61,6 +61,7 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
         uiStage = new Stage(new FitViewport(1280, 720), game.getBatch());
         hudUI = new HudUI(world.getPlayer().getInventory(), game.getAssets(), game.getConfig().player.maxHearts);
         pauseMenuUI = new PauseMenuUI(game, game.getAssets().getSkin(), this);
+        hudUI.updateGeese(0, world.getGeeseToDisperse());
         uiStage.addActor(hudUI);
         uiStage.addActor(pauseMenuUI);
     }
@@ -183,7 +184,10 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
 
     @Override
     public void onExitReached(boolean isChased) {
-        if (isChased) {
+        int geeseLeft = world.getGeeseToDisperse() - world.getGeeseDispersed();
+        if (geeseLeft > 0) {
+            hudUI.showToast("Driver: 'Feed " + geeseLeft + " more geese first!'");
+        } else if (isChased) {
             hudUI.showToast("Driver: 'NO GEESE ON THE BUS! SHAKE THEM OFF'");
         } else {
             float timeTaken = game.getConfig().gameDurationSeconds - timeRemaining;
@@ -215,6 +219,11 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
             return;
         uiStage.getViewport().update(width, height, true);
         viewport.update(width, height);
+    }
+
+    @Override
+    public void onGooseDispersed() {
+        hudUI.updateGeese(world.getGeeseDispersed(), world.getGeeseToDisperse());
     }
 
     @Override

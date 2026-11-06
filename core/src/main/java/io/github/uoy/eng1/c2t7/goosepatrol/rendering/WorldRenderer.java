@@ -25,7 +25,7 @@ public class WorldRenderer implements Disposable {
     private final Assets assets;
     private final OrthogonalTiledMapRenderer mapRenderer;
     private final TextureRegion playerSprite, gooseSprite;
-    private final Animation<TextureRegion> playerWalk, gooseWalk;
+    private final Animation<TextureRegion> playerWalk, gooseWalk, gooseEat, gooseFly;
     private float animationTime;
     private float playerWalkTime;
 
@@ -36,6 +36,8 @@ public class WorldRenderer implements Disposable {
         this.batch = batch;
         this.assets = assets;
         mapRenderer = new OrthogonalTiledMapRenderer(assets.getMap(), batch);
+        this.gooseEat = new Animation<>(0.25f, assets.getFrames("goose_eat"), Animation.PlayMode.LOOP);
+        this.gooseFly = new Animation<>(0.1f, assets.getFrames("goose_fly"), Animation.PlayMode.LOOP);
         this.playerSprite = assets.getSprite("player");
         this.gooseSprite = assets.getSprite("goose");
 
@@ -60,7 +62,7 @@ public class WorldRenderer implements Disposable {
 
         for (Entity entity : world.getEntities()) {
             if (entity instanceof Goose) {
-                drawEntity(currentFrame(gooseWalk, gooseSprite, entity), entity);
+                drawEntity(gooseFrame((Goose) entity), entity);
             } else if (entity instanceof DroppedItem) {
                 DroppedItem drop = (DroppedItem) entity;
                 drawEntity(assets.getSprite(drop.getItem().getSpriteName()), entity);
@@ -75,6 +77,17 @@ public class WorldRenderer implements Disposable {
         }
 
         batch.end();
+    }
+
+    private TextureRegion gooseFrame(Goose goose) {
+        switch (goose.getState()) {
+            case EATING:
+                return gooseEat.getKeyFrame(animationTime);
+            case LEAVING:
+                return gooseFly.getKeyFrame(animationTime);
+            default:
+                return goose.getVelocity().isZero() ? gooseSprite : gooseWalk.getKeyFrame(animationTime);
+        }
     }
 
     private TextureRegion currentFrame(Animation<TextureRegion> walk, TextureRegion idle, Entity entity) {
