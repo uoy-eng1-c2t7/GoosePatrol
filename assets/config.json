@@ -11,12 +11,12 @@
         "speed": 150,
         "radius": 16,
         "turnSpeed": 18,
-        "sprintMultiplier": 1.35,
-        "maxHearts": 5,
+        "sprintMultiplier": 1.5,
+        "maxHearts": 3,
         "invulnerableSeconds": 1.5
     },
     "goose": {
-        "speed": 135,
+        "speed": 155,
         "radius": 16,
         "turnSpeed": 14,
         "sightRange": 200,
