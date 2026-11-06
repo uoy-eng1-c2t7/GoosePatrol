@@ -63,7 +63,10 @@ public class WorldRenderer implements Disposable {
         }
 
         // Draw player last so its always ontop
-        drawEntity(currentFrame(playerWalk, playerSprite, world.getPlayer()), world.getPlayer());
+        boolean blinkedOff = world.getPlayer().isInvulnerable() && (int) (animationTime * 10f) % 2 == 0;
+        if (!blinkedOff) {
+            drawEntity(currentFrame(playerWalk, playerSprite, world.getPlayer()), world.getPlayer());
+        }
 
         batch.end();
     }

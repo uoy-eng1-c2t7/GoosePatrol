@@ -1,23 +1,17 @@
-# Adding / editing sprites
-
-This walkthrough shows you how to edit or create a sprite.
+# Editing UI
+This walkthrough shows you how to edit the UI
 
 ---
 
 ## Required Tools
 
+- **Skin Composer**: The UI uses a 'skin', there are different ways of editing this skin but the easiest i've found is [Skin Composer](https://libgdx.com/wiki/tools/skin-composer) . 
 - **Image Editor**: You can use whatever you like, i've been using [Photopea](https://www.photopea.com/) . 
-- **Texture Packer**: Once again there are multiple options but I have been using [Texture Packer](https://libgdx.com/wiki/tools/texture-packer), specifically the GUI version as I find it easiest
 
 ## Files
 
-- `raw-assets/sprites/` - Raw sprite PNGs live here, edit them or add new ones.
-- `assets/tiled/campus.tmx` - optional if you want to place items on the map
+- `raw-assets/ui/` - Raw UI assets live here
+- `assets/ui` - The output of Skin Composer goes here, the skins json, atlas, png and fnt's for any fonts generated with Skin Composer. Also any assets that don't fit well into a skin like the large logo png.
 
-## Step 1: Create the sprite and repack the atlas
-
-
-## Step 2: Repack the Atlas
-
-
-## Step 3: Use the sprite
+## Step 1: Open up the UI skin in Skin Composer
+Import `uiskin.atlas` into Skin Composer. 

@@ -115,6 +115,18 @@ public class GameWorld {
         }
     }
 
+    private void checkPecks() {
+        for (Entity entity : entities) {
+            if (entity instanceof Goose && ((Goose) entity).isChasing()
+                    && Intersector.overlaps(entity.getBounds(), player.getBounds())) {
+                if (player.takePeck()) {
+                    listener.onPlayerPecked();
+                }
+                return;
+            }
+        }
+    }
+
     private void checkExit(float delta) {
         if (exitCooldown > 0) {
             exitCooldown -= delta;

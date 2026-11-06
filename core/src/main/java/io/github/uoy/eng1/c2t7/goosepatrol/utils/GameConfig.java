@@ -16,15 +16,17 @@ public class GameConfig {
         public float speed;
         public float radius;
         public float turnSpeed;
+        public int maxHearts;
+        public float invulnerableSeconds;
     }
 
     public static class GooseConfig {
         public float speed;
         public float radius;
         public float turnSpeed;
-        public float sightRange;      // Distance to notice player 
-        public float loseSightRange;  // Distance player must escape to lose goose
-        public float territoryRadius; // Max wander distance from home
+        public float sightRange;      
+        public float loseSightRange; 
+        public float territoryRadius; 
     }
 
     public static GameConfig load(FileHandle file) {
@@ -47,6 +49,8 @@ public class GameConfig {
         require(gameDurationSeconds > 0, "gameDurationSeconds");
         require(player != null && player.speed > 0 && player.radius > 0, "player.speed / player.radius");
         require(audio.sfxVolume >= 0 && audio.sfxVolume <= 1, "sfxVolume");
+        require(player.maxHearts >= 1, "maxHearts");
+        require(player.invulnerableSeconds >= 0.1, "invulnerableSeconds");
     }
 
     private static void require(boolean ok, String what) {

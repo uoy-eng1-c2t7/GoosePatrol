@@ -22,19 +22,31 @@ public class HudUI extends Table {
     private final Label toastLabel;
     private final Table hotbarTable;
     private final Stack[] slotStacks;
+    private final Image[] heartImages;
 
-    public HudUI(Inventory inventory, Assets assets) {
+    public HudUI(Inventory inventory, Assets assets, int maxHearts) {
         this.inventory = inventory;
         this.assets = assets;
-        this.skin = assets.getSkin();
-        ;
-        this.slotStacks = new Stack[inventory.getSlotCount()];
+        skin = assets.getSkin();
+
+        slotStacks = new Stack[inventory.getSlotCount()];
+        heartImages = new Image[maxHearts];
 
         setFillParent(true);
 
-        // TIMER
+        // Hearts and Timer
         timerLabel = new Label("05:00", skin);
-        add(timerLabel).top().padTop(20).expandX().row();
+        Table hearts = new Table();
+        for (int i = 0; i < heartImages.length; i++) {
+            heartImages[i] = new Image(skin.getDrawable("heart_full"));
+            hearts.add(heartImages[i]).size(32).padRight(4);
+        }
+
+        Table topBar = new Table();
+        topBar.add(hearts).expandX().uniformX().left();
+        topBar.add(timerLabel);
+        topBar.add().expandX().uniformX();
+        add(topBar).growX().top().pad(20, 20, 0, 20).row();
 
         // TOAST
         toastLabel = new Label("", skin);
@@ -90,14 +102,19 @@ public class HudUI extends Table {
         timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
     }
 
-     public void showToast(String message) {
+    public void updateHearts(int hearts) {
+        for (int i = 0; i < heartImages.length; i++) {
+            heartImages[i].setDrawable(skin.getDrawable(i < hearts ? "heart_full" : "heart_empty"));
+        }
+    }
+
+    public void showToast(String message) {
         toastLabel.setText(message);
         toastLabel.clearActions();
         toastLabel.getColor().a = 0f;
         toastLabel.addAction(Actions.sequence(
-            Actions.fadeIn(0.15f),
-            Actions.delay(1.0f),
-            Actions.fadeOut(0.4f)
-        ));
+                Actions.fadeIn(0.15f),
+                Actions.delay(1.0f),
+                Actions.fadeOut(0.4f)));
     }
 }

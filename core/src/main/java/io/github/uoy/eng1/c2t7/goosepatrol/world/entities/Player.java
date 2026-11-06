@@ -12,9 +12,14 @@ public class Player extends Entity {
     private final float maxStamina = 100f;
     private boolean isSprinting = false;
     private boolean exhausted = false;
+    private int hearts;
+    private final float invulnerableSeconds;
+    private float invulnerableTimer;
 
     public Player(Vector2 startPosition, GameConfig.PlayerConfig config) {
         super(startPosition, config.radius, config.speed, config.turnSpeed);
+        hearts = config.maxHearts;
+        invulnerableSeconds = config.invulnerableSeconds;
     }
 
     public void setMoveInput(Vector2 direction) {
@@ -29,6 +34,27 @@ public class Player extends Entity {
         this.isSprinting = sprinting && !exhausted;
     }
 
+    /**
+     * Removes a heart unless the player was pecked very recently. Returns true if
+     * it landed.
+     */
+    public boolean takePeck() {
+        if (invulnerableTimer > 0f || hearts == 0) {
+            return false;
+        }
+        hearts--;
+        invulnerableTimer = invulnerableSeconds;
+        return true;
+    }
+
+    public int getHearts() {
+        return hearts;
+    }
+
+    public boolean isInvulnerable() {
+        return invulnerableTimer > 0f;
+    }
+
     public Inventory getInventory() {
         return inventory;
     }
@@ -40,6 +66,7 @@ public class Player extends Entity {
     @Override
     public void update(float delta) {
         super.update(delta);
+        invulnerableTimer = Math.max(0f, invulnerableTimer - delta);
 
         if (isSprinting && !getVelocity().isZero()) {
             stamina = Math.max(0, stamina - delta * 35f);

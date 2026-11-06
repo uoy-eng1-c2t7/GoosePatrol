@@ -59,7 +59,7 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
 
         // UI stage setup
         uiStage = new Stage(new FitViewport(1280, 720), game.getBatch());
-        hudUI = new HudUI(world.getPlayer().getInventory(), game.getAssets());
+        hudUI = new HudUI(world.getPlayer().getInventory(), game.getAssets(), game.getConfig().player.maxHearts);
         pauseMenuUI = new PauseMenuUI(game, game.getAssets().getSkin(), this);
         uiStage.addActor(hudUI);
         uiStage.addActor(pauseMenuUI);
@@ -76,6 +76,7 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
 
     @Override
     public void render(float delta) {
+        delta = Math.min(delta, 0.05f); // A long frame must not skip through walls
         // Update game - freeze when paused
         if (!isPaused) {
             timeRemaining = Math.max(0, timeRemaining - delta);
@@ -130,7 +131,7 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
             return true;
         }
 
-        // Toggle debug 
+        // Toggle debug
         if (keycode == Input.Keys.F3) {
             debugRenderer.toggle();
         }
@@ -179,7 +180,7 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
         game.setScreen(new GameScreen(game));
     }
 
-    @Override 
+    @Override
     public void onExitReached(boolean isChased) {
         if (isChased) {
             hudUI.showToast("Driver: 'NO GEESE ON THE BUS! SHAKE THEM OFF'");
@@ -189,15 +190,21 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
         }
     }
 
-    @Override 
+    @Override
     public void onInventoryChanged() {
         hudUI.updateHotbar();
     }
 
-    @Override 
+    @Override
     public void onPlayerPecked() {
         game.getAssets().getSound("pain").play(game.getConfig().audio.sfxVolume);
-        hudUI.showToast("OUCH! Pecked by a goose!");
+        int hearts = world.getPlayer().getHearts();
+        hudUI.updateHearts(hearts);
+        if (hearts == 0) {
+            game.setScreen(new TicketScreen(game, false, 0));
+        } else {
+            hudUI.showToast("OUCH! " + hearts + " hearts left");
+        }
     }
 
     @Override

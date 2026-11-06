@@ -1,14 +1,16 @@
 {
     "gameDurationSeconds": 300,
     "minLoadTimeSeconds": 1,
-    "startingItems": ["bread"],
+    "startingItems": ["bread", "bread", "bread"],
     "player": {
         "speed": 120,
         "radius": 16,
-        "turnSpeed": 10
+        "turnSpeed": 10,
+        "maxHearts": 5,
+        "invulnerableSeconds": 1.5
     },
     "goose": {
-        "speed": 95,
+        "speed": 110,
         "radius": 16,
         "turnSpeed": 10,
         "sightRange": 140,
