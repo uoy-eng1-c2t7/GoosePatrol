@@ -11,6 +11,20 @@ ds_goose
   orig: 505, 155
   offset: 0, 0
   index: -1
+slot
+  rotate: false
+  xy: 1, 269
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+slot_selected
+  rotate: false
+  xy: 1, 219
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 startbtn
   rotate: false
   xy: 1, 319
@@ -26,17 +40,31 @@ white-pixel
   orig: 1, 1
   offset: 0, 0
   index: -1
-slot
+arrow
   rotate: false
-  xy: 1, 219
-  size: 48, 48
-  orig: 48, 48
+  xy: 1, 185
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
-slot_selected
+heart_empty
   rotate: false
-  xy: 1, 269
-  size: 48, 48
-  orig: 48, 48
+  xy: 1, 151
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+heart_full
+  rotate: false
+  xy: 1, 117
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+receipt_divider
+  rotate: false
+  xy: 64, 346
+  size: 16, 4
+  orig: 16, 4
   offset: 0, 0
   index: -1
