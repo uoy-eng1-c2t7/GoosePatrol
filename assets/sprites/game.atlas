@@ -1,34 +1,49 @@
-
 game.png
-size: 69,71
-format: RGBA8888
-filter: Nearest,Nearest
-repeat: none
-player.png
-  rotate: false
-  xy: 0,0
-  size: 33,43
-  orig: 33,43
-  offset: 0,0
-  index: -1
-bread.png
-  rotate: false
-  xy: 0,43
-  size: 38,28
-  orig: 42,42
-  offset: 0,0
-  index: -1
-gun.png
-  rotate: false
-  xy: 33,0
-  size: 36,23
-  orig: 42,42
-  offset: 0,0
-  index: -1
-goose.png
-  rotate: false
-  xy: 33,23
-  size: 20,14
-  orig: 24,24
-  offset: 0,0
-  index: -1
+size:1024,64
+repeat:none
+arrow
+bounds:770,24,32,32
+bread
+bounds:52,8,48,48
+crisps
+bounds:602,8,48,48
+energy_drink
+bounds:552,8,48,48
+goose
+bounds:202,8,48,48
+goose_alert
+bounds:804,32,24,24
+goose_eat
+index:1
+bounds:302,8,48,48
+goose_eat
+index:0
+bounds:502,8,48,48
+goose_fly
+index:0
+bounds:2,8,48,48
+goose_fly
+index:1
+bounds:452,8,48,48
+goose_walk
+index:0
+bounds:252,8,48,48
+goose_walk
+index:1
+bounds:652,8,48,48
+heart_empty
+bounds:702,24,32,32
+heart_full
+bounds:736,24,32,32
+nest
+bounds:352,8,48,48
+player
+bounds:102,8,48,48
+player_walk
+index:1
+bounds:152,8,48,48
+player_walk
+index:0
+bounds:402,8,48,48
+receipt_divider
+bounds:2,2,16,4

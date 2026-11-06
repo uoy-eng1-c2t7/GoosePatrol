@@ -96,7 +96,7 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
 
         // Render Game World
         ScreenUtils.clear(Color.BLACK);
-        renderer.render(camera);
+        renderer.render(camera, isPaused ? 0f : delta); // Pause animation if paused
         debugRenderer.render(camera);
 
         // Render UI layer

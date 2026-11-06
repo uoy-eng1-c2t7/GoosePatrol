@@ -1,6 +1,7 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.rendering;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -23,17 +24,29 @@ public class WorldRenderer implements Disposable {
     private final Assets assets;
     private final OrthogonalTiledMapRenderer mapRenderer;
     private final TextureRegion playerSprite, gooseSprite;
+    private final Animation<TextureRegion> playerWalk, gooseWalk;
+    private float animationTime;
+
+    private static final float WALK_FRAME_SECONDS = 0.15f;
 
     public WorldRenderer(GameWorld world, Assets assets, SpriteBatch batch) {
         this.world = world;
         this.batch = batch;
         this.assets = assets;
         mapRenderer = new OrthogonalTiledMapRenderer(assets.getMap(), batch);
-        this.playerSprite = assets.getSprite("player.png");
-        this.gooseSprite = assets.getSprite("goose.png");
+        this.playerSprite = assets.getSprite("player");
+        this.gooseSprite = assets.getSprite("goose");
+
+        this.playerWalk = new Animation<>(WALK_FRAME_SECONDS,
+                assets.getFrames("player_walk"), Animation.PlayMode.LOOP);
+
+        this.gooseWalk = new Animation<>(WALK_FRAME_SECONDS,
+                assets.getFrames("goose_walk"), Animation.PlayMode.LOOP);
     }
 
-    public void render(OrthographicCamera camera) {
+    public void render(OrthographicCamera camera, float delta) {
+        animationTime += delta;
+
         mapRenderer.setView(camera);
         mapRenderer.render();
 
@@ -42,7 +55,7 @@ public class WorldRenderer implements Disposable {
 
         for (Entity entity : world.getEntities()) {
             if (entity instanceof Goose) {
-                drawEntity(gooseSprite, entity);
+                drawEntity(currentFrame(gooseWalk, gooseSprite, entity), entity);
             } else if (entity instanceof DroppedItem) {
                 DroppedItem drop = (DroppedItem) entity;
                 drawEntity(assets.getSprite(drop.getItem().getSpriteName()), entity);
@@ -50,9 +63,13 @@ public class WorldRenderer implements Disposable {
         }
 
         // Draw player last so its always ontop
-        drawEntity(playerSprite, world.getPlayer());
+        drawEntity(currentFrame(playerWalk, playerSprite, world.getPlayer()), world.getPlayer());
 
         batch.end();
+    }
+
+    private TextureRegion currentFrame(Animation<TextureRegion> walk, TextureRegion idle, Entity entity) {
+        return entity.getVelocity().isZero() ? idle : walk.getKeyFrame(animationTime);
     }
 
     private void drawEntity(TextureRegion sprite, Entity entity) {

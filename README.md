@@ -31,11 +31,11 @@ To run the game on your desktop:
 
 Select a guide below based on what you are working on:
 
-- 🗺️ **[...edit the map, walls, or spawn points](docs/editing-maps.md)**  
+- 🗺️ **[...edit the map, walls, tiles or spawn points](docs/editing_the_map.md)**  
   *How to open `campus.tmx` in Tiled, set up collision rectangles, add new tiles and place spawn markers.*
 
-- 🎒 **[...add a new item](docs/adding-items.md)**  
-  *How to register an item in `ItemRegistry.java`, define what it does, and give it starting inventory or map spawns.*
+- 🎒 **[...edit / add sprites](docs/editing_sprites.md)**  
+  *How to add a new sprite to the texture atlas and access it via the asset manager.*
 
 
 
