@@ -5,7 +5,8 @@
     "startingItems": [
         "bread",
         "bread",
-        "bread"
+        "bread",
+        "energy_drink"
     ],
     "player": {
         "speed": 150,
@@ -23,7 +24,7 @@
         "loseSightRange": 450,
         "territoryRadius": 180,
         "giveUpSeconds": 5,
-        "alertRange": 300,   
+        "alertRange": 300,
         "leaveSeconds": 3,
         "geesePerFood": 3
     },

@@ -65,6 +65,10 @@ public class Player extends Entity {
         return stamina / maxStamina;
     }
 
+    public float getMaxStamina() { return maxStamina; }
+
+    public void setStamina(float stamina) { this.stamina = stamina; }
+
     @Override
     public void update(float delta) {
         super.update(delta);

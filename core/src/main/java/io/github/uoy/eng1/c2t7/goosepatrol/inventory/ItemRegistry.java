@@ -16,6 +16,7 @@ public class ItemRegistry {
     public static final Item ENERGY_DRINK = register(new Item(
             "energy_drink", "Energy Drink", "energy_drink", 5,
             (world, player) -> {
+                player.setStamina(player.getMaxStamina());
                 return true;
             }));
 
