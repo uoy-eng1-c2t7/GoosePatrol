@@ -22,7 +22,7 @@ public class EventRegistry {
     ));
 
     public static final Event GEESE_SPEED_EVENT = register(new Event(
-        "geese_speed", "Speedy Geese", "The geese are now 50% faster", 0.01f, true,
+        "geese_speed", "Speedy Geese", "The geese are now 50% faster", 0.01f, false,
         (GameWorld world) -> {
             Array<Entity> entities = world.getEntities();
             for (Entity entity: entities) {
