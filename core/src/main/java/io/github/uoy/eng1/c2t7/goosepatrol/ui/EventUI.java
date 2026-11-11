@@ -60,7 +60,7 @@ public class EventUI extends Table {
     private Table panel() {
         Table panel = new Table();
         panel.setBackground(skin.getDrawable("panel"));
-        panel.pad(10, 16, 10, 16);
+        panel.pad(5, 8, 5, 8);
         return panel;
     }
 }

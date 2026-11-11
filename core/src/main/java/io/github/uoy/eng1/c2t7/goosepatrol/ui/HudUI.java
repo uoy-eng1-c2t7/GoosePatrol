@@ -32,8 +32,6 @@ public class HudUI extends Table {
     private final EventUI eventUI;
 
     public HudUI(Inventory inventory, Assets assets, int maxHearts) {
-        this.setDebug(true);
-
         this.inventory = inventory;
         this.assets = assets;
         skin = assets.getSkin();
@@ -77,7 +75,7 @@ public class HudUI extends Table {
 
         //EVENTS
         eventUI = new EventUI(skin);
-        add(eventUI).row();
+        add(eventUI).right().top().row();
 
         // TOAST
         toastLabel = new Label("", skin);
