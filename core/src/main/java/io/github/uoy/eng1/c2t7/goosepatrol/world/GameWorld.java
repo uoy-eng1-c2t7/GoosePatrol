@@ -35,6 +35,8 @@ public class GameWorld {
     private static final Array<Rectangle> NO_WALLS = new Array<>();
     private static final float DRIVER_TALK_RANGE = 320f;
     private int geeseDispersed = 0;
+    private int itemsUsed = 0;
+    private int eventsTriggered = 0;
 
     public static final float eventTimerMax = 1f;
     public static float eventTimer = eventTimerMax;
@@ -84,12 +86,12 @@ public class GameWorld {
     }
 
     public void runEvents() {
-        float roll = (float) Math.random();
         for (String id: EventRegistry.getEvents().keySet()) {
             Event event = EventRegistry.get(id);
+            float roll = (float) Math.random();
             float p = event.getProbability();
             if (roll <= p) {
-                if (event.trigger(this)) listener.onEventTriggered(event);
+                if (event.trigger(this))  { listener.onEventTriggered(event); eventsTriggered += 1; }
             }
         }
     }
@@ -266,4 +268,10 @@ public class GameWorld {
     public int getGeeseToDisperse() {
         return config.geeseToDisperse;
     }
+
+    public int getItemsUsed() { return itemsUsed; }
+
+    public void setItemsUsed(int uses) { itemsUsed = uses; }
+
+    public int getEventsTriggered() { return eventsTriggered; }
 }

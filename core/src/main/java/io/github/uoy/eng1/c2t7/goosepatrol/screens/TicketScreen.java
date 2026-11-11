@@ -14,7 +14,7 @@ import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 public class TicketScreen implements Screen {
     private final Stage stage;
 
-    public TicketScreen(GoosePatrol game, boolean won, float timeTakenSeconds) {
+    public TicketScreen(GoosePatrol game, boolean won, float timeTakenSeconds, int itemsUsed, int eventsTriggered) {
         this.stage = new Stage(new FitViewport(1280, 720), game.getBatch());
         Gdx.input.setInputProcessor(stage);
         Skin skin = game.getAssets().getSkin();
@@ -37,13 +37,19 @@ public class TicketScreen implements Screen {
         int mins = (int) (timeTakenSeconds / 60);
         int secs = (int) (timeTakenSeconds % 60);
         Label timeLabel = new Label("Trip Time: " + String.format("%02d:%02d", mins, secs), skin);
+        Label itemLabel = new Label("Items used: " + itemsUsed, skin);
+        Label eventLabel = new Label("Events triggered: " + eventsTriggered, skin);
         timeLabel.setColor(Color.BLACK);
+        itemLabel.setColor(Color.BLACK);
+        eventLabel.setColor(Color.BLACK);
         Label divider = new Label("---------------------------", skin);
         divider.setColor(Color.GRAY);
         ticket.add(header).padBottom(10).row();
         ticket.add(title).padBottom(15).row();
         if (won) {
             ticket.add(timeLabel).padBottom(10).row();
+            ticket.add(itemLabel).padBottom(10).row();
+            ticket.add(eventLabel).padBottom(10).row();
         }
         ticket.add(divider).padBottom(20).row();
 
@@ -57,7 +63,7 @@ public class TicketScreen implements Screen {
                 game.setScreen(new GameScreen(game));
             }
         });
-        
+
         menuBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -72,7 +78,7 @@ public class TicketScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(0.1f, 0.1f, 0.15f, 1f); 
+        ScreenUtils.clear(0.1f, 0.1f, 0.15f, 1f);
         stage.act(delta);
         stage.draw();
     }

@@ -9,7 +9,7 @@ public class Item {
     public interface ItemBehavior {
         /**
          * Triggered when the player uses the item.
-         * 
+         *
          * @return true if the item should be consumed, false otherwise.
          */
         boolean onUse(GameWorld world, Player player);
@@ -30,7 +30,9 @@ public class Item {
     }
 
     public boolean use(GameWorld world, Player player) {
-        return behavior != null && behavior.onUse(world, player);
+        if (behavior == null || !behavior.onUse(world, player)) return false;
+        world.setItemsUsed(world.getItemsUsed() + 1);
+        return true;
     }
 
     public String getId() {

@@ -99,13 +99,13 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
         if (departTimer > 0f) {
             departTimer -= delta;
             if (departTimer <= 0f) {
-                game.setScreen(new TicketScreen(game, true, winTime));
+                game.setScreen(new TicketScreen(game, true, winTime, world.getItemsUsed(), world.getEventsTriggered()));
                 return;
             }
         } else if (!isPaused) {
             timeRemaining = Math.max(0, timeRemaining - delta);
             if (timeRemaining <= 0) {
-                game.setScreen(new TicketScreen(game, false, 0));
+                game.setScreen(new TicketScreen(game, false, 0, world.getItemsUsed(), world.getEventsTriggered()));
             }
             hudUI.updateTimer(timeRemaining);
             hudUI.updateStamina(world.getPlayer().getStaminaPercent());
@@ -236,7 +236,7 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
         int hearts = world.getPlayer().getHearts();
         hudUI.updateHearts(hearts);
         if (hearts == 0) {
-            game.setScreen(new TicketScreen(game, false, 0));
+            game.setScreen(new TicketScreen(game, false, 0, world.getItemsUsed(), world.getEventsTriggered()));
         } else {
             hudUI.showToast("OUCH! " + hearts + " hearts left");
         }
