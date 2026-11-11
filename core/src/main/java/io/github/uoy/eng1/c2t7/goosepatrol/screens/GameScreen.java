@@ -13,14 +13,17 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
+import io.github.uoy.eng1.c2t7.goosepatrol.events.Event;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.ItemStack;
 import io.github.uoy.eng1.c2t7.goosepatrol.rendering.CameraController;
 import io.github.uoy.eng1.c2t7.goosepatrol.rendering.DebugRenderer;
 import io.github.uoy.eng1.c2t7.goosepatrol.rendering.WorldRenderer;
+import io.github.uoy.eng1.c2t7.goosepatrol.ui.EventUI;
 import io.github.uoy.eng1.c2t7.goosepatrol.ui.HudUI;
 import io.github.uoy.eng1.c2t7.goosepatrol.ui.PauseMenuUI;
 import io.github.uoy.eng1.c2t7.goosepatrol.ui.StartOverlayUI;
 import io.github.uoy.eng1.c2t7.goosepatrol.ui.PauseMenuUI.PauseListener;
+import io.github.uoy.eng1.c2t7.goosepatrol.utils.Assets;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.GameWorld;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.WorldListener;
@@ -55,9 +58,11 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
         GameConfig config = game.getConfig();
         this.timeRemaining = config.gameDurationSeconds;
 
+        Assets assets = game.getAssets();
+
         // World and Renderer setup
-        world = new GameWorld(config, this, game.getAssets().getMap());
-        renderer = new WorldRenderer(world, game.getAssets(), game.getBatch());
+        world = new GameWorld(config, this, assets.getMap());
+        renderer = new WorldRenderer(world, assets, game.getBatch());
         debugRenderer = new DebugRenderer(world, game.getBatch());
         viewport = new ExtendViewport(config.camera.viewWidth, config.camera.viewHeight, camera);
         this.cameraController = new CameraController(camera, world.getMap().getWidth(), world.getMap().getHeight(),
@@ -65,12 +70,12 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
 
         // UI stage setup
         uiStage = new Stage(new ExtendViewport(1280, 720), game.getBatch());
-        hudUI = new HudUI(world.getPlayer().getInventory(), game.getAssets(), game.getConfig().player.maxHearts);
-        pauseMenuUI = new PauseMenuUI(game, game.getAssets().getSkin(), this);
+        hudUI = new HudUI(world.getPlayer().getInventory(), assets, game.getConfig().player.maxHearts);
+        pauseMenuUI = new PauseMenuUI(game, assets.getSkin(), this);
         hudUI.updateGeese(0, world.getGeeseToDisperse());
         uiStage.addActor(hudUI);
         uiStage.addActor(pauseMenuUI);
-        startOverlay = new StartOverlayUI(game.getAssets().getSkin(), world.getGeeseToDisperse());
+        startOverlay = new StartOverlayUI(assets.getSkin(), world.getGeeseToDisperse());
         uiStage.addActor(startOverlay);
     }
 
@@ -269,4 +274,7 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
         renderer.dispose();
         uiStage.dispose();
     }
+
+    @Override
+    public void onEventTriggered(Event event) { hudUI.getEventUI().announceEvent(event); }
 }
