@@ -3,6 +3,10 @@ package io.github.uoy.eng1.c2t7.goosepatrol.utils;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 
+/**
+ * Tuning values loaded from assets/config.json and validated at startup, so
+ * balance can change without recompiling (QR-06).
+ */
 public class GameConfig {
     public int gameDurationSeconds;
     public float minLoadTimeSeconds;

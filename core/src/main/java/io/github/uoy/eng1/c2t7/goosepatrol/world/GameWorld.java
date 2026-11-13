@@ -19,6 +19,12 @@ import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Goose;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Player;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.pathfinding.NavGrid;
 
+/**
+ * The game model: owns every entity, the timer, win/lose status and the
+ * counters.
+ * Knows nothing about rendering or input; reports changes through
+ * {@link WorldListener}. Implements FR-05..FR-14, UR_PLY_WIN, UR_PLY_LOSE.
+ */
 public class GameWorld {
     public enum Status {
         RUNNING,

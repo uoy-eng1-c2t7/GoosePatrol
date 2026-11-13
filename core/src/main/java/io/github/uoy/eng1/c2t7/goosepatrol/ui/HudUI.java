@@ -9,12 +9,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-
-import io.github.uoy.eng1.c2t7.goosepatrol.events.Event;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.Inventory;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.ItemStack;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.Assets;
 
+/**
+ * In-game overlay: hearts, stamina, timer, geese progress, counters and hotbar.
+ * Implements UR_PLY_TIME, FR-12, FR-13.
+ */
 public class HudUI extends Table {
     private final Inventory inventory;
     private final Assets assets;

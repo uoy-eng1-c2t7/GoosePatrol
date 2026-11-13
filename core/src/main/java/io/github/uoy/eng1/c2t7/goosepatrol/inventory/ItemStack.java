@@ -1,5 +1,6 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.inventory;
 
+/** A count of one item kind held in an inventory slot. */
 public class ItemStack {
     private final Item item;
     private int count;

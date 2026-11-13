@@ -9,6 +9,10 @@ import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Player;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Every hidden event in the game. To add one, register a new {@link Event}
+ * here.
+ */
 public class EventRegistry {
     private static final Map<String, Event> EVENTS = new HashMap<>();
 

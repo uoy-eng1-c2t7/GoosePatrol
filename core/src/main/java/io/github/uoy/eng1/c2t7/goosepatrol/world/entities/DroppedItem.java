@@ -3,6 +3,11 @@ package io.github.uoy.eng1.c2t7.goosepatrol.world.entities;
 import com.badlogic.gdx.math.Vector2;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.Item;
 
+/**
+ * An item lying in the world: either a map pickup the player can collect, or
+ * thrown food that distracts geese until its lifetime runs out. Implements
+ * FR-18, FR-20.
+ */
 public class DroppedItem extends Entity {
     private final Item item;
     private final int count;

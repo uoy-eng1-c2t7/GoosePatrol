@@ -6,6 +6,12 @@ import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.pathfinding.NavGrid;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.pathfinding.PathFollower;
 
+/**
+ * A goose driven by a state machine: WANDERING near home → CHASING once it sees
+ * the player → DISTRACTED by thrown food → EATING → LEAVING (dispersed). Gives
+ * up and RETURNS home if it loses the player. Implements FR-08, FR-09, FR-10,
+ * UR_PLY_DISPERSE.
+ */
 public class Goose extends Entity {
     public enum State {
         WANDERING,

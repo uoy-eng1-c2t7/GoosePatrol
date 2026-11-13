@@ -1,5 +1,9 @@
 package io.github.uoy.eng1.c2t7.goosepatrol.inventory;
 
+/**
+ * Fixed-size hotbar of item stacks with one selected slot. Implements
+ * UR_PLY_INVENTORY, FR-19.
+ */
 public class Inventory {
     private final ItemStack[] slots;
     private int selectedSlot = 0;

@@ -3,6 +3,10 @@ package io.github.uoy.eng1.c2t7.goosepatrol.inventory;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Every item in the game, keyed by id. Ids match object names in the Tiled
+ * entities layer and config.json startingItems. Implements FR-07, FR-20, FR-21.
+ */
 public class ItemRegistry {
     private static final Map<String, Item> ITEMS = new HashMap<>();
 

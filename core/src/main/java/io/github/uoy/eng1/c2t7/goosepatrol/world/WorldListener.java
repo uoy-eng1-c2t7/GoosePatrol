@@ -2,6 +2,10 @@ package io.github.uoy.eng1.c2t7.goosepatrol.world;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.events.Event;
 
+/**
+ * Callbacks the world uses to tell the screen something happened, so the world
+ * never depends on UI code.
+ */
 public interface WorldListener {
 
     default void onInventoryChanged() {

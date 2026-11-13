@@ -11,6 +11,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 
+/**
+ * Results screen styled as a bus ticket: outcome, time, items used, events
+ * triggered. Implements FR-01, FR-22.
+ */
 public class TicketScreen implements Screen {
     private final Stage stage;
 

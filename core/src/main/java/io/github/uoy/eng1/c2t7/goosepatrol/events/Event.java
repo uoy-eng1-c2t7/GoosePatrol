@@ -2,6 +2,10 @@ package io.github.uoy.eng1.c2t7.goosepatrol.events;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.world.GameWorld;
 
+/**
+ * A hidden event: invisible until it fires, then applies its behaviour to the
+ * world. Non-repeatable events fire at most once per game. Implements FR-06.
+ */
 public class Event {
 
     @FunctionalInterface

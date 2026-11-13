@@ -12,6 +12,10 @@ import com.badlogic.gdx.utils.Array;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.Item;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.ItemRegistry;
 
+/**
+ * Reads the Tiled map's object layers (collision, entities, exit) into walls,
+ * spawn points and the exit zone. See docs/editing_the_map.md.
+ */
 public class MapLoader {
     public static class ItemSpawn {
         public final Item item;

@@ -5,6 +5,10 @@ import com.badlogic.gdx.math.Vector2;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.Inventory;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
 
+/**
+ * The student the user controls: movement, sprint/stamina, hearts and the
+ * inventory. Implements UR_PLY_MOVEMENT, FR-02, FR-15, FR-17.
+ */
 public class Player extends Entity {
     private final Vector2 moveInput = new Vector2();
     private final Inventory inventory = new Inventory(9);
@@ -65,9 +69,13 @@ public class Player extends Entity {
         return stamina / maxStamina;
     }
 
-    public float getMaxStamina() { return maxStamina; }
+    public float getMaxStamina() {
+        return maxStamina;
+    }
 
-    public void setStamina(float stamina) { this.stamina = stamina; }
+    public void setStamina(float stamina) {
+        this.stamina = stamina;
+    }
 
     @Override
     public void update(float delta) {

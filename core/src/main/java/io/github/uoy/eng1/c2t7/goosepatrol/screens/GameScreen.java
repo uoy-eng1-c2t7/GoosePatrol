@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 import io.github.uoy.eng1.c2t7.goosepatrol.events.Event;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.Item;
-import io.github.uoy.eng1.c2t7.goosepatrol.inventory.ItemStack;
 import io.github.uoy.eng1.c2t7.goosepatrol.rendering.CameraController;
 import io.github.uoy.eng1.c2t7.goosepatrol.rendering.DebugRenderer;
 import io.github.uoy.eng1.c2t7.goosepatrol.rendering.WorldRenderer;
@@ -28,6 +27,11 @@ import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.GameWorld;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.WorldListener;
 
+/**
+ * The gameplay screen: reads input, steps the {@link GameWorld}, draws it and
+ * the HUD, and switches to the results screen when the world reports WON/LOST.
+ * Implements FR-04, FR-05.
+ */
 public class GameScreen extends InputAdapter implements Screen, WorldListener, PauseListener {
     private final GoosePatrol game;
     private final GameWorld world;
