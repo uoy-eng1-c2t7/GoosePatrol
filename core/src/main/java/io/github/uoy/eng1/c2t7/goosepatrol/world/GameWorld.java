@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import io.github.uoy.eng1.c2t7.goosepatrol.events.Event;
+import io.github.uoy.eng1.c2t7.goosepatrol.events.EventRegistry;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.Item;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.ItemRegistry;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
@@ -33,6 +35,11 @@ public class GameWorld {
     private static final Array<Rectangle> NO_WALLS = new Array<>();
     private static final float DRIVER_TALK_RANGE = 320f;
     private int geeseDispersed = 0;
+    private int itemsUsed = 0;
+    private int eventsTriggered = 0;
+
+    public static final float eventTimerMax = 1f;
+    public static float eventTimer = eventTimerMax;
 
     public GameWorld(GameConfig config, WorldListener listener, TiledMap tiledMap) {
         this.listener = listener;
@@ -67,6 +74,26 @@ public class GameWorld {
         alertNearbyGeese();
         checkPecks();
         checkExit();
+        updateEventTimer(delta);
+    }
+
+    public void updateEventTimer(float delta) {
+        eventTimer -= delta;
+        if (eventTimer <= 0) {
+            eventTimer = eventTimerMax;
+            runEvents();
+        }
+    }
+
+    public void runEvents() {
+        for (String id: EventRegistry.getEvents().keySet()) {
+            Event event = EventRegistry.get(id);
+            float roll = (float) Math.random();
+            float p = event.getProbability();
+            if (roll <= p) {
+                if (event.trigger(this))  { listener.onEventTriggered(event); eventsTriggered += 1; }
+            }
+        }
     }
 
     private void updateEntities(Array<Entity> entities, float delta) {
@@ -241,4 +268,10 @@ public class GameWorld {
     public int getGeeseToDisperse() {
         return config.geeseToDisperse;
     }
+
+    public int getItemsUsed() { return itemsUsed; }
+
+    public void setItemsUsed(int uses) { itemsUsed = uses; }
+
+    public int getEventsTriggered() { return eventsTriggered; }
 }

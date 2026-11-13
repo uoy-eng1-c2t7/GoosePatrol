@@ -14,7 +14,7 @@ public abstract class Entity {
     private final Vector2 velocity = new Vector2();
     private final Circle bounds;
     private final float turnSpeed;
-    private final float speed;
+    private float speed;
 
     private float rotation;
 
@@ -40,6 +40,8 @@ public abstract class Entity {
     public float getSpeed() {
         return speed;
     }
+
+    public void setSpeed(float speed) { this.speed = speed; }
 
     /** Direction last moved in, in degrees (0 = right, 90 = up). */
     public float getRotation() {

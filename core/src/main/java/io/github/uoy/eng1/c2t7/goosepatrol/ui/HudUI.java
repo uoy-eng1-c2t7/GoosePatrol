@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
+import io.github.uoy.eng1.c2t7.goosepatrol.events.Event;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.Inventory;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.ItemStack;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.Assets;
@@ -27,6 +28,8 @@ public class HudUI extends Table {
     private final Image[] heartImages;
     private final ProgressBar staminaBar;
     private final Table toastPanel;
+
+    private final EventUI eventUI;
 
     public HudUI(Inventory inventory, Assets assets, int maxHearts) {
         this.inventory = inventory;
@@ -70,6 +73,10 @@ public class HudUI extends Table {
         topBar.add(right).expandX().uniformX().right().top();
         add(topBar).growX().top().pad(20, 20, 0, 20).row();
 
+        //EVENTS
+        eventUI = new EventUI(skin);
+        add(eventUI).right().top().row();
+
         // TOAST
         toastLabel = new Label("", skin);
         toastPanel = panel();
@@ -83,6 +90,7 @@ public class HudUI extends Table {
         add(hotbarTable).bottom().padBottom(20);
 
         updateHotbar();
+
     }
 
     private Table panel() {
@@ -156,4 +164,6 @@ public class HudUI extends Table {
                 Actions.delay(1.0f),
                 Actions.fadeOut(0.4f)));
     }
+
+    public EventUI getEventUI() { return eventUI; }
 }
