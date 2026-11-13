@@ -23,7 +23,8 @@ import io.github.uoy.eng1.c2t7.goosepatrol.world.pathfinding.NavGrid;
  * The game model: owns every entity, the timer, win/lose status and the
  * counters.
  * Knows nothing about rendering or input; reports changes through
- * {@link WorldListener}. Implements FR-05..FR-14, UR_PLY_WIN, UR_PLY_LOSE.
+ * {@link WorldListener}. Implements FR-06, FR-11, FR-12, FR-13, FR-14, FR-16,
+ * UR_PLY_WIN, UR_PLY_LOSE.
  */
 public class GameWorld {
     public enum Status {
@@ -203,7 +204,7 @@ public class GameWorld {
                 if (player.takePeck()) {
                     listener.onPlayerPecked();
                     if (player.getHearts() == 0) {
-                        status = Status.LOST;
+                        status = Status.LOST; // FR-16
                     }
                 }
                 return;
