@@ -139,8 +139,10 @@ public class HudUI extends Table {
                 // Stack count label in bottom right corner
                 if (itemStack.getCount() > 1) {
                     Label count = new Label(String.valueOf(itemStack.getCount()), skin);
-                    count.setAlignment(Align.bottomRight);
-                    stack.add(count);
+                    count.setFontScale(0.6f);
+                    Table countCorner = new Table();
+                    countCorner.add(count).expand().bottom().right().pad(0, 0, 2, 4);
+                    stack.add(countCorner);
                 }
             }
         }
