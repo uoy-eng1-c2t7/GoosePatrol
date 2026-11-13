@@ -17,7 +17,7 @@
         "invulnerableSeconds": 1.5
     },
     "goose": {
-        "speed": 155,
+        "speed": 149,
         "radius": 16,
         "turnSpeed": 14,
         "sightRange": 200,
