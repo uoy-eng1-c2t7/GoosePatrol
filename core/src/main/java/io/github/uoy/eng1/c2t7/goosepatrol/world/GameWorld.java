@@ -38,10 +38,11 @@ public class GameWorld {
     private int itemsUsed = 0;
     private int eventsTriggered = 0;
 
-    public static final float eventTimerMax = 1f;
-    public static float eventTimer = eventTimerMax;
+    private static final float EVENT_ROLL_INTERVAL = 1f;
+    private float eventTimer = EVENT_ROLL_INTERVAL;
 
     public GameWorld(GameConfig config, WorldListener listener, TiledMap tiledMap) {
+        EventRegistry.resetAll();
         this.listener = listener;
         this.config = config;
         this.map = new MapLoader(tiledMap);
@@ -77,21 +78,23 @@ public class GameWorld {
         updateEventTimer(delta);
     }
 
-    public void updateEventTimer(float delta) {
+    private void updateEventTimer(float delta) {
         eventTimer -= delta;
         if (eventTimer <= 0) {
-            eventTimer = eventTimerMax;
+            eventTimer = EVENT_ROLL_INTERVAL;
             runEvents();
         }
     }
 
-    public void runEvents() {
-        for (String id: EventRegistry.getEvents().keySet()) {
-            Event event = EventRegistry.get(id);
-            float roll = (float) Math.random();
-            float p = event.getProbability();
-            if (roll <= p) {
-                if (event.trigger(this))  { listener.onEventTriggered(event); eventsTriggered += 1; }
+    /**
+     * Rolls each hidden event's chance once; triggered events are announced and
+     * counted (FR-06, FR-13).
+     */
+    private void runEvents() {
+        for (Event event : EventRegistry.getEvents().values()) {
+            if (MathUtils.random() <= event.getProbability() && event.trigger(this)) {
+                eventsTriggered++;
+                listener.onEventTriggered(event);
             }
         }
     }
@@ -269,9 +272,15 @@ public class GameWorld {
         return config.geeseToDisperse;
     }
 
-    public int getItemsUsed() { return itemsUsed; }
+    public int getItemsUsed() {
+        return itemsUsed;
+    }
 
-    public void setItemsUsed(int uses) { itemsUsed = uses; }
+    public void setItemsUsed(int uses) {
+        itemsUsed = uses;
+    }
 
-    public int getEventsTriggered() { return eventsTriggered; }
+    public int getEventsTriggered() {
+        return eventsTriggered;
+    }
 }

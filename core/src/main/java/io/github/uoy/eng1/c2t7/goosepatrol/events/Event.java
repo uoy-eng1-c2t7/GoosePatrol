@@ -4,7 +4,6 @@ import io.github.uoy.eng1.c2t7.goosepatrol.world.GameWorld;
 
 public class Event {
 
-
     @FunctionalInterface
     public interface EventBehaviour {
         void onTrigger(GameWorld world);
@@ -18,7 +17,8 @@ public class Event {
     private final boolean repeatable;
     private boolean triggered;
 
-    public Event(String id, String name, String description, float probability, boolean repeatable, EventBehaviour behaviour) {
+    public Event(String id, String name, String description, float probability, boolean repeatable,
+            EventBehaviour behaviour) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -30,19 +30,36 @@ public class Event {
 
     // returns true if triggered successfully, false otherwise
     public boolean trigger(GameWorld world) {
-        if (behaviour == null || triggered) return false;
-        if (!repeatable) triggered = true;
+        if (behaviour == null || triggered)
+            return false;
+        if (!repeatable)
+            triggered = true;
         behaviour.onTrigger(world);
 
         return true;
     }
 
-    public String getId() { return id; }
+    public String getId() {
+        return id;
+    }
 
-    public float getProbability() { return probability; }
+    public float getProbability() {
+        return probability;
+    }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
+    /**
+     * Makes a non-repeatable event available again. Called at the start of each
+     * game.
+     */
+    public void reset() {
+        triggered = false;
+    }
 }

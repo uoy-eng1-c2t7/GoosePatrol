@@ -12,34 +12,42 @@ import java.util.Map;
 public class EventRegistry {
     private static final Map<String, Event> EVENTS = new HashMap<>();
 
-
     public static final Event PLAYER_SPEED_EVENT = register(new Event(
-        "player_speed", "Usain Bolt", "Player is now twice as fast", 0.01f, false,
-        (GameWorld world) -> {
-            Player player = world.getPlayer();
-            player.setSpeed(player.getSpeed() * 2);
-        }
-    ));
+            "player_speed", "Usain Bolt", "Player is now twice as fast", 0.01f, false,
+            (GameWorld world) -> {
+                Player player = world.getPlayer();
+                player.setSpeed(player.getSpeed() * 2);
+            }));
 
     public static final Event GEESE_SPEED_EVENT = register(new Event(
-        "geese_speed", "Speedy Geese", "The geese are now 50% faster", 0.01f, false,
-        (GameWorld world) -> {
-            Array<Entity> entities = world.getEntities();
-            for (Entity entity: entities) {
-                if (entity instanceof Goose) {
-                    entity.setSpeed((float) (entity.getSpeed() * 1.5));
+            "geese_speed", "Speedy Geese", "The geese are now 50% faster", 0.01f, false,
+            (GameWorld world) -> {
+                Array<Entity> entities = world.getEntities();
+                for (Entity entity : entities) {
+                    if (entity instanceof Goose) {
+                        entity.setSpeed((float) (entity.getSpeed() * 1.5));
+                    }
                 }
-            }
-        }
-    ));
+            }));
 
     public static Event register(Event event) {
         EVENTS.put(event.getId(), event);
         return event;
     }
 
-    public static Map<String, Event> getEvents() { return EVENTS; }
+    /** Resets every event so a new game starts with all events available. */
+    public static void resetAll() {
+        for (Event event : EVENTS.values()) {
+            event.reset();
+        }
+    }
 
-    public static Event get(String id) { return EVENTS.get(id); }
+    public static Map<String, Event> getEvents() {
+        return EVENTS;
+    }
+
+    public static Event get(String id) {
+        return EVENTS.get(id);
+    }
 
 }
