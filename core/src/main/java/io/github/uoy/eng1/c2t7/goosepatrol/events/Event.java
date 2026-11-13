@@ -32,7 +32,6 @@ public class Event {
     public boolean trigger(GameWorld world) {
         if (behaviour == null || triggered) return false;
         if (!repeatable) triggered = true;
-        System.out.println(triggered);
         behaviour.onTrigger(world);
 
         return true;
