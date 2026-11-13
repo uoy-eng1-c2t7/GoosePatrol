@@ -84,10 +84,6 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
     public void show() {
         cameraController.setTarget(world.getPlayer().getPosition());
 
-        if (isPaused) {
-            cameraController.snapToTarget(); // The camera doesn't update itself while paused
-        }
-
         // Multiplex input - UI recieves clicks first, if not handled go to gamescreen
         InputMultiplexer multiplexer = new InputMultiplexer(uiStage, this);
         Gdx.input.setInputProcessor(multiplexer);
@@ -258,6 +254,7 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
             return;
         uiStage.getViewport().update(width, height, true);
         viewport.update(width, height);
+        cameraController.snapToTarget(); 
     }
 
     @Override
