@@ -11,6 +11,7 @@ import io.github.uoy.eng1.c2t7.goosepatrol.events.Event;
 import io.github.uoy.eng1.c2t7.goosepatrol.events.EventRegistry;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.Item;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.ItemRegistry;
+import io.github.uoy.eng1.c2t7.goosepatrol.inventory.ItemStack;
 import io.github.uoy.eng1.c2t7.goosepatrol.utils.GameConfig;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.DroppedItem;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Entity;
@@ -37,12 +38,16 @@ public class GameWorld {
     private int geeseDispersed = 0;
     private int itemsUsed = 0;
     private int eventsTriggered = 0;
+    private Status status = Status.RUNNING;
+    private float timeRemaining;
+    private float timeTaken;
 
     private static final float EVENT_ROLL_INTERVAL = 1f;
     private float eventTimer = EVENT_ROLL_INTERVAL;
 
     public GameWorld(GameConfig config, WorldListener listener, TiledMap tiledMap) {
         EventRegistry.resetAll();
+        timeRemaining = config.gameDurationSeconds;
         this.listener = listener;
         this.config = config;
         this.map = new MapLoader(tiledMap);
@@ -69,7 +74,21 @@ public class GameWorld {
         }
     }
 
+    /**
+     * Advances the game by one frame. Does nothing once the game is won or lost.
+     *
+     * @param delta     seconds since the last frame
+     * @param moveInput movement direction from the keyboard, each axis -1, 0 or 1
+     */
     public void update(float delta, Vector2 moveInput) {
+        if (status != Status.RUNNING) {
+            return;
+        }
+        timeRemaining = Math.max(0f, timeRemaining - delta); // FR-14
+        if (timeRemaining <= 0f) {
+            status = Status.LOST; // UR_PLY_LOSE
+            return;
+        }
         player.setMoveInput(moveInput);
         updateEntities(entities, delta);
         alertNearbyGeese();
@@ -177,6 +196,9 @@ public class GameWorld {
                     && Intersector.overlaps(entity.getBounds(), player.getBounds())) {
                 if (player.takePeck()) {
                     listener.onPlayerPecked();
+                    if (player.getHearts() == 0) {
+                        status = Status.LOST;
+                    }
                 }
                 return;
             }
@@ -186,6 +208,8 @@ public class GameWorld {
     private void checkExit() {
         if (map.getExitZone() != null && Intersector.overlaps(player.getBounds(), map.getExitZone())
                 && hasDispersedEnough() && !isPlayerBeingChased()) {
+            status = Status.WON;
+            timeTaken = config.gameDurationSeconds - timeRemaining;
             listener.onExitReached();
         }
     }
@@ -248,12 +272,45 @@ public class GameWorld {
         }
     }
 
+    /**
+     * Uses the item in the selected hotbar slot (UR_PLY_INVENTORY, FR-12).
+     *
+     * @return the item that was used, or null if the slot was empty or the item
+     *         refused
+     */
+    public Item useActiveItem() {
+        ItemStack active = player.getInventory().getActiveStack();
+        if (active == null) {
+            return null;
+        }
+        Item item = active.getItem();
+        if (!item.use(this, player)) {
+            return null;
+        }
+        player.getInventory().consumeActiveItem();
+        itemsUsed++;
+        listener.onInventoryChanged();
+        return item;
+    }
+
     public Player getPlayer() {
         return player;
     }
 
     public Array<Entity> getEntities() {
         return entities;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public float getTimeRemaining() {
+        return timeRemaining;
+    }
+
+    public float getTimeTaken() {
+        return timeTaken;
     }
 
     public NavGrid getNavGrid() {
@@ -274,10 +331,6 @@ public class GameWorld {
 
     public int getItemsUsed() {
         return itemsUsed;
-    }
-
-    public void setItemsUsed(int uses) {
-        itemsUsed = uses;
     }
 
     public int getEventsTriggered() {

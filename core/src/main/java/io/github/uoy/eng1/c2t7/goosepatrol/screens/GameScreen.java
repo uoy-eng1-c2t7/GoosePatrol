@@ -18,7 +18,6 @@ import io.github.uoy.eng1.c2t7.goosepatrol.inventory.ItemStack;
 import io.github.uoy.eng1.c2t7.goosepatrol.rendering.CameraController;
 import io.github.uoy.eng1.c2t7.goosepatrol.rendering.DebugRenderer;
 import io.github.uoy.eng1.c2t7.goosepatrol.rendering.WorldRenderer;
-import io.github.uoy.eng1.c2t7.goosepatrol.ui.EventUI;
 import io.github.uoy.eng1.c2t7.goosepatrol.ui.HudUI;
 import io.github.uoy.eng1.c2t7.goosepatrol.ui.PauseMenuUI;
 import io.github.uoy.eng1.c2t7.goosepatrol.ui.StartOverlayUI;

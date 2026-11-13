@@ -3,7 +3,10 @@ package io.github.uoy.eng1.c2t7.goosepatrol.inventory;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.GameWorld;
 import io.github.uoy.eng1.c2t7.goosepatrol.world.entities.Player;
 
-/** Rperesnets one invenory item */
+/**
+ * One kind of inventory item, e.g. bread. Behaviour is supplied as a lambda in
+ * {@link ItemRegistry}.
+ */
 public class Item {
     @FunctionalInterface
     public interface ItemBehavior {
@@ -29,10 +32,9 @@ public class Item {
         this.behavior = behavior;
     }
 
+    /** Runs this item's behaviour. Returns true if the item should be consumed. */
     public boolean use(GameWorld world, Player player) {
-        if (behavior == null || !behavior.onUse(world, player)) return false;
-        world.setItemsUsed(world.getItemsUsed() + 1);
-        return true;
+        return behavior != null && behavior.onUse(world, player);
     }
 
     public String getId() {
