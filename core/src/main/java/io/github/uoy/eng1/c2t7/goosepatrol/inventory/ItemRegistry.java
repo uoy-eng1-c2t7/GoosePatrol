@@ -16,6 +16,9 @@ public class ItemRegistry {
     public static final Item ENERGY_DRINK = register(new Item(
             "energy_drink", "Energy Drink", "energy_drink", 5,
             (world, player) -> {
+                if (player.getStaminaPercent() >= 1f) {
+                    return false; // Already full, don't waste it
+                }
                 player.setStamina(player.getMaxStamina());
                 return true;
             }));
