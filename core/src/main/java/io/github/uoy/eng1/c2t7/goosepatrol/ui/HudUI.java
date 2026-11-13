@@ -28,6 +28,7 @@ public class HudUI extends Table {
     private final Image[] heartImages;
     private final ProgressBar staminaBar;
     private final Table toastPanel;
+    private final Label countersLabel;
 
     private final EventUI eventUI;
 
@@ -61,7 +62,10 @@ public class HudUI extends Table {
         timerPanel.add(timerLabel);
 
         Table geesePanel = panel();
-        geesePanel.add(geeseLabel);
+        countersLabel = new Label("", skin);
+        geesePanel.add(geeseLabel).right().row();
+        geesePanel.add(countersLabel).right();
+        updateCounters(0, 0);
 
         Table left = new Table();
         left.add(status).left().top();
@@ -73,7 +77,7 @@ public class HudUI extends Table {
         topBar.add(right).expandX().uniformX().right().top();
         add(topBar).growX().top().pad(20, 20, 0, 20).row();
 
-        //EVENTS
+        // EVENTS
         eventUI = new EventUI(skin);
         add(eventUI).right().top().row();
 
@@ -107,6 +111,11 @@ public class HudUI extends Table {
             slotStacks[i] = slotStack;
             hotbarTable.add(slotStack).size(48, 48).pad(4);
         }
+    }
+
+    /** Shows how many items have been used and events triggered (FR-12, FR-13). */
+    public void updateCounters(int itemsUsed, int eventsTriggered) {
+        countersLabel.setText("Items used: " + itemsUsed + "   Events: " + eventsTriggered);
     }
 
     public void updateHotbar() {
@@ -165,5 +174,7 @@ public class HudUI extends Table {
                 Actions.fadeOut(0.4f)));
     }
 
-    public EventUI getEventUI() { return eventUI; }
+    public EventUI getEventUI() {
+        return eventUI;
+    }
 }

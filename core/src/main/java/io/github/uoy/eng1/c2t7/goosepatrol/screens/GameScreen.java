@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import io.github.uoy.eng1.c2t7.goosepatrol.GoosePatrol;
 import io.github.uoy.eng1.c2t7.goosepatrol.events.Event;
+import io.github.uoy.eng1.c2t7.goosepatrol.inventory.Item;
 import io.github.uoy.eng1.c2t7.goosepatrol.inventory.ItemStack;
 import io.github.uoy.eng1.c2t7.goosepatrol.rendering.CameraController;
 import io.github.uoy.eng1.c2t7.goosepatrol.rendering.DebugRenderer;
@@ -46,16 +47,13 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
     // State
     private boolean isPaused = true;
     private boolean waitingToStart = true;
-    private float timeRemaining;
 
     private static final float BUS_DEPART_SECONDS = 1.2f;
     private float departTimer = 0f;
-    private float winTime;
 
     public GameScreen(GoosePatrol game) {
         this.game = game;
         GameConfig config = game.getConfig();
-        this.timeRemaining = config.gameDurationSeconds;
 
         Assets assets = game.getAssets();
 
@@ -98,21 +96,18 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
         if (departTimer > 0f) {
             departTimer -= delta;
             if (departTimer <= 0f) {
-                game.setScreen(new TicketScreen(game, true, winTime, world.getItemsUsed(), world.getEventsTriggered()));
+                showResults(true);
                 return;
             }
         } else if (!isPaused) {
-            timeRemaining = Math.max(0, timeRemaining - delta);
-            if (timeRemaining <= 0) {
-                game.setScreen(new TicketScreen(game, false, 0, world.getItemsUsed(), world.getEventsTriggered()));
-            }
-            hudUI.updateTimer(timeRemaining);
-            hudUI.updateStamina(world.getPlayer().getStaminaPercent());
-
-            moveInput.set(
-                    (Gdx.input.isKeyPressed(Input.Keys.D) ? 1 : 0) - (Gdx.input.isKeyPressed(Input.Keys.A) ? 1 : 0),
-                    (Gdx.input.isKeyPressed(Input.Keys.W) ? 1 : 0) - (Gdx.input.isKeyPressed(Input.Keys.S) ? 1 : 0));
+            readMoveInput();
             world.update(delta, moveInput);
+            if (world.getStatus() == GameWorld.Status.LOST) {
+                showResults(false);
+                return; // This screen has been disposed, so stop drawing it
+            }
+            hudUI.updateTimer(world.getTimeRemaining());
+            hudUI.updateStamina(world.getPlayer().getStaminaPercent());
             cameraController.update(delta);
         }
 
@@ -140,7 +135,7 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
         }
 
         // Toggle Pause
-        if (keycode == Input.Keys.ESCAPE) {
+        if (keycode == Input.Keys.ESCAPE || keycode == Input.Keys.SPACE) {
             togglePause();
             return true;
         }
@@ -185,15 +180,29 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
     }
 
     private void useActiveItem() {
-        ItemStack active = world.getPlayer().getInventory().getActiveStack();
-        if (active != null) {
-            boolean consumed = active.getItem().use(world, world.getPlayer());
-            if (consumed) {
-                world.getPlayer().getInventory().consumeActiveItem();
-                hudUI.showToast("Used " + active.getItem().getDisplayName());
-            }
-            hudUI.updateHotbar();
+        Item used = world.useActiveItem();
+        if (used != null) {
+            hudUI.showToast("Used " + used.getDisplayName());
+            hudUI.updateCounters(world.getItemsUsed(), world.getEventsTriggered());
         }
+        hudUI.updateHotbar();
+    }
+
+    /** WASD or arrow keys (FR-02). */
+    private void readMoveInput() {
+        moveInput.set(
+                (isDown(Input.Keys.D, Input.Keys.RIGHT) ? 1 : 0) - (isDown(Input.Keys.A, Input.Keys.LEFT) ? 1 : 0),
+                (isDown(Input.Keys.W, Input.Keys.UP) ? 1 : 0) - (isDown(Input.Keys.S, Input.Keys.DOWN) ? 1 : 0));
+    }
+
+    private static boolean isDown(int key, int altKey) {
+        return Gdx.input.isKeyPressed(key) || Gdx.input.isKeyPressed(altKey);
+    }
+
+    /** Switches to the results ticket (FR-01, FR-12, FR-13). */
+    private void showResults(boolean won) {
+        game.setScreen(new TicketScreen(game, won, world.getTimeTaken(),
+                world.getItemsUsed(), world.getEventsTriggered()));
     }
 
     private void startGame() {
@@ -219,7 +228,6 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
 
     @Override
     public void onExitReached() {
-        winTime = game.getConfig().gameDurationSeconds - timeRemaining;
         departTimer = BUS_DEPART_SECONDS;
         renderer.startBusLeaving();
     }
@@ -234,9 +242,7 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
         game.getAssets().getSound("pain").play(game.getConfig().audio.sfxVolume);
         int hearts = world.getPlayer().getHearts();
         hudUI.updateHearts(hearts);
-        if (hearts == 0) {
-            game.setScreen(new TicketScreen(game, false, 0, world.getItemsUsed(), world.getEventsTriggered()));
-        } else {
+        if (hearts > 0) {
             hudUI.showToast("OUCH! " + hearts + " hearts left");
         }
     }
@@ -275,5 +281,8 @@ public class GameScreen extends InputAdapter implements Screen, WorldListener, P
     }
 
     @Override
-    public void onEventTriggered(Event event) { hudUI.getEventUI().announceEvent(event); }
+    public void onEventTriggered(Event event) {
+        hudUI.getEventUI().announceEvent(event);
+        hudUI.updateCounters(world.getItemsUsed(), world.getEventsTriggered());
+    }
 }

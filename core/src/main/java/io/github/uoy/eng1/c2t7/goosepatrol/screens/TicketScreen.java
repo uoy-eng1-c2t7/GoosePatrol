@@ -48,10 +48,10 @@ public class TicketScreen implements Screen {
         ticket.add(title).padBottom(15).row();
         if (won) {
             ticket.add(timeLabel).padBottom(10).row();
-            ticket.add(itemLabel).padBottom(10).row();
-            ticket.add(eventLabel).padBottom(10).row();
         }
         ticket.add(divider).padBottom(20).row();
+        ticket.add(itemLabel).padBottom(10).row();
+        ticket.add(eventLabel).padBottom(10).row();
 
         // Buttons
         TextButton restartBtn = new TextButton("Play Again", skin);

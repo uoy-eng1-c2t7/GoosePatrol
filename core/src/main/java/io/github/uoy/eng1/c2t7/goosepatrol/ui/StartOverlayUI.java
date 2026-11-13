@@ -19,11 +19,11 @@ public class StartOverlayUI extends Table {
         card.add(new Label("Feed " + geeseToDisperse + " geese, then reach the bus", skin)).colspan(2).padBottom(24)
                 .row();
 
-        addControl(card, skin, "WASD", "Move");
+        addControl(card, skin, "WASD / Arrows", "Move");
         addControl(card, skin, "Shift", "Sprint");
         addControl(card, skin, "E", "Throw bread");
         addControl(card, skin, "1-9 / Scroll", "Choose item");
-        addControl(card, skin, "Esc", "Pause");
+        addControl(card, skin, "Esc / Space", "Pause");
 
         card.add(new Label("Press SPACE to start", skin)).colspan(2).padTop(24);
         add(card);
