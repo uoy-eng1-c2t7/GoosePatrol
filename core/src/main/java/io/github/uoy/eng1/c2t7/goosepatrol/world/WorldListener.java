@@ -8,6 +8,7 @@ import io.github.uoy.eng1.c2t7.goosepatrol.events.Event;
  */
 public interface WorldListener {
 
+    // jj hb
     default void onInventoryChanged() {
 
     }
